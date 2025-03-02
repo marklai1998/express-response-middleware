@@ -10,7 +10,7 @@ on:
 
 jobs:
   run-lint:
-    runs-on: kubernetes
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
