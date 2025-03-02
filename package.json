@@ -29,5 +29,6 @@
     "should": "^13.2.3",
     "supertest": "^3.1.0"
   },
-  "dependencies": {}
+  "dependencies": {},
+  "packageManager": "pnpm@9.14.2"
 }
