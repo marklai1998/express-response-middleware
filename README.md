@@ -90,7 +90,25 @@ Asynchronously transform the HTTP headers of the response.
 
 ## Exception handling
 
-`responseMiddleware` catches any exception (synchronous, asynchronous or Promise reject) and sends an HTTP 500 response with the exception message. This is done by `responseMiddleware.onError(err, req, res)`, feel free to redefine it to your needs.
+`responseMiddleware` catches any exception (synchronous, asynchronous or Promise reject) and sends an HTTP 500 response with the exception message. You should handle your own error if you want different behavior
+
+## Migrate from `express-mung`
+
+- Update the import
+- Rename option `mungError` to `runOnError`
+- Add try catch to your function body if used to override mung.onError()
+
+```
+-   import mung from 'express-mung'
++   import mung from 'express-mung'
+
+const myMiddleware = mung.json(() => {
+  // code here
+},
+-  { mungError: true }
++  { runOnError: true }
+)
+```
 
 # License
 
