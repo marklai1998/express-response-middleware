@@ -10,9 +10,9 @@ This package allows synchronous and asynchronous transformation of an express re
 
 Then in your middleware
 
-    var mung = require('express-response-middleware');
+    var responseMiddleware = require('express-response-middleware');
 
-    module.exports = mung.json(my_transform);
+    module.exports = responseMiddleware.json(my_transform);
 
 ## Usage
 
@@ -20,7 +20,7 @@ Sample middleware (redact.js) to remove classified information.
 
 ```javascript
 'use strict'
-const mung = require('express-response-middleware')
+const responseMiddleware = require('express-response-middleware')
 
 /* Remove any classified information from the response. */
 function redact(body, req, res) {
@@ -29,7 +29,7 @@ function redact(body, req, res) {
   return body
 }
 
-module.exports = mung.json(redact)
+module.exports = responseMiddleware.json(redact)
 ```
 
 then add to your `app.js` file (before the route handling middleware)
@@ -44,53 +44,53 @@ See the mocha [tests](https://github.com/marklai1998/express-response-middleware
 
 ## Reference
 
-### mung.json(fn, [options])
+### responseMiddleware.json(fn, [options])
 
 Transform the JSON body of the response.
 
 `fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns the modified body. If `undefined` is returned (i.e. nothing) then the original JSON is assumed to be modified. If `null` is returned, then a 204 No Content HTTP status is returned to client.
 
-### mung.jsonAsync(fn, [options])
+### responseMiddleware.jsonAsync(fn, [options])
 
 Asynchronously transform the JSON body of the response.
 
 `fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns a promise to a modified body. The promise returns an `object.` If it is `null` then a 204 No Content is sent to the client.
 
-### mung.headers(fn)
+### responseMiddleware.headers(fn)
 
 Transform the HTTP headers of the response.
 
 `fn(req, res)` receives the `req` and `res`. It should modify the header(s) and then return.
 
-### mung.headersAsync(fn)
+### responseMiddleware.headersAsync(fn)
 
 Asynchronously transform the HTTP headers of the response.
 
 `fn(req, res)` receives the `req` and `res`. It returns a `promise` to modify the header(s).
 
-### mung.write(fn, [options])
+### responseMiddleware.write(fn, [options])
 
 `fn(chunk, encoding, req, res)` receives the string or buffer as `chunk`, its `encoding` if applicable (`null` otherwise), `req` and `res`. It returns the modified body. If `undefined` is returned (i.e. nothing) then the original unmodified chunk is used.
 
 ### Notes
 
-- when `mung.json*` receives a scalar value then the `content-type` is switched `text-plain`.
+- when `responseMiddleware.json*` receives a scalar value then the `content-type` is switched `text-plain`.
 
-- when `mung.json*` detects that a response has been sent, it will abort.
+- when `responseMiddleware.json*` detects that a response has been sent, it will abort.
 
-- sending a response while in `mung.headers*` is **undefined behaviour** and will most likely result in an error.
+- sending a response while in `responseMiddleware.headers*` is **undefined behaviour** and will most likely result in an error.
 
-- when `mung.write` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
+- when `responseMiddleware.write` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
 
-- calling `res.json` or `res.send` from `mung.write` can lead to unexpected behavior since they end the response internally.
+- calling `res.json` or `res.send` from `responseMiddleware.write` can lead to unexpected behavior since they end the response internally.
 
 ### options
 
-- `mungError`, when `true` the munger function is always invoked. When `false` (the default) the munger function is only invoked when the response is not in error.
+- `runOnError`, when `true` the callback function is always invoked. When `false` (the default) the callback function is only invoked when the response is not in error.
 
 ## Exception handling
 
-`mung` catches any exception (synchronous, asynchronous or Promise reject) and sends an HTTP 500 response with the exception message. This is done by `mung.onError(err, req, res)`, feel free to redefine it to your needs.
+`responseMiddleware` catches any exception (synchronous, asynchronous or Promise reject) and sends an HTTP 500 response with the exception message. This is done by `responseMiddleware.onError(err, req, res)`, feel free to redefine it to your needs.
 
 # License
 

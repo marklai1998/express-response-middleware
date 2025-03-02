@@ -1,13 +1,13 @@
 'use strict'
 
-let mung = {}
+let responseMiddleware = {}
 let faux_fin = { end: () => null }
 
 function isScalar(v) {
   return typeof v !== 'object' && !Array.isArray(v)
 }
 
-mung.onError = (err, req, res, next) => {
+responseMiddleware.onError = (err, req, res, next) => {
   res
     .status(500)
     .set('content-language', 'en')
@@ -16,23 +16,23 @@ mung.onError = (err, req, res, next) => {
   return res
 }
 
-mung.json = function json(fn, options) {
+responseMiddleware.json = function json(fn, options) {
   return function (req, res, next) {
     let original = res.json
     options = options || {}
-    let mungError = options.mungError
+    let runOnError = options.runOnError
 
     function json_hook(json) {
       let originalJson = json
       res.json = original
       if (res.headersSent) return res
-      if (!mungError && res.statusCode >= 400) return original.call(this, json)
+      if (!runOnError && res.statusCode >= 400) return original.call(this, json)
 
       // Run the munger
       try {
         json = fn(json, req, res)
       } catch (e) {
-        return mung.onError(e, req, res, next)
+        return responseMiddleware.onError(e, req, res, next)
       }
       if (res.headersSent) return res
 
@@ -56,7 +56,7 @@ mung.json = function json(fn, options) {
   }
 }
 
-mung.jsonAsync = function json(fn, options) {
+responseMiddleware.jsonAsync = function json(fn, options) {
   return function (req, res, next) {
     let original = res.json
     options = options || {}
@@ -83,9 +83,9 @@ mung.jsonAsync = function json(fn, options) {
 
             return original.call(this, json)
           })
-          .catch(e => mung.onError(e, req, res, next))
+          .catch(e => responseMiddleware.onError(e, req, res, next))
       } catch (e) {
-        mung.onError(e, req, res, next)
+        responseMiddleware.onError(e, req, res, next)
       }
 
       return faux_fin
@@ -96,7 +96,7 @@ mung.jsonAsync = function json(fn, options) {
   }
 }
 
-mung.headers = function headers(fn) {
+responseMiddleware.headers = function headers(fn) {
   return function (req, res, next) {
     let original = res.end
     function headers_hook() {
@@ -105,7 +105,7 @@ mung.headers = function headers(fn) {
         try {
           fn(req, res)
         } catch (e) {
-          return mung.onError(e, req, res, next)
+          return responseMiddleware.onError(e, req, res, next)
         }
         if (res.headersSent) {
           console.error(
@@ -122,12 +122,12 @@ mung.headers = function headers(fn) {
   }
 }
 
-mung.headersAsync = function headersAsync(fn) {
+responseMiddleware.headersAsync = function headersAsync(fn) {
   return function (req, res, next) {
     let original = res.end
     let onError = e => {
       res.end = original
-      return mung.onError(e, req, res, next)
+      return responseMiddleware.onError(e, req, res, next)
     }
     function headers_async_hook() {
       if (res.headersSent) return original.apply(this, args)
@@ -151,10 +151,10 @@ mung.headersAsync = function headersAsync(fn) {
   }
 }
 
-mung.write = function write(fn, options = {}) {
+responseMiddleware.write = function write(fn, options = {}) {
   return function (req, res, next) {
     const original = res.write
-    const mungError = options.mungError
+    const runOnError = options.runOnError
 
     function write_hook(chunk, encoding, callback) {
       // If res.end has already been called, do nothing.
@@ -163,7 +163,7 @@ mung.write = function write(fn, options = {}) {
       }
 
       // Do not mung on errors
-      if (!mungError && res.statusCode >= 400) {
+      if (!runOnError && res.statusCode >= 400) {
         return original.apply(res, arguments)
       }
 
@@ -190,7 +190,7 @@ mung.write = function write(fn, options = {}) {
 
         return original.call(res, modifiedChunk, encoding, callback)
       } catch (err) {
-        return mung.onError(err, req, res, next)
+        return responseMiddleware.onError(err, req, res, next)
       }
     }
 
@@ -200,4 +200,4 @@ mung.write = function write(fn, options = {}) {
   }
 }
 
-module.exports = mung
+module.exports = responseMiddleware

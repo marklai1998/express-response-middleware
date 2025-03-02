@@ -21,7 +21,7 @@ export type TransformChunk = (
 ) => string | Buffer
 
 export interface Options {
-  mungError: boolean
+  runOnError: boolean
 }
 
 /**
