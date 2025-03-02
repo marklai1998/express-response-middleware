@@ -101,7 +101,7 @@ describe('mung write', () => {
 
   it('should mung an error response when told to', done => {
     const server = express()
-      .use(mung.write(appendText, { mungError: true }))
+      .use(mung.write(appendText, { runOnError: true }))
       .get('/', (req, res) => {
         res.status(404).write(originalResponseTextBody)
         res.end()

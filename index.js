@@ -60,13 +60,13 @@ responseMiddleware.jsonAsync = function json(fn, options) {
   return function (req, res, next) {
     let original = res.json
     options = options || {}
-    let mungError = options.mungError
+    let runOnError = options.runOnError
 
     function json_async_hook(json) {
       let originalJson = json
       res.json = original
       if (res.headersSent) return
-      if (!mungError && res.statusCode >= 400) return original.call(this, json)
+      if (!runOnError && res.statusCode >= 400) return original.call(this, json)
       try {
         fn(json, req, res)
           .then(json => {

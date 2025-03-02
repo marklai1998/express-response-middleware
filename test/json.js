@@ -60,7 +60,7 @@ describe('mung json', () => {
 
   it('should mung an error response when told to', done => {
     let server = express()
-      .use(mung.json(inspect, { mungError: true }))
+      .use(mung.json(inspect, { runOnError: true }))
       .get('/', (req, res) => res.status(404).json({ a: 'a' }).end())
     request(server)
       .get('/')

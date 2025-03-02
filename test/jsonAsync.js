@@ -66,7 +66,7 @@ describe('mung jsonAsync', () => {
 
   it('should mung an error response when told to', done => {
     let server = express()
-      .use(mung.jsonAsync(inspect, { mungError: true }))
+      .use(mung.jsonAsync(inspect, { runOnError: true }))
       .get('/', (req, res) => res.status(404).json({ a: 'a' }).end())
     request(server)
       .get('/')
