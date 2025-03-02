@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "description": "Transform an express response (or make until no good)",
   "main": "index.js",
+  "types": "index.d.ts",
   "scripts": {
     "test": "mocha"
   },
@@ -23,6 +24,7 @@
   },
   "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
+    "@types/node": "22.9.1",
     "bluebird": "^3.5.1",
     "express": "^4.16.3",
     "mocha": "^5.2.0",
@@ -30,5 +32,8 @@
     "supertest": "^3.1.0"
   },
   "dependencies": {},
+  "peerDependencies": {
+    "express": "^4.0.0 || ^5.0.0"
+  },
   "packageManager": "pnpm@9.14.2"
 }
