@@ -1,0 +1,34 @@
+name: Publish Package to npmjs
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.node-version'
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          release-type: node
+      - run: pnpm install --frozen-lockfile
+        if: ${{ steps.release.outputs.release_created }}
+      - run: pnpm build
+        if: ${{ steps.release.outputs.release_created }}
+      - run: pnpm clean-package-json
+        if: ${{ steps.release.outputs.release_created }}
+      - run: 'echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}" > ~/.npmrc'
+        if: ${{ steps.release.outputs.release_created }}
+      - run: pnpm publish --no-git-checks
+        if: ${{ steps.release.outputs.release_created }}
