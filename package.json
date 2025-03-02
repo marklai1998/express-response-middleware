@@ -5,7 +5,9 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "lint:format": "prettier --check src package.json",
+    "lint:format:fix": "prettier --write src package.json"
   },
   "repository": {
     "type": "git",
@@ -28,6 +30,7 @@
     "bluebird": "^3.5.1",
     "express": "^4.16.3",
     "mocha": "^5.2.0",
+    "prettier": "3.5.2",
     "should": "^13.2.3",
     "supertest": "^3.1.0"
   },
