@@ -22,12 +22,6 @@ jobs:
         id: release
         with:
           release-type: node
-      - run: pnpm install --frozen-lockfile
-        if: ${{ steps.release.outputs.release_created }}
-      - run: pnpm build
-        if: ${{ steps.release.outputs.release_created }}
-      - run: pnpm clean-package-json
-        if: ${{ steps.release.outputs.release_created }}
       - run: 'echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}" > ~/.npmrc'
         if: ${{ steps.release.outputs.release_created }}
       - run: pnpm publish --no-git-checks
