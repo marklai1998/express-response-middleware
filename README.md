@@ -1,17 +1,17 @@
-# express-mung [![Build Status](https://travis-ci.org/richardschneider/express-prefer.svg)](https://travis-ci.org/richardschneider/express-mung)
+# express-response-middleware
 
 Middleware for express responses.
 
 This package allows synchronous and asynchronous transformation of an express response.  This is a similar concept to the express middleware for a request but for a response.  Note that the middleware is executed in LIFO order.  It is implemented by monkey patching (hooking) the `res.end`, `res.json`, or `res.write` methods.
 
 
-## Getting started [![npm version](https://badge.fury.io/js/express-mung.svg)](https://badge.fury.io/js/express-mung)
+## Getting started [![npm version](https://badge.fury.io/js/express-response-middleware.svg)](https://badge.fury.io/js/express-response-middleware)
 
-    $ npm install express-mung --save
+    $ npm install express-response-middleware --save
 
 Then in your middleware
 
-    var mung = require('express-mung');
+    var mung = require('express-response-middleware');
 
     module.exports = mung.json(my_transform);
 
@@ -21,7 +21,7 @@ Sample middleware (redact.js) to remove classified information.
 
 ````javascript
 'use strict';
-const mung = require('express-mung');
+const mung = require('express-response-middleware');
 
 /* Remove any classified information from the response. */
 function redact(body, req, res) {
@@ -39,7 +39,7 @@ app.use(require('./redact'))
 ````
 and [*That's all folks!*](https://www.youtube.com/watch?v=gBzJGckMYO4)
 
-See the mocha [tests](https://github.com/richardschneider/express-mung/tree/master/test) for some more examples.
+See the mocha [tests](https://github.com/marklai1998/express-response-middleware/tree/master/test) for some more examples.
 
 ## Reference
 
@@ -93,7 +93,3 @@ Asynchronously transform the HTTP headers of the response.
 
 # License
 The MIT license
-
-Copyright © 2015 Richard Schneider (makaretu@gmail.com)
-
-<a href="https://www.buymeacoffee.com/kmXOxKJ4E" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>

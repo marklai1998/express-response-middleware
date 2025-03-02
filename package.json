@@ -1,5 +1,5 @@
 {
-  "name": "express-mung",
+  "name": "express-response-middleware",
   "version": "0.5.1",
   "description": "Transform an express response (or make until no good)",
   "main": "index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/richardschneider/express-mung.git"
+    "url": "git+https://github.com/marklai1998/express-response-middleware"
   },
   "keywords": [
     "mung",
@@ -17,16 +17,11 @@
     "response",
     "express"
   ],
-  "author": "Richard Schneider <makaretu@gmail.com>",
-  "contributors": [
-    "Ido Schachter <ido.schachter@ironsrc.com>",
-    "Sachin Hegde <sachin.hegde91@gmail.com>"
-  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/richardschneider/express-mung/issues"
+    "url": "https://github.com/marklai1998/express-response-middleware/issues"
   },
-  "homepage": "https://github.com/richardschneider/express-mung#readme",
+  "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
     "bluebird": "^3.5.1",
     "express": "^4.16.3",
