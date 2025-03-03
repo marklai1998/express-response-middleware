@@ -5,7 +5,7 @@
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
-    "test": "mocha",
+    "test": "vitest run --coverage",
     "lint:format": "prettier --check index.js index.d.ts package.json",
     "lint:format:fix": "prettier --write index.js index.d.ts package.json"
   },
@@ -26,14 +26,18 @@
   },
   "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
+    "@types/express": "^4.17.21",
     "@types/node": "22.9.1",
+    "@types/supertest": "^6.0.2",
+    "@vitest/coverage-v8": "3.0.6",
     "bluebird": "^3.5.1",
     "express": "^4.16.3",
     "mocha": "^5.2.0",
     "prettier": "3.5.2",
     "should": "^13.2.3",
-    "supertest": "^3.1.0"
+    "supertest": "^3.1.0",
+    "typescript": "5.6.3",
+    "vitest": "3.0.6"
   },
-  "dependencies": {},
   "packageManager": "pnpm@9.14.2"
 }
