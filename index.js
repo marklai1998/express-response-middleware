@@ -130,8 +130,8 @@ responseMiddleware.headersAsync = function headersAsync(fn) {
       return responseMiddleware.onError(e, req, res, next)
     }
     function headers_async_hook() {
-      if (res.headersSent) return original.apply(this, args)
       let args = arguments
+      if (res.headersSent) return original.apply(this, args)
       res.end = () => null
       try {
         fn(req, res)
