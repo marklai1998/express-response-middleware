@@ -1,6 +1,6 @@
 {
   "name": "express-response-middleware",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Transform an express response (or make until no good)",
   "main": "index.js",
   "types": "index.d.ts",
