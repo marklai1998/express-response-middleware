@@ -1,5 +1,5 @@
 import express from 'express'
-import * as responseMiddleware from '../index'
+import * as responseMiddleware from '../main'
 import request from 'supertest'
 import { expect } from 'vitest'
 

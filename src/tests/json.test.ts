@@ -1,7 +1,7 @@
 import express, { ErrorRequestHandler } from 'express'
-import * as responseMiddleware from '../index'
+import * as responseMiddleware from '../main'
 import request from 'supertest'
-import { Transform } from '../index'
+import { Transform } from '../main'
 
 describe('json', () => {
   const noop: Transform = (_json, _req, _res) => {}

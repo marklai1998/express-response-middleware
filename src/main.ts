@@ -22,8 +22,6 @@ export type Options = {
   runOnError?: boolean
 }
 
-let faux_fin = { end: () => null }
-
 const isScalar = (v: unknown) => {
   return typeof v !== 'object' && !Array.isArray(v)
 }
@@ -40,36 +38,38 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
 export const json =
   (fn: Transform, { runOnError }: Options = {}): RequestHandler =>
   (req, res, next) => {
-    const original = res.json
+    const originalJsonFn = res.json
 
     res.json = function (this: Response, json) {
       const originalJson = json
-      res.json = original
+      res.json = originalJsonFn
       if (res.headersSent) return res
-      if (!runOnError && res.statusCode >= 400) return original.call(this, json)
+      if (!runOnError && res.statusCode >= 400)
+        return originalJsonFn.call(this, json)
 
       // Run the munger
       try {
-        json = fn(json, req, res)
+        let result = fn(json, req, res)
+
+        if (res.headersSent) return res
+
+        // If no returned value from fn, then assume json has been mucked with.
+        if (result === undefined) result = originalJson
+
+        // If null, then 204 No Content
+        if (result === null) return res.status(204).end()
+
+        // If munged scalar value, then text/plain
+        if (originalJson !== result && isScalar(result)) {
+          res.set('content-type', 'text/plain')
+          return res.send(String(result))
+        }
+
+        return originalJsonFn.call(this, result)
       } catch (e) {
         errorHandler(e, req, res, next)
         return res
       }
-      if (res.headersSent) return res
-
-      // If no returned value from fn, then assume json has been mucked with.
-      if (json === undefined) json = originalJson
-
-      // If null, then 204 No Content
-      if (json === null) return res.status(204).end()
-
-      // If munged scalar value, then text/plain
-      if (originalJson !== json && isScalar(json)) {
-        res.set('content-type', 'text/plain')
-        return res.send(String(json))
-      }
-
-      return original.call(this, json)
     }
 
     return next()
@@ -78,35 +78,41 @@ export const json =
 export const jsonAsync =
   (fn: TransformAsync, { runOnError }: Options = {}): RequestHandler =>
   (req, res, next) => {
-    const original = res.json
+    const originalJsonFn = res.json
 
     res.json = function (this: Response, json) {
       const originalJson = json
-      res.json = original
+      res.json = originalJsonFn
       if (res.headersSent) return res
-      if (!runOnError && res.statusCode >= 400) return original.call(this, json)
+      if (!runOnError && res.statusCode >= 400)
+        return originalJsonFn.call(this, json)
       try {
         fn(json, req, res)
-          .then(json => {
+          .then(result => {
             if (res.headersSent) return
 
+            // If no returned value from fn, then assume json has been mucked with.
+            if (result === undefined) result = originalJson
+
             // If null, then 204 No Content
-            if (json === null) return res.status(204).end()
+            if (result === null) return res.status(204).end()
 
             // If munged scalar value, then text/plain
-            if (json !== originalJson && isScalar(json)) {
+            if (result !== originalJson && isScalar(result)) {
               res.set('content-type', 'text/plain')
-              return res.send(String(json))
+              return res.send(String(result))
             }
 
-            return original.call(this, json)
+            originalJsonFn.call(this, result)
+
+            return
           })
           .catch(e => errorHandler(e, req, res, next))
       } catch (e) {
         errorHandler(e, req, res, next)
       }
 
-      return faux_fin
+      return { end: () => null } as unknown as Response
     }
 
     return next()
@@ -116,24 +122,25 @@ export const headers =
   (fn: TransformHeader): RequestHandler =>
   (req, res, next) => {
     const original = res.end
-    function headersHook() {
+
+    res.end = function (this: Response) {
       res.end = original
       if (!res.headersSent) {
         try {
           fn(req, res)
         } catch (e) {
-          return errorHandler(e, req, res, next)
+          errorHandler(e, req, res, next)
+          return res
         }
         if (res.headersSent) {
           console.error(
             'sending response while in mung.headers is undefined behaviour'
           )
-          return
+          return res
         }
       }
-      return original.apply(this, arguments)
+      return original.apply(this, arguments as any)
     }
-    res.end = headersHook
 
     next && next()
   }
@@ -146,10 +153,10 @@ export const headersAsync =
       res.end = original
       return errorHandler(e, req, res, next)
     }
-    function headerAsyncHook() {
-      let args = arguments
+    res.end = function (this: Response) {
+      let args = arguments as any
       if (res.headersSent) return original.apply(this, args)
-      res.end = () => null
+      res.end = () => null as any
       try {
         fn(req, res)
           .then(() => {
@@ -161,10 +168,10 @@ export const headersAsync =
       } catch (e) {
         onError(e, req, res, next)
       }
+      return res
     }
-    res.end = headerAsyncHook
 
-    next && next()
+    return next()
   }
 
 export const write =
@@ -172,15 +179,20 @@ export const write =
   (req, res, next) => {
     const original = res.write
 
-    function writeHook(chunk: any, encoding: any, callback: any) {
+    res.write = function (
+      this: Response,
+      chunk: any,
+      encoding: any,
+      callback: any
+    ) {
       // If res.end has already been called, do nothing.
-      if (res.finished) {
+      if (res.writableEnded) {
         return false
       }
 
       // Do not mung on errors
       if (!runOnError && res.statusCode >= 400) {
-        return original.apply(res, arguments)
+        return original.apply(res, arguments as any)
       }
 
       try {
@@ -195,7 +207,7 @@ export const write =
 
         // res.finished is set to `true` once res.end has been called.
         // If it is called in the mung function, stop execution here.
-        if (res.finished) {
+        if (res.writableEnded) {
           return false
         }
 
@@ -206,11 +218,10 @@ export const write =
 
         return original.call(res, modifiedChunk, encoding, callback)
       } catch (err) {
-        return errorHandler(err, req, res, next)
+        errorHandler(err, req, res, next)
+        return res
       }
-    }
+    } as typeof res.write
 
-    res.write = writeHook as any
-
-    next && next()
+    return next()
   }
