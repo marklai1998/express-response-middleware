@@ -24,5 +24,7 @@ jobs:
           release-type: node
       - run: 'echo "//registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}}" > ~/.npmrc'
         if: ${{ steps.release.outputs.release_created }}
+      - run: pnpm build --no-git-checks
+        if: ${{ steps.release.outputs.release_created }}
       - run: pnpm publish --no-git-checks
         if: ${{ steps.release.outputs.release_created }}
