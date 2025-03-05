@@ -1,7 +1,7 @@
 import express, { ErrorRequestHandler } from 'express'
-import * as responseMiddleware from '../index'
+import * as responseMiddleware from '../main'
 import request from 'supertest'
-import { TransformChunk } from '../index'
+import { TransformChunk } from '../main'
 import { expect } from 'vitest'
 
 describe('write', () => {
