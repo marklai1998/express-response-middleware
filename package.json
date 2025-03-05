@@ -8,8 +8,8 @@
   "scripts": {
     "build": "rollup -c",
     "test": "vitest run --coverage",
-    "lint:format": "prettier --check index.js index.d.ts package.json",
-    "lint:format:fix": "prettier --write index.js index.d.ts package.json"
+    "lint:format": "prettier --check src package.json",
+    "lint:format:fix": "prettier --write src package.json"
   },
   "repository": {
     "type": "git",
