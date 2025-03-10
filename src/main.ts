@@ -48,6 +48,7 @@ export const jsonMiddleware =
       void (async () => {
         try {
           const result = await fn(json, req, res)
+
           res.end = originalEnd
 
           if (res.headersSent) return
@@ -58,12 +59,9 @@ export const jsonMiddleware =
           )
 
           if (res.__isEnd) res.end()
-
-          return
         } catch (e) {
           res.end = originalEnd
           errorHandler(e, req, res, next)
-          return res
         }
       })()
 
@@ -95,6 +93,8 @@ export const headersMiddleware =
           if (res.headersSent) return
 
           originalEnd.apply(this, arguments as any)
+
+          if (res.__isEnd) res.end()
         } catch (e) {
           res.end = originalEnd
           errorHandler(e, req, res, next)
@@ -130,18 +130,9 @@ export const writeMiddleware =
           res
         )
 
-        // res.finished is set to `true` once res.end has been called.
-        // If it is called in the mung function, stop execution here.
-        if (res.writableEnded) {
-          return false
-        }
+        if (res.writableEnded) return false
 
-        // If no returned value from fn, then set it back to the original value
-        if (modifiedChunk === undefined) {
-          modifiedChunk = chunk
-        }
-
-        arguments[0] = modifiedChunk
+        arguments[0] = modifiedChunk === undefined ? chunk : modifiedChunk
         return original.apply(res, arguments as any)
       } catch (err) {
         errorHandler(err, req, res, next)
