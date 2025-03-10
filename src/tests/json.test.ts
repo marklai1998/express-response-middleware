@@ -10,10 +10,6 @@ describe('json', () => {
     ;(json as any).inspected_by = 'me'
   }
 
-  const remove: Transform = (_json, _req, _res) => {
-    return null
-  }
-
   const error: Transform = (json, _req, _res) => {
     ;(json as any).foo.bar.hopefully.fails()
   }
@@ -46,15 +42,6 @@ describe('json', () => {
     expect(response.headers['content-length']).toStrictEqual(
       JSON.stringify(expected).length.toString()
     )
-  })
-
-  it('should return 204 on null JSON result', async () => {
-    const server = express()
-      .use(responseMiddleware.json(remove))
-      .get('/', (_req, res) => res.status(200).json({ a: 'a' }))
-    const response = await request(server).get('/')
-
-    expect(response.status).toStrictEqual(204)
   })
 
   it('should return the JSON result from a res.send', async () => {

@@ -58,9 +58,6 @@ export const json =
         // If no returned value from fn, then assume json has been mucked with.
         if (result === undefined) result = originalJson
 
-        // If null, then 204 No Content
-        if (result === null) return res.status(204).end()
-
         return originalJsonFn.call(this, result)
       } catch (e) {
         errorHandler(e, req, res, next)
@@ -92,12 +89,6 @@ export const jsonAsync =
 
             // If no returned value from fn, then assume json has been mucked with.
             if (result === undefined) result = originalJson
-
-            // If null, then 204 No Content
-            if (result === null) {
-              res.status(204).end()
-              return
-            }
 
             originalJsonFn.call(this, result)
 

@@ -19,12 +19,6 @@ describe('jsonAsync', () => {
     })
   }
 
-  const remove: TransformAsync = (json, _req, _res) => {
-    return new Promise(resolve => {
-      resolve(json)
-    }).then(() => null)
-  }
-
   const error: TransformAsync = (json, _req, _res) => {
     return new Promise(resolve => {
       resolve(json)
@@ -59,15 +53,6 @@ describe('jsonAsync', () => {
     expect(response.headers['content-length']).toStrictEqual(
       JSON.stringify(expected).length.toString()
     )
-  })
-
-  it('should return 204 on null JSON result', async () => {
-    const server = express()
-      .use(responseMiddleware.jsonAsync(remove))
-      .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
-    const response = await request(server).get('/')
-
-    expect(response.status).toStrictEqual(204)
   })
 
   it('should return a number as application/json', async () => {

@@ -74,8 +74,6 @@ Asynchronously transform the HTTP headers of the response.
 
 ### Notes
 
-- when `responseMiddleware.json*` receives a scalar value then the `content-type` is switched `text-plain`.
-
 - when `responseMiddleware.json*` detects that a response has been sent, it will abort.
 
 - sending a response while in `responseMiddleware.headers*` is **undefined behaviour** and will most likely result in an error.
@@ -172,11 +170,12 @@ const myMiddleware = responseMiddleware.json((json) => {
 
 
 
-#### Remove `content-type` handler
+#### Remove `content-type` and 204 handler
 
-Remove auto `content-type`, you should set correct content type when returning different data
+- Removed auto `content-type` to `text/plain`, you should set correct content type when returning different data
+- Removed 204 handler with null return, you should set correct status when returning different data
 
-> Note. Express allow sending plain text with `.json` and content type will still be json, this change is to stick to vanilla behavior  
+> Note. Express allow sending plain text and null with `.json` and content type will still be json + 200, this change is to stick to vanilla behavior  
 
 Before
 ```ts
@@ -184,7 +183,9 @@ import mung from 'express-mung'
 
 const myMiddleware = mung.json((json) => {
   const hasPermission = false
+  const shouldSendNull = false
   if (!hasPermission) return "Forbidden" // `content-type` will automatically set to `text/plain`
+  if (shouldSendNull) return null // `status` will automatically set to 204
   return json
 })
 ```
@@ -195,9 +196,14 @@ import responseMiddleware from 'express-response-middleware'
 
 const myMiddleware = responseMiddleware.json((json) => {
     const hasPermission = false
+    const shouldSendNull = false
     if (!hasPermission) {
         res.send("Forbidden")
         return
+    }
+    if (shouldSendNull) {
+        res.status(204)
+        return null
     }
     return json
 })
