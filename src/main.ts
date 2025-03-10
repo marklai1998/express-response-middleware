@@ -85,7 +85,7 @@ export const json =
       }
     }
 
-    return next()
+    next()
   }
 
 export const jsonAsync =
@@ -150,7 +150,7 @@ export const jsonAsync =
       return res
     }
 
-    return next()
+    next()
   }
 
 export const headers =
@@ -177,7 +177,7 @@ export const headers =
       return original.apply(this, arguments as any)
     }
 
-    next && next()
+    next()
   }
 
 export const headersAsync =
@@ -215,7 +215,7 @@ export const headersAsync =
       return res
     }
 
-    return next()
+    next()
   }
 
 export const write =
@@ -223,12 +223,7 @@ export const write =
   (req, res, next) => {
     const original = res.write
 
-    res.write = function (
-      this: Response,
-      chunk: any,
-      encoding: any,
-      callback: any
-    ) {
+    res.write = function (this: Response, chunk) {
       // If res.end has already been called, do nothing.
       if (res.writableEnded) {
         return false
@@ -244,7 +239,7 @@ export const write =
           chunk,
           // Since `encoding` is an optional argument to `res.write`,
           // make sure it is a string and not actually the callback.
-          typeof encoding === 'string' ? encoding : null,
+          typeof arguments[1] === 'string' ? arguments[1] : null,
           req,
           res
         )
@@ -264,9 +259,9 @@ export const write =
         return original.apply(res, arguments as any)
       } catch (err) {
         errorHandler(err, req, res, next)
-        return res
+        return false
       }
-    } as typeof res.write
+    }
 
-    return next()
+    next()
   }
