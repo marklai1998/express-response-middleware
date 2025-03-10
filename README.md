@@ -44,13 +44,13 @@ See the mocha [tests](https://github.com/marklai1998/express-response-middleware
 
 ## Reference
 
-### responseMiddleware.json(fn, [options])
+### responseMiddleware.json(fn)
 
 Transform the JSON body of the response.
 
 `fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns the modified body. If `undefined` is returned (i.e. nothing) then the original JSON is assumed to be modified. If `null` is returned, then a 204 No Content HTTP status is returned to client.
 
-### responseMiddleware.jsonAsync(fn, [options])
+### responseMiddleware.jsonAsync(fn)
 
 Asynchronously transform the JSON body of the response.
 
@@ -68,7 +68,7 @@ Asynchronously transform the HTTP headers of the response.
 
 `fn(req, res)` receives the `req` and `res`. It returns a `promise` to modify the header(s).
 
-### responseMiddleware.write(fn, [options])
+### responseMiddleware.write(fn)
 
 `fn(chunk, encoding, req, res)` receives the string or buffer as `chunk`, its `encoding` if applicable (`null` otherwise), `req` and `res`. It returns the modified body. If `undefined` is returned (i.e. nothing) then the original unmodified chunk is used.
 
@@ -83,10 +83,6 @@ Asynchronously transform the HTTP headers of the response.
 - when `responseMiddleware.write` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
 
 - calling `res.json` or `res.send` from `responseMiddleware.write` can lead to unexpected behavior since they end the response internally.
-
-### options
-
-- `runOnError`, when `true` the callback function is always invoked. When `false` (the default) the callback function is only invoked when the response is not in error.
 
 ## Exception handling
 
