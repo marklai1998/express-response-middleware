@@ -1,6 +1,9 @@
 # express-response-middleware
 
-[V1 Readme](docs/V1_README.md)
+> [!IMPORTANT]  
+> V2 is still WIP, meanwhile please check out [V1 Readme](docs/V1_README.md)
+
+
 
 Middleware for express responses.
 
