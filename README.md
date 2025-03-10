@@ -48,13 +48,7 @@ See the mocha [tests](https://github.com/marklai1998/express-response-middleware
 
 Transform the JSON body of the response.
 
-`fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns the modified body. If `undefined` is returned (i.e. nothing) then the original JSON is assumed to be modified. If `null` is returned, then a 204 No Content HTTP status is returned to client.
-
-### jsonAsyncMiddleware(fn)
-
-Asynchronously transform the JSON body of the response.
-
-`fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns a promise to a modified body. The promise returns an `object.` If it is `null` then a 204 No Content is sent to the client.
+`fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns a promise to a modified body or the modified body directly. If `undefined` is returned (i.e. nothing) then the original JSON is assumed to be modified.
 
 ### headersMiddleware(fn)
 
@@ -90,9 +84,16 @@ Asynchronously transform the HTTP headers of the response.
 
 ### To V2
 
-V2 completely rewrote in ESM
+#### Requirement
+
+V2 completely rewrote in ESM with modern syntax
+
+- > Node 18
 
 #### Update Import
+
+- `mung.json` => `jsonMiddleware`
+- `mung.jsonAsync` => `jsonMiddleware`
 
 Before
 ```ts

@@ -1,15 +1,15 @@
 import express, { ErrorRequestHandler } from 'express'
 import request from 'supertest'
-import { jsonAsyncMiddleware, TransformAsync } from '../main'
+import { jsonMiddleware, Transform } from '../main'
 
-describe('jsonAsyncMiddleware', () => {
-  const noop: TransformAsync = (json, _req, _res) => {
+describe('jsonMiddleware', () => {
+  const noop: Transform = (json, _req, _res) => {
     return new Promise(resolve => {
       resolve(json)
     })
   }
 
-  const inspect: TransformAsync = (json, _req, _res) => {
+  const inspect: Transform = (json, _req, _res) => {
     return new Promise(resolve => {
       resolve(json)
     }).then((json: any) => {
@@ -18,7 +18,7 @@ describe('jsonAsyncMiddleware', () => {
     })
   }
 
-  const error: TransformAsync = (json, _req, _res) => {
+  const error: Transform = (json, _req, _res) => {
     return new Promise(resolve => {
       resolve(json)
     }).then((json: any) => json.foo.bar.hopefully.fails())
@@ -26,7 +26,7 @@ describe('jsonAsyncMiddleware', () => {
 
   it('should return the JSON result', async () => {
     const server = express()
-      .use(jsonAsyncMiddleware(inspect))
+      .use(jsonMiddleware(inspect))
       .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
     const response = await request(server).get('/')
 
@@ -41,7 +41,7 @@ describe('jsonAsyncMiddleware', () => {
 
   it('should call callback with an error', async () => {
     const server = express()
-      .use(jsonAsyncMiddleware(inspect))
+      .use(jsonMiddleware(inspect))
       .get('/', (_req, res) => res.status(404).json({ a: 'a' }).end())
     const response = await request(server).get('/')
 
@@ -56,7 +56,7 @@ describe('jsonAsyncMiddleware', () => {
 
   it('should return a number as application/json', async () => {
     const server = express()
-      .use(jsonAsyncMiddleware(noop))
+      .use(jsonMiddleware(noop))
       .get('/', (_req, res) => res.status(200).json(42).end())
     const response = await request(server).get('/')
 
@@ -70,12 +70,12 @@ describe('jsonAsyncMiddleware', () => {
   })
 
   it('should abort if a response is sent', async () => {
-    const error: TransformAsync = (json, _req, res) => {
+    const error: Transform = (json, _req, res) => {
       res.status(403).send('no permissions')
       return Promise.resolve(json)
     }
     const server = express()
-      .use(jsonAsyncMiddleware(error))
+      .use(jsonMiddleware(error))
       .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
     const response = await request(server).get('/')
 
@@ -93,7 +93,7 @@ describe('jsonAsyncMiddleware', () => {
       res.status(501).send(err.message).end()
     const server = express()
       .use(errorHandler)
-      .use(jsonAsyncMiddleware(error))
+      .use(jsonMiddleware(error))
       .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
     const response = await request(server).get('/')
 

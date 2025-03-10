@@ -12,12 +12,7 @@ export type Transform = (
   body: {},
   request: Request,
   response: Response
-) => unknown
-export type TransformAsync = (
-  body: {},
-  request: Request,
-  response: Response
-) => Promise<unknown>
+) => unknown | Promise<unknown>
 export type TransformHeader = (request: Request, response: Response) => unknown
 export type TransformHeaderAsync = (
   request: Request,
@@ -43,35 +38,6 @@ export const jsonMiddleware =
   (fn: Transform): RequestHandler =>
   (req, res, next) => {
     const originalJsonFn = res.json
-
-    res.json = function (this: Response, json) {
-      const originalJson = json
-      res.json = originalJsonFn
-
-      if (res.headersSent) return res
-
-      try {
-        let result = fn(json, req, res)
-
-        if (res.headersSent) return res
-
-        return originalJsonFn.call(
-          this,
-          result === undefined ? originalJson : result
-        )
-      } catch (e) {
-        errorHandler(e, req, res, next)
-        return res
-      }
-    }
-
-    next()
-  }
-
-export const jsonAsyncMiddleware =
-  (fn: TransformAsync): RequestHandler =>
-  (req, res, next) => {
-    const originalJsonFn = res.json
     const originalEnd = res.end
 
     res.json = function (this: Response, json) {
@@ -80,31 +46,27 @@ export const jsonAsyncMiddleware =
 
       if (res.headersSent) return res
 
-      try {
-        fn(json, req, res)
-          .then(result => {
-            res.end = originalEnd
+      void (async () => {
+        try {
+          const result = await fn(json, req, res)
+          res.end = originalEnd
 
-            if (res.headersSent) return
+          if (res.headersSent) return
 
-            originalJsonFn.call(
-              this,
-              result === undefined ? originalJson : result
-            )
+          originalJsonFn.call(
+            this,
+            result === undefined ? originalJson : result
+          )
 
-            if (res.__isEnd) res.end()
+          if (res.__isEnd) res.end()
 
-            return
-          })
-          .catch(e => {
-            res.end = originalEnd
-            errorHandler(e, req, res, next)
-          })
-      } catch (e) {
-        res.end = originalEnd
-        errorHandler(e, req, res, next)
-        return res
-      }
+          return
+        } catch (e) {
+          res.end = originalEnd
+          errorHandler(e, req, res, next)
+          return res
+        }
+      })()
 
       res.end = function (this: Response) {
         res.__isEnd = true
