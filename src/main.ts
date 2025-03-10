@@ -13,10 +13,12 @@ export type Transform = (
   request: Request,
   response: Response
 ) => unknown | Promise<unknown>
+
 export type TransformHeader = (
   request: Request,
   response: Response
 ) => unknown | Promise<unknown>
+
 export type TransformChunk = (
   chunk: string | Buffer,
   encoding: string | null,
@@ -121,7 +123,7 @@ export const writeMiddleware =
       if (res.writableEnded) return false
 
       try {
-        let modifiedChunk = fn(
+        const modifiedChunk = fn(
           chunk,
           // Since `encoding` is an optional argument to `res.write`,
           // make sure it is a string and not actually the callback.
