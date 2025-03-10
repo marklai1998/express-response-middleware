@@ -1,16 +1,28 @@
 import { ErrorRequestHandler, Request, RequestHandler, Response } from 'express'
 
-export type Transform = (body: {}, request: Request, response: Response) => any
+declare global {
+  namespace Express {
+    interface Response {
+      __isEnd?: boolean
+    }
+  }
+}
+
+export type Transform = (
+  body: {},
+  request: Request,
+  response: Response
+) => unknown
 export type TransformAsync = (
   body: {},
   request: Request,
   response: Response
-) => Promise<any>
-export type TransformHeader = (request: Request, response: Response) => any
+) => Promise<unknown>
+export type TransformHeader = (request: Request, response: Response) => unknown
 export type TransformHeaderAsync = (
   request: Request,
   response: Response
-) => Promise<any>
+) => Promise<unknown>
 export type TransformChunk = (
   chunk: string | Buffer,
   encoding: string | null,
@@ -43,11 +55,12 @@ export const json =
     res.json = function (this: Response, json) {
       const originalJson = json
       res.json = originalJsonFn
+
       if (res.headersSent) return res
+
       if (!runOnError && res.statusCode >= 400)
         return originalJsonFn.call(this, json)
 
-      // Run the munger
       try {
         let result = fn(json, req, res)
 
@@ -79,40 +92,62 @@ export const jsonAsync =
   (fn: TransformAsync, { runOnError }: Options = {}): RequestHandler =>
   (req, res, next) => {
     const originalJsonFn = res.json
+    const originalEnd = res.end
 
     res.json = function (this: Response, json) {
       const originalJson = json
       res.json = originalJsonFn
+
       if (res.headersSent) return res
+
       if (!runOnError && res.statusCode >= 400)
         return originalJsonFn.call(this, json)
+
       try {
         fn(json, req, res)
           .then(result => {
+            res.end = originalEnd
+
             if (res.headersSent) return
 
             // If no returned value from fn, then assume json has been mucked with.
             if (result === undefined) result = originalJson
 
             // If null, then 204 No Content
-            if (result === null) return res.status(204).end()
+            if (result === null) {
+              res.status(204).end()
+              return
+            }
 
             // If munged scalar value, then text/plain
             if (result !== originalJson && isScalar(result)) {
               res.set('content-type', 'text/plain')
-              return res.send(String(result))
+              res.send(String(result))
+              return
             }
 
             originalJsonFn.call(this, result)
 
+            if (res.__isEnd) res.end()
+
             return
           })
-          .catch(e => errorHandler(e, req, res, next))
+          .catch(e => {
+            res.end = originalEnd
+            errorHandler(e, req, res, next)
+          })
       } catch (e) {
+        res.end = originalEnd
         errorHandler(e, req, res, next)
+        return res
       }
 
-      return { end: () => null } as unknown as Response
+      res.end = function (this: Response) {
+        res.__isEnd = true
+        return res
+      }
+
+      return res
     }
 
     return next()
@@ -134,7 +169,7 @@ export const headers =
         }
         if (res.headersSent) {
           console.error(
-            'sending response while in mung.headers is undefined behaviour'
+            'sending response while in headers is undefined behaviour'
           )
           return res
         }
@@ -148,26 +183,35 @@ export const headers =
 export const headersAsync =
   (fn: TransformHeaderAsync): RequestHandler =>
   (req, res, next) => {
-    const original = res.end
-    let onError = (e: any, req: any, res: any, next: any) => {
-      res.end = original
-      return errorHandler(e, req, res, next)
-    }
+    const originalEnd = res.end
+
     res.end = function (this: Response) {
-      let args = arguments as any
-      if (res.headersSent) return original.apply(this, args)
-      res.end = () => null as any
+      if (res.headersSent) return originalEnd.apply(this, arguments as any)
+
       try {
         fn(req, res)
           .then(() => {
-            res.end = original
+            res.end = originalEnd
+
             if (res.headersSent) return
-            original.apply(this, args)
+
+            originalEnd.apply(this, arguments as any)
           })
-          .catch(e => onError(e, req, res, next))
+          .catch(e => {
+            res.end = originalEnd
+            return errorHandler(e, req, res, next)
+          })
       } catch (e) {
-        onError(e, req, res, next)
+        res.end = originalEnd
+        errorHandler(e, req, res, next)
+        return res
       }
+
+      res.end = function (this: Response) {
+        res.__isEnd = true
+        return res
+      }
+
       return res
     }
 
