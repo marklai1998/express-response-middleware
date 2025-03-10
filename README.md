@@ -92,28 +92,85 @@ Asynchronously transform the HTTP headers of the response.
 
 ### To V2
 
-V2 completely rewrote in ESM, there might be minor behavior difference in edge case
+V2 completely rewrote in ESM
 
-- Update the import
-- Handle your own error, if you used to override `onError`
-- Handle your own ignore case, Remove `mungError`
+#### Update Import
 
-```diff
-- import mung from 'express-mung'
-+ import responseMiddleware from 'express-response-middleware'
+Before
+```ts
+import mung from 'express-mung'
 
-- mung.onError = customErrorHandle
+mung.onError = customErrorHandle
 
 const myMiddleware = responseMiddleware.json((json) => {
-+ try {
-+   if(res.statusCode >= 400) return // mungError equivalent
-+ } catch (e){ // onError equivalent
-+   customErrorHandle(e)
-+ }
-},
-- { mungError: true }
-)
+  // your code
+})
 ```
+
+After
+```ts
+import responseMiddleware from 'express-response-middleware'
+
+const myMiddleware = responseMiddleware.json((json) => {
+    // your code
+})
+```
+
+#### Remove `onError` override
+
+It is now impossible to override `onError` due to ESM code base, you should try catch your own error
+
+Before
+```ts
+import mung from 'express-mung'
+
+mung.onError = customErrorHandle
+
+const myMiddleware = responseMiddleware.json((json) => {
+  // your code
+})
+```
+
+After
+```ts
+import responseMiddleware from 'express-response-middleware'
+
+const myMiddleware = responseMiddleware.json((json) => {
+  try {
+    // your code
+  } catch (e){ // onError equivalent
+    customErrorHandle(e)
+  }
+})
+```
+
+#### Remove `mungError`
+
+`mungError` is Removed and callback is always called
+
+Before
+```ts
+import mung from 'express-mung'
+
+// Would not run on res.statusCode >= 400, unless mungError is set to true
+const myMiddleware = mung.json((json) => { 
+  // code
+  return json
+})
+```
+
+After
+```ts
+import responseMiddleware from 'express-response-middleware'
+
+// Would always run, you have to do your own filtering
+const myMiddleware = responseMiddleware.json((json) => {
+    if (res.statusCode >= 400) return
+    return json
+})
+```
+
+
 
 #### Remove `content-type` handler
 
