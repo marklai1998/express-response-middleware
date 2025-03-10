@@ -19,29 +19,45 @@ export const jsonMiddleware =
 
       if (res.headersSent) return res
 
-      void (async () => {
-        try {
-          const result = await fn(json, req, res)
-
-          res.end = originalEnd
-
-          if (res.headersSent) return
-
-          originalJsonFn.call(
-            this,
-            result === undefined ? originalJson : result
-          )
-
-          if (res.__isEnd) res.end()
-        } catch (e) {
-          res.end = originalEnd
-          errorHandler(e, req, res, next)
-        }
-      })()
-
-      res.end = function (this: Response) {
-        res.__isEnd = true
+      let mayBePromise
+      try {
+        mayBePromise = fn(json, req, res)
+      } catch (e) {
+        errorHandler(e, req, res, next)
         return res
+      }
+
+      if (mayBePromise instanceof Promise) {
+        void (async () => {
+          try {
+            const result = await mayBePromise
+
+            res.end = originalEnd
+
+            if (res.headersSent) return
+
+            originalJsonFn.call(
+              this,
+              result === undefined ? originalJson : result
+            )
+
+            if (res.__isEnd) res.end()
+          } catch (e) {
+            res.end = originalEnd
+            errorHandler(e, req, res, next)
+          }
+        })()
+
+        res.end = function (this: Response) {
+          res.__isEnd = true
+          return res
+        }
+      } else {
+        const result = mayBePromise
+
+        if (res.headersSent) return res
+
+        originalJsonFn.call(this, result === undefined ? originalJson : result)
       }
 
       return res
