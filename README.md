@@ -10,39 +10,31 @@ This package allows synchronous and asynchronous transformation of an express re
 
     $ npm install express-response-middleware --save
 
-Then in your middleware
-
-    var responseMiddleware = require('express-response-middleware');
-
-    module.exports = responseMiddleware.json(my_transform);
-
 ## Usage
 
 Sample middleware (redact.js) to remove classified information.
 
 ```javascript
 'use strict'
-const responseMiddleware = require('express-response-middleware')
+import { jsonMiddleware } from 'express-response-middleware'
 
 /* Remove any classified information from the response. */
-function redact(body, req, res) {
-  if (body.secret) body.secret = '****'
-  // ...
-  return body
-}
-
-module.exports = responseMiddleware.json(redact)
+export const hideSecretMiddleware = jsonMiddleware((body, req, res) {
+    if (body.secret) body.secret = '****'
+    // ...
+    return body
+})
 ```
 
 then add to your `app.js` file (before the route handling middleware)
 
 ```javascript
-app.use(require('./redact'))
+app.use(hideSecretMiddleware)
 ```
 
 and [_That's all folks!_](https://www.youtube.com/watch?v=gBzJGckMYO4)
 
-See the mocha [tests](https://github.com/marklai1998/express-response-middleware/tree/master/test) for some more examples.
+See the [tests](https://github.com/marklai1998/express-response-middleware/tree/master/src/tests) for some more examples.
 
 ## Reference
 
