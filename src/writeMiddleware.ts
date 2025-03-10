@@ -8,6 +8,8 @@ export type TransformChunk = (
   response: Response
 ) => void | string | Buffer
 
+// TODO: async support
+// TODO: add docs about return type
 export const writeMiddleware =
   (fn: TransformChunk): RequestHandler =>
   (req, res, next) => {
