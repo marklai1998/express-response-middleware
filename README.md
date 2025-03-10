@@ -90,7 +90,7 @@ Asynchronously transform the HTTP headers of the response.
 
 V2 completely rewrote in ESM with modern syntax
 
-- > Node 18
+- Node 18 or above
 
 #### Update Import
 
