@@ -96,22 +96,46 @@ Asynchronously transform the HTTP headers of the response.
 
 ### To V2
 
-TBD
+V2 completely rewrote in ESM, there might be minor behavior difference in edge case
+
+- Update the import
+- Handle your own error, if you used to override `onError`
+- Handle your own ignore case, Remove `mungError` 
+
+```diff
+- import mung from 'express-mung'
++ import responseMiddleware from 'express-response-middleware'
+
+- mung.onError = customErrorHandle
+
+const myMiddleware = responseMiddleware.json((json) => {
++ try {
++   if(res.statusCode >= 400) return // mungError equivalent
++ } catch (e){ // onError equivalent
++   customErrorHandle(e)
++ }
+},
+- { mungError: true }
+)
+```
+
 
 ### To V1
+
+V1 is mostly just fork of `express-mung` with integrated types
 
 - Update the import
 - Rename option `mungError` to `runOnError`
 
 ```diff
--   import mung from 'express-mung'
-+   import responseMiddleware from 'express-response-middleware'
+- import mung from 'express-mung'
++ import responseMiddleware from 'express-response-middleware'
 
 const myMiddleware = responseMiddleware.json(() => {
   // code here
 },
--  { mungError: true }
-+  { runOnError: true }
+- { mungError: true }
++ { runOnError: true }
 )
 ```
 

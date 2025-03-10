@@ -63,23 +63,9 @@ describe('write', () => {
     expect(response.body).toStrictEqual({ a: 'a', inspected_by: 'me' })
   })
 
-  it('should not call callback with an error response (by default)', async () => {
+  it('should call callback an error response', async () => {
     const server = express()
       .use(responseMiddleware.write(appendText))
-      .get('/', (_req, res) => {
-        res.status(404).write('This is the response body')
-        res.end()
-      })
-
-    const response = await request(server).get('/')
-    expect(response.status).toStrictEqual(404)
-    expect(response.text).toStrictEqual('This is the response body')
-    expect(response.body).toStrictEqual({})
-  })
-
-  it('should call callback an error response when told to', async () => {
-    const server = express()
-      .use(responseMiddleware.write(appendText, { runOnError: true }))
       .get('/', (_req, res) => {
         res.status(404).write('This is the response body')
         res.end()

@@ -41,19 +41,9 @@ describe('json', () => {
     )
   })
 
-  it('should not call callback with an error response (by default)', async () => {
+  it('should call callback with an error', async () => {
     const server = express()
       .use(responseMiddleware.json(inspect))
-      .get('/', (_req, res) => res.status(404).json({ a: 'a' }).end())
-    const response = await request(server).get('/')
-
-    expect(response.status).toStrictEqual(404)
-    expect(response.body).not.toHaveProperty('inspected_by')
-  })
-
-  it('should call callback with an error response when told to', async () => {
-    const server = express()
-      .use(responseMiddleware.json(inspect, { runOnError: true }))
       .get('/', (_req, res) => res.status(404).json({ a: 'a' }).end())
     const response = await request(server).get('/')
 

@@ -30,10 +30,6 @@ export type TransformChunk = (
   response: Response
 ) => void | string | Buffer
 
-export type Options = {
-  runOnError?: boolean
-}
-
 const isScalar = (v: unknown) => {
   return typeof v !== 'object' && !Array.isArray(v)
 }
@@ -48,7 +44,7 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
 }
 
 export const json =
-  (fn: Transform, { runOnError }: Options = {}): RequestHandler =>
+  (fn: Transform): RequestHandler =>
   (req, res, next) => {
     const originalJsonFn = res.json
 
@@ -57,9 +53,6 @@ export const json =
       res.json = originalJsonFn
 
       if (res.headersSent) return res
-
-      if (!runOnError && res.statusCode >= 400)
-        return originalJsonFn.call(this, json)
 
       try {
         let result = fn(json, req, res)
@@ -89,7 +82,7 @@ export const json =
   }
 
 export const jsonAsync =
-  (fn: TransformAsync, { runOnError }: Options = {}): RequestHandler =>
+  (fn: TransformAsync): RequestHandler =>
   (req, res, next) => {
     const originalJsonFn = res.json
     const originalEnd = res.end
@@ -99,9 +92,6 @@ export const jsonAsync =
       res.json = originalJsonFn
 
       if (res.headersSent) return res
-
-      if (!runOnError && res.statusCode >= 400)
-        return originalJsonFn.call(this, json)
 
       try {
         fn(json, req, res)
@@ -219,20 +209,12 @@ export const headersAsync =
   }
 
 export const write =
-  (fn: TransformChunk, { runOnError }: Options = {}): RequestHandler =>
+  (fn: TransformChunk): RequestHandler =>
   (req, res, next) => {
     const original = res.write
 
     res.write = function (this: Response, chunk) {
-      // If res.end has already been called, do nothing.
-      if (res.writableEnded) {
-        return false
-      }
-
-      // Do not mung on errors
-      if (!runOnError && res.statusCode >= 400) {
-        return original.apply(res, arguments as any)
-      }
+      if (res.writableEnded) return false
 
       try {
         let modifiedChunk = fn(
