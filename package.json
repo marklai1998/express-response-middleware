@@ -1,13 +1,15 @@
 {
   "name": "express-response-middleware",
   "version": "1.0.0",
-  "description": "Transform an express response (or make until no good)",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "description": "Transform an express response",
+  "main": "dist/cjs/index.cjs",
+  "module": "dist/esm/index.mjs",
+  "types": "dist/esm/index.d.ts",
   "scripts": {
-    "test": "mocha",
-    "lint:format": "prettier --check index.js index.d.ts package.json",
-    "lint:format:fix": "prettier --write index.js index.d.ts package.json"
+    "build": "rollup -c",
+    "test": "vitest run --coverage",
+    "lint:format": "prettier --check src package.json",
+    "lint:format:fix": "prettier --write src package.json"
   },
   "repository": {
     "type": "git",
@@ -26,14 +28,19 @@
   },
   "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
+    "@rollup/plugin-typescript": "12.1.2",
+    "@types/express": "4.17.21",
     "@types/node": "22.9.1",
-    "bluebird": "^3.5.1",
-    "express": "^4.16.3",
-    "mocha": "^5.2.0",
-    "prettier": "3.5.2",
-    "should": "^13.2.3",
-    "supertest": "^3.1.0"
+    "@types/supertest": "6.0.2",
+    "@vitest/coverage-v8": "3.0.7",
+    "express": "4.16.3",
+    "prettier": "3.5.3",
+    "rollup": "4.27.3",
+    "rollup-plugin-dts": "6.1.1",
+    "rollup-plugin-peer-deps-external": "2.2.4",
+    "supertest": "7.0.0",
+    "typescript": "5.8.2",
+    "vitest": "3.0.7"
   },
-  "dependencies": {},
   "packageManager": "pnpm@9.14.2"
 }
