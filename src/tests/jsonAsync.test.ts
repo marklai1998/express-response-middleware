@@ -1,9 +1,8 @@
 import express, { ErrorRequestHandler } from 'express'
-import * as responseMiddleware from '../main'
 import request from 'supertest'
-import { TransformAsync } from '../main'
+import { jsonAsyncMiddleware, TransformAsync } from '../main'
 
-describe('jsonAsync', () => {
+describe('jsonAsyncMiddleware', () => {
   const noop: TransformAsync = (json, _req, _res) => {
     return new Promise(resolve => {
       resolve(json)
@@ -27,7 +26,7 @@ describe('jsonAsync', () => {
 
   it('should return the JSON result', async () => {
     const server = express()
-      .use(responseMiddleware.jsonAsync(inspect))
+      .use(jsonAsyncMiddleware(inspect))
       .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
     const response = await request(server).get('/')
 
@@ -42,7 +41,7 @@ describe('jsonAsync', () => {
 
   it('should call callback with an error', async () => {
     const server = express()
-      .use(responseMiddleware.jsonAsync(inspect))
+      .use(jsonAsyncMiddleware(inspect))
       .get('/', (_req, res) => res.status(404).json({ a: 'a' }).end())
     const response = await request(server).get('/')
 
@@ -57,7 +56,7 @@ describe('jsonAsync', () => {
 
   it('should return a number as application/json', async () => {
     const server = express()
-      .use(responseMiddleware.jsonAsync(noop))
+      .use(jsonAsyncMiddleware(noop))
       .get('/', (_req, res) => res.status(200).json(42).end())
     const response = await request(server).get('/')
 
@@ -76,7 +75,7 @@ describe('jsonAsync', () => {
       return Promise.resolve(json)
     }
     const server = express()
-      .use(responseMiddleware.jsonAsync(error))
+      .use(jsonAsyncMiddleware(error))
       .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
     const response = await request(server).get('/')
 
@@ -94,7 +93,7 @@ describe('jsonAsync', () => {
       res.status(501).send(err.message).end()
     const server = express()
       .use(errorHandler)
-      .use(responseMiddleware.jsonAsync(error))
+      .use(jsonAsyncMiddleware(error))
       .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
     const response = await request(server).get('/')
 

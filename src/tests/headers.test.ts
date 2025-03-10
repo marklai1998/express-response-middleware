@@ -1,13 +1,13 @@
 import express from 'express'
-import * as responseMiddleware from '../main'
 import request from 'supertest'
 import { expect } from 'vitest'
+import { headersAsyncMiddleware, headersMiddleware } from '../main'
 
 describe('headers', () => {
   it('should return the headers', async () => {
     const server = express()
       .use(
-        responseMiddleware.headers((_req, res) => {
+        headersMiddleware((_req, res) => {
           res.set('x-inspected-by', 'me')
         })
       )
@@ -26,7 +26,7 @@ describe('headers', () => {
   it('should work with promises', async () => {
     const server = express()
       .use(
-        responseMiddleware.headersAsync((_req, res) => {
+        headersAsyncMiddleware((_req, res) => {
           return Promise.resolve(true).then(() => {
             res.set('x-inspected-by', 'me')
           })
@@ -47,7 +47,7 @@ describe('headers', () => {
   it('should 500 on a synchronous exception', async () => {
     const server = express()
       .use(
-        responseMiddleware.headers((req, _res) => {
+        headersMiddleware((req, _res) => {
           ;(req as any).hopefully_fails()
         })
       )
@@ -60,7 +60,7 @@ describe('headers', () => {
   it('should 500 on an asynchronous exception', async () => {
     const server = express()
       .use(
-        responseMiddleware.headersAsync((req, _res) => {
+        headersAsyncMiddleware((req, _res) => {
           return Promise.resolve(true).then(() => {
             ;(req as any).hopefully_fails()
           })

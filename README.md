@@ -98,18 +98,16 @@ Before
 ```ts
 import mung from 'express-mung'
 
-mung.onError = customErrorHandle
-
-const myMiddleware = responseMiddleware.json((json) => {
+const myMiddleware = mung.json((json) => {
   // your code
 })
 ```
 
 After
 ```ts
-import responseMiddleware from 'express-response-middleware'
+import { jsonMiddleware } from 'express-response-middleware'
 
-const myMiddleware = responseMiddleware.json((json) => {
+const myMiddleware = jsonMiddleware((json) => {
     // your code
 })
 ```

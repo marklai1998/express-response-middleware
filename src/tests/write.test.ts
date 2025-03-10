@@ -1,7 +1,6 @@
 import express, { ErrorRequestHandler } from 'express'
-import * as responseMiddleware from '../main'
 import request from 'supertest'
-import { TransformChunk } from '../main'
+import { TransformChunk, writeMiddleware } from '../main'
 import { expect } from 'vitest'
 
 describe('write', () => {
@@ -30,7 +29,7 @@ describe('write', () => {
 
   it('should return the text result', async () => {
     const server = express()
-      .use(responseMiddleware.write(appendText))
+      .use(writeMiddleware(appendText))
       .get('/', (_req, res) => {
         res.status(200).write('This is the response body')
         res.end()
@@ -45,7 +44,7 @@ describe('write', () => {
 
   it('should return a `body` when the content type is application/json', async () => {
     const server = express()
-      .use(responseMiddleware.write(inspectJson))
+      .use(writeMiddleware(inspectJson))
       .get('/', (_req, res) => {
         res
           .set('Content-Type', 'application/json')
@@ -65,7 +64,7 @@ describe('write', () => {
 
   it('should call callback an error response', async () => {
     const server = express()
-      .use(responseMiddleware.write(appendText))
+      .use(writeMiddleware(appendText))
       .get('/', (_req, res) => {
         res.status(404).write('This is the response body')
         res.end()
@@ -80,7 +79,7 @@ describe('write', () => {
 
   it('should abort if a response is sent', async () => {
     const server = express()
-      .use(responseMiddleware.write(error403))
+      .use(writeMiddleware(error403))
       .get('/', (_req, res) => {
         res
           .set('Content-Type', 'application/json')
@@ -98,7 +97,7 @@ describe('write', () => {
       res.status(500).send(err.message).end()
     const server = express()
       .use(errorHandler)
-      .use(responseMiddleware.write(error))
+      .use(writeMiddleware(error))
       .get('/', (_req, res) => {
         res
           .set('Content-Type', 'application/json')
@@ -116,7 +115,7 @@ describe('write', () => {
       res.status(500).send(err.message).end()
     const server = express()
       .use(errorHandler)
-      .use(responseMiddleware.write(error))
+      .use(writeMiddleware(error))
       .get('/', (_req, res) => {
         process.nextTick(() => {
           res

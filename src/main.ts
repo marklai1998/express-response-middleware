@@ -39,7 +39,7 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   return res
 }
 
-export const json =
+export const jsonMiddleware =
   (fn: Transform): RequestHandler =>
   (req, res, next) => {
     const originalJsonFn = res.json
@@ -68,7 +68,7 @@ export const json =
     next()
   }
 
-export const jsonAsync =
+export const jsonAsyncMiddleware =
   (fn: TransformAsync): RequestHandler =>
   (req, res, next) => {
     const originalJsonFn = res.json
@@ -117,7 +117,7 @@ export const jsonAsync =
     next()
   }
 
-export const headers =
+export const headersMiddleware =
   (fn: TransformHeader): RequestHandler =>
   (req, res, next) => {
     const original = res.end
@@ -144,7 +144,7 @@ export const headers =
     next()
   }
 
-export const headersAsync =
+export const headersAsyncMiddleware =
   (fn: TransformHeaderAsync): RequestHandler =>
   (req, res, next) => {
     const originalEnd = res.end
@@ -182,7 +182,7 @@ export const headersAsync =
     next()
   }
 
-export const write =
+export const writeMiddleware =
   (fn: TransformChunk): RequestHandler =>
   (req, res, next) => {
     const original = res.write

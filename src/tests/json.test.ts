@@ -1,9 +1,8 @@
 import express, { ErrorRequestHandler } from 'express'
-import * as responseMiddleware from '../main'
 import request from 'supertest'
-import { Transform } from '../main'
+import { jsonMiddleware, Transform } from '../main'
 
-describe('json', () => {
+describe('jsonMiddleware', () => {
   const noop: Transform = (_json, _req, _res) => {}
 
   const inspect: Transform = (json, _req, _res) => {
@@ -16,7 +15,7 @@ describe('json', () => {
 
   it('should return the JSON result', async () => {
     const server = express()
-      .use(responseMiddleware.json(inspect))
+      .use(jsonMiddleware(inspect))
       .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
     const response = await request(server).get('/')
 
@@ -31,7 +30,7 @@ describe('json', () => {
 
   it('should call callback with an error', async () => {
     const server = express()
-      .use(responseMiddleware.json(inspect))
+      .use(jsonMiddleware(inspect))
       .get('/', (_req, res) => res.status(404).json({ a: 'a' }).end())
     const response = await request(server).get('/')
 
@@ -46,7 +45,7 @@ describe('json', () => {
 
   it('should return the JSON result from a res.send', async () => {
     const server = express()
-      .use(responseMiddleware.json(inspect))
+      .use(jsonMiddleware(inspect))
       .get('/', (_req, res) => res.status(200).send({ a: 'a' }).end())
     const response = await request(server).get('/')
 
@@ -61,7 +60,7 @@ describe('json', () => {
 
   it('should return a as application/json', async () => {
     const server = express()
-      .use(responseMiddleware.json(noop))
+      .use(jsonMiddleware(noop))
       .get('/', (_req, res) => res.status(200).json(42).end())
     const response = await request(server).get('/')
 
@@ -77,7 +76,7 @@ describe('json', () => {
   it('should abort if a response is sent', async () => {
     const server = express()
       .use(
-        responseMiddleware.json((_json, _req, res) => {
+        jsonMiddleware((_json, _req, res) => {
           res.status(403).send('no permissions')
         })
       )
@@ -98,7 +97,7 @@ describe('json', () => {
       res.status(500).send(err.message).end()
     const server = express()
       .use(errorHandler)
-      .use(responseMiddleware.json(error))
+      .use(jsonMiddleware(error))
       .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
 
     const response = await request(server).get('/')
@@ -111,7 +110,7 @@ describe('json', () => {
       res.status(500).send(err.message).end()
     const server = express()
       .use(errorHandler)
-      .use(responseMiddleware.json(error))
+      .use(jsonMiddleware(error))
       .get('/', (_req, res) => {
         process.nextTick(() => {
           res.status(200).json({ a: 'a' }).end()
