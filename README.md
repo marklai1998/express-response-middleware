@@ -1,5 +1,7 @@
 # express-response-middleware
 
+[V1 Readme](docs/V1_README.md)
+
 Middleware for express responses.
 
 This package allows synchronous and asynchronous transformation of an express response. This is a similar concept to the express middleware for a request but for a response. Note that the middleware is executed in LIFO order. It is implemented by monkey patching (hooking) the `res.end`, `res.json`, or `res.write` methods.
