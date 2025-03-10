@@ -25,18 +25,6 @@ describe('jsonAsync', () => {
     }).then(() => null)
   }
 
-  const reduce: TransformAsync = (json, _req, _res) => {
-    return new Promise(resolve => {
-      resolve(json)
-    }).then((json: any) => json.a)
-  }
-
-  const life: TransformAsync = (json, _req, _res) => {
-    return new Promise(resolve => {
-      resolve(json)
-    }).then(() => 42)
-  }
-
   const error: TransformAsync = (json, _req, _res) => {
     return new Promise(resolve => {
       resolve(json)
@@ -80,35 +68,6 @@ describe('jsonAsync', () => {
     const response = await request(server).get('/')
 
     expect(response.status).toStrictEqual(204)
-  })
-
-  it('should return a scalar result as text/plain', async () => {
-    const server = express()
-      .use(responseMiddleware.jsonAsync(reduce))
-      .get('/', (_req, res) => res.status(200).json({ a: 'alpha' }).end())
-
-    const response = await request(server).get('/')
-
-    expect(response.status).toStrictEqual(200)
-    expect(response.text).toStrictEqual('alpha')
-    expect(response.headers).toStrictEqual(
-      expect.objectContaining({ 'content-type': 'text/plain; charset=utf-8' })
-    )
-  })
-
-  it('should return a number as text/plain', async () => {
-    const server = express()
-      .use(responseMiddleware.jsonAsync(life))
-      .get('/', (_req, res) =>
-        res.status(200).json('the meaning of life').end()
-      )
-    const response = await request(server).get('/')
-
-    expect(response.status).toStrictEqual(200)
-    expect(response.text).toStrictEqual('42')
-    expect(response.headers).toStrictEqual(
-      expect.objectContaining({ 'content-type': 'text/plain; charset=utf-8' })
-    )
   })
 
   it('should return a number as application/json', async () => {

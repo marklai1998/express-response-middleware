@@ -30,10 +30,6 @@ export type TransformChunk = (
   response: Response
 ) => void | string | Buffer
 
-const isScalar = (v: unknown) => {
-  return typeof v !== 'object' && !Array.isArray(v)
-}
-
 const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   res
     .status(500)
@@ -64,12 +60,6 @@ export const json =
 
         // If null, then 204 No Content
         if (result === null) return res.status(204).end()
-
-        // If munged scalar value, then text/plain
-        if (originalJson !== result && isScalar(result)) {
-          res.set('content-type', 'text/plain')
-          return res.send(String(result))
-        }
 
         return originalJsonFn.call(this, result)
       } catch (e) {
@@ -106,13 +96,6 @@ export const jsonAsync =
             // If null, then 204 No Content
             if (result === null) {
               res.status(204).end()
-              return
-            }
-
-            // If munged scalar value, then text/plain
-            if (result !== originalJson && isScalar(result)) {
-              res.set('content-type', 'text/plain')
-              res.send(String(result))
               return
             }
 

@@ -96,7 +96,7 @@ V2 completely rewrote in ESM, there might be minor behavior difference in edge c
 
 - Update the import
 - Handle your own error, if you used to override `onError`
-- Handle your own ignore case, Remove `mungError` 
+- Handle your own ignore case, Remove `mungError`
 
 ```diff
 - import mung from 'express-mung'
@@ -113,6 +113,37 @@ const myMiddleware = responseMiddleware.json((json) => {
 },
 - { mungError: true }
 )
+```
+
+#### Remove `content-type` handler
+
+Remove auto `content-type`, you should set correct content type when returning different data
+
+> Note. Express allow sending plain text with `.json` and content type will still be json, this change is to stick to vanilla behavior  
+
+Before
+```ts
+import mung from 'express-mung'
+
+const myMiddleware = mung.json((json) => {
+  const hasPermission = false
+  if (!hasPermission) return "Forbidden" // `content-type` will automatically set to `text/plain`
+  return json
+})
+```
+
+After
+```ts
+import responseMiddleware from 'express-response-middleware'
+
+const myMiddleware = responseMiddleware.json((json) => {
+    const hasPermission = false
+    if (!hasPermission) {
+        res.send("Forbidden")
+        return
+    }
+    return json
+})
 ```
 
 
