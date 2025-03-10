@@ -23,8 +23,6 @@ export const headersMiddleware =
           if (res.headersSent) return
 
           originalEnd.apply(this, arguments as any)
-
-          if (res.__isEnd) res.end()
         } catch (e) {
           res.end = originalEnd
           errorHandler(e, req, res, next)
@@ -32,7 +30,6 @@ export const headersMiddleware =
       })()
 
       res.end = function (this: Response) {
-        res.__isEnd = true
         return res
       }
 
