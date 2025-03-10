@@ -260,7 +260,8 @@ export const write =
           modifiedChunk = chunk
         }
 
-        return original.call(res, modifiedChunk, encoding, callback)
+        arguments[0] = modifiedChunk
+        return original.apply(res, arguments as any)
       } catch (err) {
         errorHandler(err, req, res, next)
         return res
