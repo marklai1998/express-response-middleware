@@ -44,43 +44,43 @@ See the mocha [tests](https://github.com/marklai1998/express-response-middleware
 
 ## Reference
 
-### responseMiddleware.json(fn)
+### jsonMiddleware(fn)
 
 Transform the JSON body of the response.
 
 `fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns the modified body. If `undefined` is returned (i.e. nothing) then the original JSON is assumed to be modified. If `null` is returned, then a 204 No Content HTTP status is returned to client.
 
-### responseMiddleware.jsonAsync(fn)
+### jsonAsyncMiddleware(fn)
 
 Asynchronously transform the JSON body of the response.
 
 `fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns a promise to a modified body. The promise returns an `object.` If it is `null` then a 204 No Content is sent to the client.
 
-### responseMiddleware.headers(fn)
+### headersMiddleware(fn)
 
 Transform the HTTP headers of the response.
 
 `fn(req, res)` receives the `req` and `res`. It should modify the header(s) and then return.
 
-### responseMiddleware.headersAsync(fn)
+### headersAsyncMiddleware(fn)
 
 Asynchronously transform the HTTP headers of the response.
 
 `fn(req, res)` receives the `req` and `res`. It returns a `promise` to modify the header(s).
 
-### responseMiddleware.write(fn)
+### writeMiddleware(fn)
 
 `fn(chunk, encoding, req, res)` receives the string or buffer as `chunk`, its `encoding` if applicable (`null` otherwise), `req` and `res`. It returns the modified body. If `undefined` is returned (i.e. nothing) then the original unmodified chunk is used.
 
 ### Notes
 
-- when `responseMiddleware.json*` detects that a response has been sent, it will abort.
+- when `jsonMiddleware*` detects that a response has been sent, it will abort.
 
-- sending a response while in `responseMiddleware.headers*` is **undefined behaviour** and will most likely result in an error.
+- sending a response while in `headersMiddleware*` is **undefined behaviour** and will most likely result in an error.
 
-- when `responseMiddleware.write` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
+- when `writeMiddleware` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
 
-- calling `res.json` or `res.send` from `responseMiddleware.write` can lead to unexpected behavior since they end the response internally.
+- calling `res.json` or `res.send` from `writeMiddleware` can lead to unexpected behavior since they end the response internally.
 
 ## Exception handling
 
