@@ -94,15 +94,20 @@ Asynchronously transform the HTTP headers of the response.
 
 ## Migrate from `express-mung`
 
+### To V2
+
+TBD
+
+### To V1
+
 - Update the import
 - Rename option `mungError` to `runOnError`
-- Add try catch to your function body if used to override mung.onError()
 
-```
+```diff
 -   import mung from 'express-mung'
-+   import mung from 'express-mung'
++   import responseMiddleware from 'express-response-middleware'
 
-const myMiddleware = mung.json(() => {
+const myMiddleware = responseMiddleware.json(() => {
   // code here
 },
 -  { mungError: true }
