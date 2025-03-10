@@ -1,8 +1,8 @@
 import { Request, RequestHandler, Response } from 'express'
 import { errorHandler } from './utils/errorHandler'
 
-export type TransformJson = (
-  body: {},
+export type TransformJson<T = {}> = (
+  body: T,
   request: Request,
   response: Response
 ) => unknown | Promise<unknown>

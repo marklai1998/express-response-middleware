@@ -6,12 +6,12 @@ import { sleep } from './testHelpers/sleep'
 describe('jsonMiddleware', () => {
   const noop: TransformJson = () => {}
 
-  const inspect: TransformJson = json => {
-    ;(json as any).inspected_by = 'me'
+  const inspect: TransformJson<any> = json => {
+    json.inspected_by = 'me'
   }
 
-  const error: TransformJson = json => {
-    ;(json as any).foo.bar.hopefully.fails()
+  const error: TransformJson<any> = json => {
+    json.foo.bar.hopefully.fails()
   }
 
   const noopAsync: TransformJson = async json => {
@@ -25,9 +25,9 @@ describe('jsonMiddleware', () => {
     return json
   }
 
-  const errorAsync: TransformJson = async json => {
+  const errorAsync: TransformJson<any> = async json => {
     await sleep()
-    ;(json as any).foo.bar.hopefully.fails()
+    json.foo.bar.hopefully.fails()
     return json
   }
 
