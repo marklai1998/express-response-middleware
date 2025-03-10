@@ -6,7 +6,7 @@ export type TransformHeaders = (
   response: Response
 ) => unknown | Promise<unknown>
 
-export const headersMiddleware =
+export const endMiddleware =
   (fn: TransformHeaders): RequestHandler =>
   (req, res, next) => {
     const originalEnd = res.end

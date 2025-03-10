@@ -1,5 +1,5 @@
 export * from './jsonMiddleware'
-export * from './headersMiddleware'
+export * from './endMiddleware'
 export * from './writeMiddleware'
 
 declare global {

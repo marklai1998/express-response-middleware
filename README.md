@@ -47,7 +47,7 @@ Transform the JSON body of the response.
 
 `fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns a `promise` to a modified body or the modified body directly. If `undefined` is returned (i.e. nothing) then the original JSON is assumed to be modified.
 
-### headersMiddleware(fn)
+### endMiddleware(fn)
 
 Transform the HTTP headers of the response.
 
@@ -63,7 +63,7 @@ Transform the HTTP headers of the response.
 
 - when `jsonMiddleware*` detects that a response has been sent, it will abort.
 
-- sending a response while in `headersMiddleware*` is **undefined behaviour** and will most likely result in an error.
+- sending a response while in `endMiddleware*` is **undefined behaviour** and will most likely result in an error.
 
 - when `writeMiddleware` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
 
@@ -87,8 +87,8 @@ V2 completely rewrote in ESM with modern syntax
 
 - `mung.json` => `jsonMiddleware`
 - `mung.jsonAsync` => `jsonMiddleware`
-- `mung.headers` => `headersMiddleware`
-- `mung.headersAsync` => `headersMiddleware`
+- `mung.headers` => `endMiddleware`
+- `mung.headersAsync` => `endMiddleware`
 
 Before
 ```ts

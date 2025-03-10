@@ -1,7 +1,7 @@
 import express from 'express'
 import request from 'supertest'
 import { expect } from 'vitest'
-import { headersMiddleware, TransformHeader } from '../main'
+import { endMiddleware, TransformHeader } from '../main'
 
 describe('headers', () => {
   const header: TransformHeader = (_req, res) => {
@@ -26,7 +26,7 @@ describe('headers', () => {
 
   it.each([header, headerAsync])('should return the headers', async handler => {
     const server = express()
-      .use(headersMiddleware(handler))
+      .use(endMiddleware(handler))
       .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
     const response = await request(server).get('/')
 
@@ -43,7 +43,7 @@ describe('headers', () => {
     'should 500 on a synchronous exception',
     async handler => {
       const server = express()
-        .use(headersMiddleware(handler))
+        .use(endMiddleware(handler))
         .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
       const response = await request(server).get('/')
 
