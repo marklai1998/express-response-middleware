@@ -55,10 +55,10 @@ export const json =
 
         if (res.headersSent) return res
 
-        // If no returned value from fn, then assume json has been mucked with.
-        if (result === undefined) result = originalJson
-
-        return originalJsonFn.call(this, result)
+        return originalJsonFn.call(
+          this,
+          result === undefined ? originalJson : result
+        )
       } catch (e) {
         errorHandler(e, req, res, next)
         return res
@@ -87,10 +87,10 @@ export const jsonAsync =
 
             if (res.headersSent) return
 
-            // If no returned value from fn, then assume json has been mucked with.
-            if (result === undefined) result = originalJson
-
-            originalJsonFn.call(this, result)
+            originalJsonFn.call(
+              this,
+              result === undefined ? originalJson : result
+            )
 
             if (res.__isEnd) res.end()
 
