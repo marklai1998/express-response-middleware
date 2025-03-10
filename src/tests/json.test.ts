@@ -1,44 +1,42 @@
 import express, { ErrorRequestHandler } from 'express'
 import request from 'supertest'
-import { jsonMiddleware, Transform } from '../main'
+import { jsonMiddleware, TransformJson } from '../main'
+import { sleep } from './testHelpers/sleep'
 
 describe('jsonMiddleware', () => {
-  const noop: Transform = (_json, _req, _res) => {}
+  const noop: TransformJson = () => {}
 
-  const inspect: Transform = (json, _req, _res) => {
+  const inspect: TransformJson = json => {
     ;(json as any).inspected_by = 'me'
   }
 
-  const error: Transform = (json, _req, _res) => {
+  const error: TransformJson = json => {
     ;(json as any).foo.bar.hopefully.fails()
   }
 
-  const noopAsync: Transform = (json, _req, _res) => {
-    return new Promise(resolve => {
-      resolve(json)
-    })
+  const noopAsync: TransformJson = async json => {
+    await sleep()
+    return json
   }
 
-  const inspectAsync: Transform = (json, _req, _res) => {
-    return new Promise(resolve => {
-      resolve(json)
-    }).then((json: any) => {
-      json.inspected_by = 'me'
-      return json
-    })
+  const inspectAsync: TransformJson = async json => {
+    await sleep()
+    ;(json as any).inspected_by = 'me'
+    return json
   }
 
-  const errorAsync: Transform = (json, _req, _res) => {
-    return new Promise(resolve => {
-      resolve(json)
-    }).then((json: any) => json.foo.bar.hopefully.fails())
+  const errorAsync: TransformJson = async json => {
+    await sleep()
+    ;(json as any).foo.bar.hopefully.fails()
+    return json
   }
 
-  const noPermission: Transform = (_json, _req, res) => {
+  const noPermission: TransformJson = (_json, _req, res) => {
     res.status(403).send('no permissions')
   }
 
-  const noPermissionAsync: Transform = (json, _req, res) => {
+  const noPermissionAsync: TransformJson = async (json, _req, res) => {
+    // TODO: fix async before send
     res.status(403).send('no permissions')
     return Promise.resolve(json)
   }

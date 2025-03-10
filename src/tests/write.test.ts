@@ -4,11 +4,11 @@ import { TransformChunk, writeMiddleware } from '../main'
 import { expect } from 'vitest'
 
 describe('write', () => {
-  const appendText: TransformChunk = (chunk, _encoding, _req, _res) => {
+  const appendText: TransformChunk = chunk => {
     return chunk + ' with more content'
   }
 
-  const inspectJson: TransformChunk = (chunk, _encoding, _req, _res) => {
+  const inspectJson: TransformChunk = chunk => {
     try {
       const json = JSON.parse(String(chunk))
       json.inspected_by = 'me'
@@ -19,7 +19,7 @@ describe('write', () => {
     }
   }
 
-  const error: TransformChunk = (chunk, _encoding, _req, _res) => {
+  const error: TransformChunk = chunk => {
     ;(chunk as any).foo.bar.hopefully.fails()
   }
 

@@ -1,27 +1,28 @@
 import express from 'express'
 import request from 'supertest'
 import { expect } from 'vitest'
-import { endMiddleware, TransformHeader } from '../main'
+import { endMiddleware, TransformHeaders } from '../main'
+import { sleep } from './testHelpers/sleep'
 
 describe('headers', () => {
-  const header: TransformHeader = (_req, res) => {
+  const header: TransformHeaders = (_req, res) => {
     res.set('x-inspected-by', 'me')
   }
 
-  const headerAsync: TransformHeader = (_req, res) => {
-    return Promise.resolve(true).then(() => {
-      res.set('x-inspected-by', 'me')
-    })
+  const headerAsync: TransformHeaders = async (_req, res) => {
+    await sleep()
+    res.set('x-inspected-by', 'me')
+    return
   }
 
-  const error: TransformHeader = (req, _res) => {
+  const error: TransformHeaders = req => {
     ;(req as any).hopefully_fails()
   }
 
-  const errorAsync: TransformHeader = (req, _res) => {
-    return Promise.resolve(true).then(() => {
-      ;(req as any).hopefully_fails()
-    })
+  const errorAsync: TransformHeaders = async req => {
+    await sleep()
+    ;(req as any).hopefully_fails()
+    return
   }
 
   it.each([header, headerAsync])('should return the headers', async handler => {
