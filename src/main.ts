@@ -13,11 +13,10 @@ export type Transform = (
   request: Request,
   response: Response
 ) => unknown | Promise<unknown>
-export type TransformHeader = (request: Request, response: Response) => unknown
-export type TransformHeaderAsync = (
+export type TransformHeader = (
   request: Request,
   response: Response
-) => Promise<unknown>
+) => unknown | Promise<unknown>
 export type TransformChunk = (
   chunk: string | Buffer,
   encoding: string | null,
@@ -82,56 +81,25 @@ export const jsonMiddleware =
 export const headersMiddleware =
   (fn: TransformHeader): RequestHandler =>
   (req, res, next) => {
-    const original = res.end
-
-    res.end = function (this: Response) {
-      res.end = original
-      if (!res.headersSent) {
-        try {
-          fn(req, res)
-        } catch (e) {
-          errorHandler(e, req, res, next)
-          return res
-        }
-        if (res.headersSent) {
-          console.error(
-            'sending response while in headers is undefined behaviour'
-          )
-          return res
-        }
-      }
-      return original.apply(this, arguments as any)
-    }
-
-    next()
-  }
-
-export const headersAsyncMiddleware =
-  (fn: TransformHeaderAsync): RequestHandler =>
-  (req, res, next) => {
     const originalEnd = res.end
 
     res.end = function (this: Response) {
       if (res.headersSent) return originalEnd.apply(this, arguments as any)
 
-      try {
-        fn(req, res)
-          .then(() => {
-            res.end = originalEnd
+      void (async () => {
+        try {
+          await fn(req, res)
 
-            if (res.headersSent) return
+          res.end = originalEnd
 
-            originalEnd.apply(this, arguments as any)
-          })
-          .catch(e => {
-            res.end = originalEnd
-            return errorHandler(e, req, res, next)
-          })
-      } catch (e) {
-        res.end = originalEnd
-        errorHandler(e, req, res, next)
-        return res
-      }
+          if (res.headersSent) return
+
+          originalEnd.apply(this, arguments as any)
+        } catch (e) {
+          res.end = originalEnd
+          errorHandler(e, req, res, next)
+        }
+      })()
 
       res.end = function (this: Response) {
         res.__isEnd = true

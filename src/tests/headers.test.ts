@@ -1,7 +1,7 @@
 import express from 'express'
 import request from 'supertest'
 import { expect } from 'vitest'
-import { headersAsyncMiddleware, headersMiddleware } from '../main'
+import { headersMiddleware } from '../main'
 
 describe('headers', () => {
   it('should return the headers', async () => {
@@ -26,7 +26,7 @@ describe('headers', () => {
   it('should work with promises', async () => {
     const server = express()
       .use(
-        headersAsyncMiddleware((_req, res) => {
+        headersMiddleware((_req, res) => {
           return Promise.resolve(true).then(() => {
             res.set('x-inspected-by', 'me')
           })
@@ -60,7 +60,7 @@ describe('headers', () => {
   it('should 500 on an asynchronous exception', async () => {
     const server = express()
       .use(
-        headersAsyncMiddleware((req, _res) => {
+        headersMiddleware((req, _res) => {
           return Promise.resolve(true).then(() => {
             ;(req as any).hopefully_fails()
           })

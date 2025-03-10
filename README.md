@@ -50,19 +50,13 @@ See the mocha [tests](https://github.com/marklai1998/express-response-middleware
 
 Transform the JSON body of the response.
 
-`fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns a promise to a modified body or the modified body directly. If `undefined` is returned (i.e. nothing) then the original JSON is assumed to be modified.
+`fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns a `promise` to a modified body or the modified body directly. If `undefined` is returned (i.e. nothing) then the original JSON is assumed to be modified.
 
 ### headersMiddleware(fn)
 
 Transform the HTTP headers of the response.
 
-`fn(req, res)` receives the `req` and `res`. It should modify the header(s) and then return.
-
-### headersAsyncMiddleware(fn)
-
-Asynchronously transform the HTTP headers of the response.
-
-`fn(req, res)` receives the `req` and `res`. It returns a `promise` to modify the header(s).
+`fn(req, res)` receives the `req` and `res`. It returns a `promise` to modify the header(s) or should modify the header(s) and then return.
 
 ### writeMiddleware(fn)
 
@@ -96,6 +90,8 @@ V2 completely rewrote in ESM with modern syntax
 
 - `mung.json` => `jsonMiddleware`
 - `mung.jsonAsync` => `jsonMiddleware`
+- `mung.headers` => `headersMiddleware`
+- `mung.headersAsync` => `headersMiddleware`
 
 Before
 ```ts
