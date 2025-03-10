@@ -1,7 +1,7 @@
 {
   "name": "express-response-middleware",
   "version": "1.0.0",
-  "description": "Transform an express response (or make until no good)",
+  "description": "Transform an express response",
   "main": "dist/cjs/index.cjs",
   "module": "dist/esm/index.mjs",
   "types": "dist/esm/index.d.ts",
