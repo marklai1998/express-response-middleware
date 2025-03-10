@@ -62,6 +62,8 @@ Transform the HTTP headers of the response.
 
 `fn(chunk, encoding, req, res)` receives the string or buffer as `chunk`, its `encoding` if applicable (`null` otherwise), `req` and `res`. It returns the modified body. If `undefined` is returned (i.e. nothing) then the original unmodified chunk is used.
 
+> Note. It does not support promise callback
+
 ### Notes
 
 - when `jsonMiddleware*` detects that a response has been sent, it will abort.
