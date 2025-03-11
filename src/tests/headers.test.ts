@@ -5,6 +5,7 @@ import { endMiddleware, TransformHeaders } from '../main'
 import { sleep } from './testHelpers/sleep'
 
 describe('headers', () => {
+  // TODO: try send
   const header: TransformHeaders = (_req, res) => {
     res.set('x-inspected-by', 'me')
   }
