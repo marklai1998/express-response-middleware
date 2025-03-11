@@ -12,6 +12,8 @@ describe('headers', () => {
   const headerAsync: TransformHeaders = async (_req, res) => {
     await sleep()
     res.set('x-inspected-by', 'me')
+    await sleep()
+
     return
   }
 
@@ -22,6 +24,8 @@ describe('headers', () => {
   const errorAsync: TransformHeaders = async req => {
     await sleep()
     ;(req as any).hopefully_fails()
+    await sleep()
+
     return
   }
 

@@ -22,12 +22,16 @@ describe('jsonMiddleware', () => {
   const inspectAsync: TransformJson = async json => {
     await sleep()
     ;(json as any).inspected_by = 'me'
+    await sleep()
+
     return json
   }
 
   const errorAsync: TransformJson<any> = async json => {
     await sleep()
     json.foo.bar.hopefully.fails()
+    await sleep()
+
     return json
   }
 
@@ -36,8 +40,10 @@ describe('jsonMiddleware', () => {
   }
 
   const noPermissionAsync: TransformJson = async (json, _req, res) => {
-    // TODO: fix async before send
+    await sleep()
     res.status(403).send('no permissions')
+    await sleep()
+
     return Promise.resolve(json)
   }
 

@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
-    "@rollup/plugin-typescript": "12.1.2",
+    "@rollup/plugin-typescript": "12.1.1",
     "@types/express": "4.17.21",
     "@types/node": "22.9.1",
     "@types/supertest": "6.0.2",

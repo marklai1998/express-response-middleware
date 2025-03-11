@@ -11,7 +11,6 @@ export const jsonMiddleware =
   (fn: TransformJson): RequestHandler =>
   (req, res, next) => {
     const originalJsonFn = res.json
-    const originalEnd = res.end
 
     res.json = function (this: Response, json) {
       const originalJson = json
@@ -32,26 +31,33 @@ export const jsonMiddleware =
           try {
             const result = await mayBePromise
 
-            res.end = originalEnd
-
             if (res.headersSent) return
 
             originalJsonFn.call(
               this,
               result === undefined ? originalJson : result
             )
-
-            if (res.__isEnd) res.end()
           } catch (e) {
-            res.end = originalEnd
             errorHandler(e, req, res, next)
           }
         })()
 
-        res.end = function (this: Response) {
-          res.__isEnd = true
-          return res
-        }
+        return new Proxy(res, {
+          get(target: any, prop) {
+            if (prop === 'end') {
+              return function (this: Response) {
+                return origMethod.apply(this, arguments as any)
+              }
+            }
+            const origMethod = target[prop]
+            if (typeof origMethod == 'function') {
+              return function (this: Response, ...args: unknown[]) {
+                return origMethod.apply(this, args)
+              }
+            }
+            return origMethod
+          },
+        })
       } else {
         const result = mayBePromise
 
