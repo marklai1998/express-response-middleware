@@ -46,9 +46,10 @@ export const jsonMiddleware =
           get(target: any, prop) {
             if (prop === 'end') {
               return function (this: Response) {
-                return origMethod.apply(this, arguments as any)
+                return this
               }
             }
+
             const origMethod = target[prop]
             if (typeof origMethod == 'function') {
               return function (this: Response, ...args: unknown[]) {
