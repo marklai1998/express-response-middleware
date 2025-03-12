@@ -37,6 +37,8 @@ export const jsonMiddleware =
               this,
               result === undefined ? originalJson : result
             )
+
+            if (res.__isEnd) res.end()
           } catch (e) {
             errorHandler(e, req, res, next)
           }
@@ -46,6 +48,7 @@ export const jsonMiddleware =
           get(target: any, prop) {
             if (prop === 'end') {
               return function (this: Response) {
+                this.__isEnd = true
                 return this
               }
             }
