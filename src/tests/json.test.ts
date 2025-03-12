@@ -3,6 +3,7 @@ import request from 'supertest'
 import { jsonMiddleware, TransformJson } from '../main'
 import { sleep } from './testHelpers/sleep'
 
+// TODO: multi middleware test
 describe('jsonMiddleware', () => {
   const noop: TransformJson = () => {}
 
