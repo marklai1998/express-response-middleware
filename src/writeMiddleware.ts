@@ -16,8 +16,6 @@ export const writeMiddleware =
     const original = res.write
 
     res.write = function (this: Response, chunk) {
-      if (res.writableEnded) return false
-
       try {
         const modifiedChunk = fn(
           chunk,

@@ -12,8 +12,6 @@ export const endMiddleware =
     const originalEnd = res.end
 
     res.end = function (this: Response) {
-      if (res.headersSent) return originalEnd.apply(this, arguments as any)
-
       let mayBePromise
       try {
         mayBePromise = fn(req, res)

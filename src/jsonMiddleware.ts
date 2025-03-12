@@ -16,8 +16,6 @@ export const jsonMiddleware =
       const originalJson = json
       res.json = originalJsonFn
 
-      if (res.headersSent) return res
-
       let mayBePromise
       try {
         mayBePromise = fn(json, req, res)
