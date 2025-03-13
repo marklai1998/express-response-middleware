@@ -11,7 +11,7 @@ import {
 } from '../main'
 import { sleep } from './testHelpers/sleep'
 
-describe.skip('mix and match', () => {
+describe('mix and match', () => {
   const header: TransformEnd = (_req, res) => {
     res.set('x-inspected-by', 'me')
   }
@@ -46,7 +46,7 @@ describe.skip('mix and match', () => {
     return chunk + ' with more content'
   }
 
-  it.skip.each([
+  it.each([
     [inspect, header],
     [inspectAsync, header],
     [inspect, headerAsync],
@@ -69,7 +69,7 @@ describe.skip('mix and match', () => {
     )
   })
 
-  it.skip.each([
+  it.each([
     [inspect, header],
     [inspectAsync, header],
     [inspect, headerAsync],
@@ -92,7 +92,7 @@ describe.skip('mix and match', () => {
     )
   })
 
-  it.each([
+  it.skip.each([
     [appendText, header],
     [appendTextAsync, header],
     [appendText, headerAsync],
@@ -118,7 +118,7 @@ describe.skip('mix and match', () => {
     )
   })
 
-  it.each([
+  it.skip.each([
     [appendText, header],
     [appendTextAsync, header],
     [appendText, headerAsync],
