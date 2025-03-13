@@ -27,21 +27,19 @@ export const jsonMiddleware =
       }
 
       if (mayBePromise instanceof Promise) {
-        void (async () => {
-          try {
-            const result = await mayBePromise
-
+        mayBePromise
+          .then(result => {
             if (res.headersSent) return
 
             originalJsonFn.call(
               this,
               result === undefined ? originalJson : result
             )
-          } catch (e) {
+          })
+          .catch(e => {
             res.json = originalJsonFn
             errorHandler(e, req, res, next)
-          }
-        })()
+          })
       } else {
         const result = mayBePromise
 

@@ -24,10 +24,8 @@ export const endMiddleware =
       }
 
       if (mayBePromise instanceof Promise) {
-        void (async () => {
-          try {
-            await mayBePromise
-
+        mayBePromise
+          .then(() => {
             if (res.headersSent) {
               console.error(
                 'sending response while in endMiddleware is undefined behaviour'
@@ -36,11 +34,11 @@ export const endMiddleware =
             }
 
             originalEndFn.apply(this, arguments as any)
-          } catch (e) {
+          })
+          .catch(e => {
             res.end = originalEndFn
             errorHandler(e, req, res, next)
-          }
-        })()
+          })
 
         res.end = function (this: Response) {
           return res

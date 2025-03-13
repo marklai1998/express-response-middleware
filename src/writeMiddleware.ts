@@ -33,9 +33,8 @@ export const writeMiddleware =
       }
 
       if (mayBePromise instanceof Promise) {
-        void (async () => {
+        mayBePromise.then(result => {
           try {
-            const result = await mayBePromise
             res.end = originalEndFn
 
             if (res.writableEnded) return false
@@ -51,7 +50,7 @@ export const writeMiddleware =
             errorHandler(e, req, res, next)
             return false
           }
-        })()
+        })
 
         res.end = function (this: Response) {
           this.__isEnd = true
