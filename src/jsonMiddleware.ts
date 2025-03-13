@@ -13,6 +13,8 @@ export const jsonMiddleware =
     const originalJsonFn = res.json
 
     res.json = function (this: Response, json) {
+      if (res.headersSent) return res
+
       const originalJson = json
 
       let mayBePromise

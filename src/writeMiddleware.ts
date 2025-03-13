@@ -15,6 +15,8 @@ export const writeMiddleware =
     const originalEndFn = res.end
 
     res.write = function (this: Response, chunk) {
+      if (res.writableEnded) return false
+
       let mayBePromise
       try {
         mayBePromise = fn(
