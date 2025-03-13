@@ -12,7 +12,7 @@ export const writeMiddleware =
   (fn: TransformChunk): RequestHandler =>
   (req, res, next) => {
     const originalWrite = res.write
-    const originalEnd = res.end
+    const originalEndFn = res.end
 
     res.write = function (this: Response, chunk) {
       let mayBePromise
@@ -34,7 +34,7 @@ export const writeMiddleware =
         void (async () => {
           try {
             const result = await mayBePromise
-            res.end = originalEnd
+            res.end = originalEndFn
 
             if (res.writableEnded) return false
 

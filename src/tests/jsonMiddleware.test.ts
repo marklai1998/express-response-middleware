@@ -7,16 +7,18 @@ import { sleep } from './testHelpers/sleep'
 describe('jsonMiddleware', () => {
   const noop: TransformJson = () => {}
 
-  const inspect: TransformJson<any> = json => {
-    json.inspected_by = 'me'
-  }
-
-  const error: TransformJson<any> = json => {
-    json.foo.bar.hopefully.fails()
-  }
-
   const noopAsync: TransformJson = async json => {
     await sleep()
+    return json
+  }
+
+  const inspect: TransformJson<any> = json => {
+    json.inspected_by = 'me'
+    return json
+  }
+
+  const inspect2: TransformJson<any> = json => {
+    json.inspected_by_2 = 'him'
     return json
   }
 
@@ -26,6 +28,18 @@ describe('jsonMiddleware', () => {
     await sleep()
 
     return json
+  }
+
+  const inspectAsync2: TransformJson = async json => {
+    await sleep()
+    ;(json as any).inspected_by_2 = 'him'
+    await sleep()
+
+    return json
+  }
+
+  const error: TransformJson<any> = json => {
+    json.foo.bar.hopefully.fails()
   }
 
   const errorAsync: TransformJson<any> = async json => {
@@ -65,6 +79,29 @@ describe('jsonMiddleware', () => {
       )
     }
   )
+
+  it.each([
+    [inspect, inspect2],
+    [inspect, inspectAsync2],
+    [inspect2, inspectAsync],
+    [inspectAsync2, inspect],
+    [inspectAsync, inspect2],
+    [inspectAsync, inspectAsync2],
+  ])('should work with multiple middleware', async (handler, handler2) => {
+    const server = express()
+      .use(jsonMiddleware(handler))
+      .use(jsonMiddleware(handler2))
+      .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
+    const response = await request(server).get('/')
+
+    const expected = { a: 'a', inspected_by: 'me', inspected_by_2: 'him' }
+
+    expect(response.status).toStrictEqual(200)
+    expect(response.body).toStrictEqual(expected)
+    expect(response.headers['content-length']).toStrictEqual(
+      JSON.stringify(expected).length.toString()
+    )
+  })
 
   it.each([inspect, inspectAsync])(
     'should call callback with an error',

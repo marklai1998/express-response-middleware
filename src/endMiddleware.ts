@@ -9,14 +9,14 @@ export type TransformEnd = (
 export const endMiddleware =
   (fn: TransformEnd): RequestHandler =>
   (req, res, next) => {
-    const originalEnd = res.end
+    const originalEndFn = res.end
 
     res.end = function (this: Response) {
       let mayBePromise
       try {
         mayBePromise = fn(req, res)
       } catch (e) {
-        res.end = originalEnd
+        res.end = originalEndFn
         errorHandler(e, req, res, next)
         return res
       }
@@ -26,7 +26,7 @@ export const endMiddleware =
           try {
             await mayBePromise
 
-            res.end = originalEnd
+            res.end = originalEndFn
 
             if (res.headersSent) {
               console.error(
@@ -35,9 +35,9 @@ export const endMiddleware =
               return
             }
 
-            originalEnd.apply(this, arguments as any)
+            originalEndFn.apply(this, arguments as any)
           } catch (e) {
-            res.end = originalEnd
+            res.end = originalEndFn
             errorHandler(e, req, res, next)
           }
         })()
@@ -46,7 +46,7 @@ export const endMiddleware =
           return res
         }
       } else {
-        res.end = originalEnd
+        res.end = originalEndFn
 
         if (res.headersSent) {
           console.error(
@@ -55,7 +55,7 @@ export const endMiddleware =
           return res
         }
 
-        return originalEnd.apply(this, arguments as any)
+        return originalEndFn.apply(this, arguments as any)
       }
 
       return res

@@ -14,12 +14,12 @@ export const jsonMiddleware =
 
     res.json = function (this: Response, json) {
       const originalJson = json
-      res.json = originalJsonFn
 
       let mayBePromise
       try {
         mayBePromise = fn(json, req, res)
       } catch (e) {
+        res.json = originalJsonFn
         errorHandler(e, req, res, next)
         return res
       }
@@ -35,31 +35,11 @@ export const jsonMiddleware =
               this,
               result === undefined ? originalJson : result
             )
-
-            if (res.__isEnd) res.end()
           } catch (e) {
+            res.json = originalJsonFn
             errorHandler(e, req, res, next)
           }
         })()
-
-        return new Proxy(res, {
-          get(target: any, prop) {
-            if (prop === 'end') {
-              return function (this: Response) {
-                this.__isEnd = true
-                return this
-              }
-            }
-
-            const origMethod = target[prop]
-            if (typeof origMethod == 'function') {
-              return function (this: Response, ...args: unknown[]) {
-                return origMethod.apply(this, args)
-              }
-            }
-            return origMethod
-          },
-        })
       } else {
         const result = mayBePromise
 
@@ -68,7 +48,23 @@ export const jsonMiddleware =
         originalJsonFn.call(this, result === undefined ? originalJson : result)
       }
 
-      return res
+      return new Proxy(this, {
+        get(target: any, prop) {
+          if (prop === 'end') {
+            return function (this: Response) {
+              return this
+            }
+          }
+
+          const origMethod = target[prop]
+          if (typeof origMethod == 'function') {
+            return function (this: Response, ...args: unknown[]) {
+              return origMethod.apply(this, args)
+            }
+          }
+          return origMethod
+        },
+      })
     }
 
     next()
