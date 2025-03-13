@@ -10,6 +10,9 @@ export type TransformJson<T = {}> = (
 export const jsonMiddleware =
   (fn: TransformJson): RequestHandler =>
   (req, res, next) => {
+    const isOriginallyHooked = res.__isHooked
+    res.__isHooked = true
+
     const originalJsonFn = res.json
 
     res.json = function (this: Response, json) {
@@ -35,6 +38,8 @@ export const jsonMiddleware =
               this,
               result === undefined ? originalJson : result
             )
+
+            if (!isOriginallyHooked && res.__isEnd) res.end()
           } catch (e) {
             res.json = originalJsonFn
             errorHandler(e, req, res, next)
@@ -46,12 +51,14 @@ export const jsonMiddleware =
         if (res.headersSent) return res
 
         originalJsonFn.call(this, result === undefined ? originalJson : result)
+        if (!isOriginallyHooked && res.__isEnd) res.end()
       }
 
       return new Proxy(this, {
         get(target: any, prop) {
           if (prop === 'end') {
             return function (this: Response) {
+              res.__isEnd = true
               return this
             }
           }

@@ -6,6 +6,7 @@ declare global {
   namespace Express {
     interface Response {
       __isEnd?: boolean
+      __isHooked?: boolean
     }
   }
 }
