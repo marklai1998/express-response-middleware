@@ -83,6 +83,7 @@ describe('jsonMiddleware', () => {
     [inspect, inspect2],
     [inspect, inspectAsync2],
     [inspectAsync, inspect2],
+    [inspectAsync, inspectAsync2],
   ])('should work with multiple middleware', async (handler, handler2) => {
     const server = express()
       .use(jsonMiddleware(handler))
