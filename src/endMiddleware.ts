@@ -1,13 +1,13 @@
 import { Request, RequestHandler, Response } from 'express'
 import { errorHandler } from './utils/errorHandler'
 
-export type TransformHeaders = (
+export type TransformEnd = (
   request: Request,
   response: Response
 ) => unknown | Promise<unknown>
 
 export const endMiddleware =
-  (fn: TransformHeaders): RequestHandler =>
+  (fn: TransformEnd): RequestHandler =>
   (req, res, next) => {
     const originalEnd = res.end
 
@@ -28,7 +28,12 @@ export const endMiddleware =
 
             res.end = originalEnd
 
-            if (res.headersSent) return
+            if (res.headersSent) {
+              console.error(
+                'sending response while in endMiddleware is undefined behaviour'
+              )
+              return
+            }
 
             originalEnd.apply(this, arguments as any)
           } catch (e) {
@@ -43,7 +48,12 @@ export const endMiddleware =
       } else {
         res.end = originalEnd
 
-        if (res.headersSent) return res
+        if (res.headersSent) {
+          console.error(
+            'sending response while in endMiddleware is undefined behaviour'
+          )
+          return res
+        }
 
         return originalEnd.apply(this, arguments as any)
       }

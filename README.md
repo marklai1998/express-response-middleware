@@ -47,28 +47,25 @@ Transform the JSON body of the response.
 
 `fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns a `promise` to a modified body or the modified body directly. If `undefined` is returned (i.e. nothing) then the original JSON is assumed to be modified.
 
+- when `jsonMiddleware*` detects that a response has been sent, it will abort.
+
 ### endMiddleware(fn)
 
 Transform the HTTP headers of the response.
 
 `fn(req, res)` receives the `req` and `res`. It returns a `promise` to modify the header(s) or should modify the header(s) and then return.
 
+> [!CAUTION]
+> Sending a response while in `endMiddleware*` is **undefined behaviour** and will most likely result in an error
+
+
 ### writeMiddleware(fn)
 
 `fn(chunk, encoding, req, res)` receives the string or buffer as `chunk`, its `encoding` if applicable (`null` otherwise), `req` and `res`. It returns the modified body. If `undefined` is returned (i.e. nothing) then the original unmodified chunk is used.
 
-> [!CAUTION]
-> The return type will be inaccurate when using writeMiddleware, beware if you need the return type from .write
-
-### Notes
-
-- when `jsonMiddleware*` detects that a response has been sent, it will abort.
-
-- sending a response while in `endMiddleware*` is **undefined behaviour** and will most likely result in an error.
-
-- when `writeMiddleware` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
-
-- calling `res.json` or `res.send` from `writeMiddleware` can lead to unexpected behavior since they end the response internally.
+- When `writeMiddleware` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
+- Calling `res.json` or `res.send` from `writeMiddleware` can lead to unexpected behavior since they end the response internally.
+- The return type will be inaccurate when using writeMiddleware, beware if you need the return type from .write
 
 ## Exception handling
 

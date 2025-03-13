@@ -1,16 +1,15 @@
 import express from 'express'
 import request from 'supertest'
 import { expect } from 'vitest'
-import { endMiddleware, TransformHeaders } from '../main'
+import { endMiddleware, TransformEnd } from '../main'
 import { sleep } from './testHelpers/sleep'
 
-describe('headers', () => {
-  // TODO: try send
-  const header: TransformHeaders = (_req, res) => {
+describe('endMiddleware', () => {
+  const header: TransformEnd = (_req, res) => {
     res.set('x-inspected-by', 'me')
   }
 
-  const headerAsync: TransformHeaders = async (_req, res) => {
+  const headerAsync: TransformEnd = async (_req, res) => {
     await sleep()
     res.set('x-inspected-by', 'me')
     await sleep()
@@ -18,11 +17,11 @@ describe('headers', () => {
     return
   }
 
-  const error: TransformHeaders = req => {
+  const error: TransformEnd = req => {
     ;(req as any).hopefully_fails()
   }
 
-  const errorAsync: TransformHeaders = async req => {
+  const errorAsync: TransformEnd = async req => {
     await sleep()
     ;(req as any).hopefully_fails()
     await sleep()
