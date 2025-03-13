@@ -100,6 +100,9 @@ const myMiddleware = writeMiddleware((chunk, encoding, req, res) => {
 })
 ```
 
+> [!CAUTION]
+> Promise callback support is limited, it doesn't resolve multiple write call in seq, will lead to out of order call [Code](src/writeMiddleware.ts)
+
 - When `writeMiddleware` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
 - Calling `res.json` or `res.send` from `writeMiddleware` can lead to unexpected behavior since they end the response internally.
 - The returned value of `res.write` will be inaccurate when using `writeMiddleware`, beware if you rely on it
