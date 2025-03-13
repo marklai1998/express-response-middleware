@@ -92,15 +92,15 @@ describe('mix and match', () => {
     )
   })
 
-  it.skip.each([
+  it.each([
     [appendText, header],
     [appendTextAsync, header],
     [appendText, headerAsync],
     [appendTextAsync, headerAsync],
   ])('end should work with write', async (writeHandler, endHandler) => {
     const server = express()
-      .use(writeMiddleware(writeHandler))
       .use(endMiddleware(endHandler))
+      .use(writeMiddleware(writeHandler))
       .get('/', (_req, res) => {
         res.status(200).write('This is the response body')
         res.end()
@@ -112,13 +112,13 @@ describe('mix and match', () => {
       'This is the response body with more content'
     )
     expect(response.headers).toStrictEqual(
-      expect.objectContaining({
+      expect.not.objectContaining({
         'x-inspected-by': 'me',
       })
     )
   })
 
-  it.skip.each([
+  it.each([
     [appendText, header],
     [appendTextAsync, header],
     [appendText, headerAsync],
@@ -138,7 +138,7 @@ describe('mix and match', () => {
       'This is the response body with more content'
     )
     expect(response.headers).toStrictEqual(
-      expect.objectContaining({
+      expect.not.objectContaining({
         'x-inspected-by': 'me',
       })
     )

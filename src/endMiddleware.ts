@@ -12,6 +12,8 @@ export const endMiddleware =
     const originalEndFn = res.end
 
     res.end = function (this: Response) {
+      if (res.headersSent) return originalEndFn.apply(this, arguments as any)
+
       let mayBePromise
       try {
         mayBePromise = fn(req, res)
@@ -25,8 +27,6 @@ export const endMiddleware =
         void (async () => {
           try {
             await mayBePromise
-
-            res.end = originalEndFn
 
             if (res.headersSent) {
               console.error(
@@ -46,8 +46,6 @@ export const endMiddleware =
           return res
         }
       } else {
-        res.end = originalEndFn
-
         if (res.headersSent) {
           console.error(
             'sending response while in endMiddleware is undefined behaviour'
