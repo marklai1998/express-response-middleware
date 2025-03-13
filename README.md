@@ -1,28 +1,43 @@
 # express-response-middleware
 
-> [!IMPORTANT]  
-> V2 is still WIP, meanwhile please check out [V1 Readme](docs/V1_README.md)
+> [!NOTE]  
+> Come from express-mung? Checkout the [Migration Guide](docs/MIGRATE_FROM_MUNG.md)
 
-
-
-Middleware for express responses.
+Middleware for express responses. Fork of [express-mung](https://www.npmjs.com/package/express-mung)
 
 This package allows synchronous and asynchronous transformation of an express response. This is a similar concept to the express middleware for a request but for a response. Note that the middleware is executed in LIFO order. It is implemented by monkey patching (hooking) the `res.end`, `res.json`, or `res.write` methods.
 
-## Getting started [![npm version](https://badge.fury.io/js/express-response-middleware.svg)](https://badge.fury.io/js/express-response-middleware)
+[Installation](#-installation) | [Quick Start](#-quick-start) | [API](#-api) | [Contributing](#-contributing)
 
-    $ npm install express-response-middleware --save
+## 📦 Installation
 
-## Usage
+### NPM
+
+```bash
+npm i express-response-middleware
+```
+
+### Yarn
+
+```
+yarn add express-response-middleware
+```
+
+### PNPM
+
+```
+pnpm i express-response-middleware
+```
+
+## 🚀 Quick Start
 
 Sample middleware (redact.js) to remove classified information.
 
 ```javascript
-'use strict'
 import { jsonMiddleware } from 'express-response-middleware'
 
 /* Remove any classified information from the response. */
-export const hideSecretMiddleware = jsonMiddleware((body, req, res) {
+export const hideSecretMiddleware = jsonMiddleware((body, req, res) => {
     if (body.secret) body.secret = '****'
     // ...
     return body
@@ -35,194 +50,82 @@ then add to your `app.js` file (before the route handling middleware)
 app.use(hideSecretMiddleware)
 ```
 
-and [_That's all folks!_](https://www.youtube.com/watch?v=gBzJGckMYO4)
+## 💻 API
 
-See the [tests](https://github.com/marklai1998/express-response-middleware/tree/master/src/tests) for some more examples.
+- [Json Middleware](#jsonmiddleware)
+- [End Middleware](#endMiddleware)
+- [Write Middleware](#endMiddleware)
+- Legacy docs
+  - [V1](docs/V1_README.md)
 
-## Reference
+### `jsonMiddleware`
 
-### jsonMiddleware(fn)
+Intercept `res.json`, allow transform the JSON body of the response.
 
-Transform the JSON body of the response.
+```ts
+const myMiddleware = jsonMiddleware((json, req, res) => {
+    // your code here
+    return json
+})
+```
 
-`fn(json, req, res)` receives the JSON as an object, the `req` and `res`. It returns a `promise` to a modified body or the modified body directly. If `undefined` is returned (i.e. nothing) then the original JSON is assumed to be modified.
+### `endMiddleware`
 
-- when `jsonMiddleware*` detects that a response has been sent, it will abort.
+Intercept `end.json`, allow transform the HTTP headers of the response.
 
-### endMiddleware(fn)
-
-Transform the HTTP headers of the response.
-
-`fn(req, res)` receives the `req` and `res`. It returns a `promise` to modify the header(s) or should modify the header(s) and then return.
+```ts
+const myMiddleware = endMiddleware((req, res) => {
+    // your code here
+})
+```
 
 > [!CAUTION]
 > Sending a response while in `endMiddleware*` is **undefined behaviour** and will most likely result in an error
 
+### `writeMiddleware`
 
-### writeMiddleware(fn)
+Intercept `end.write`, allow transform buffer.
 
-`fn(chunk, encoding, req, res)` receives the string or buffer as `chunk`, its `encoding` if applicable (`null` otherwise), `req` and `res`. It returns the modified body. If `undefined` is returned (i.e. nothing) then the original unmodified chunk is used.
+```ts
+const myMiddleware = writeMiddleware((chunk, encoding, req, res) => {
+    // your code here
+    return chunk
+})
+```
 
 - When `writeMiddleware` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
 - Calling `res.json` or `res.send` from `writeMiddleware` can lead to unexpected behavior since they end the response internally.
-- The return type will be inaccurate when using writeMiddleware, beware if you need the return type from .write
+- The returned value of `res.write` will be inaccurate when using `writeMiddleware`, beware if you rely on it
 
 ## Exception handling
 
 `responseMiddleware` catches any exception (synchronous, asynchronous or Promise reject) and sends an HTTP 500 response with the exception message. You should handle your own error if you want different behavior
 
-## Migrate from `express-mung`
+## 🤝 Contributing
 
-### To V2
+### Development
 
-#### Requirement
+#### Local Development
 
-V2 completely rewrote in ESM with modern syntax
-
-- Node 18 or above
-
-#### Update Import
-
-- `mung.json` => `jsonMiddleware`
-- `mung.jsonAsync` => `jsonMiddleware`
-- `mung.headers` => `endMiddleware`
-- `mung.headersAsync` => `endMiddleware`
-
-Before
-```ts
-import mung from 'express-mung'
-
-const myMiddleware = mung.json((json) => {
-  // your code
-})
+```bash
+pnpm i
+pnpm test
 ```
 
-After
-```ts
-import { jsonMiddleware } from 'express-response-middleware'
+#### Build
 
-const myMiddleware = jsonMiddleware((json) => {
-    // your code
-})
+```bash
+pnpm build
 ```
 
-#### Remove `onError` override
+### Release
 
-It is now impossible to override `onError` due to ESM code base, you should try catch your own error
+This repo uses [Release Please](https://github.com/google-github-actions/release-please-action) to release.
 
-Before
-```ts
-import mung from 'express-mung'
+#### To release a new version
 
-mung.onError = customErrorHandle
-
-const myMiddleware = responseMiddleware.json((json) => {
-  // your code
-})
-```
-
-After
-```ts
-import responseMiddleware from 'express-response-middleware'
-
-const myMiddleware = responseMiddleware.json((json) => {
-  try {
-    // your code
-  } catch (e){ // onError equivalent
-    customErrorHandle(e)
-  }
-})
-```
-
-#### Remove `mungError`
-
-`mungError` is Removed and callback is always called
-
-Before
-```ts
-import mung from 'express-mung'
-
-// Would not run on res.statusCode >= 400, unless mungError is set to true
-const myMiddleware = mung.json((json) => { 
-  // code
-  return json
-})
-```
-
-After
-```ts
-import responseMiddleware from 'express-response-middleware'
-
-// Would always run, you have to do your own filtering
-const myMiddleware = responseMiddleware.json((json) => {
-    if (res.statusCode >= 400) return
-    return json
-})
-```
-
-#### headerSent Handling
-
-Middleware will still call if headers are being sent (res.headersSent === `true`)
-
-#### Remove `content-type` and 204 handler
-
-- Removed auto `content-type` to `text/plain`, you should set correct content type when returning different data
-- Removed 204 handler with null return, you should set correct status when returning different data
-
-> Note. Express allow sending plain text and null with `.json` and content type will still be json + 200, this change is to stick to vanilla behavior  
-
-Before
-```ts
-import mung from 'express-mung'
-
-const myMiddleware = mung.json((json) => {
-  const hasPermission = false
-  const shouldSendNull = false
-  if (!hasPermission) return "Forbidden" // `content-type` will automatically set to `text/plain`
-  if (shouldSendNull) return null // `status` will automatically set to 204
-  return json
-})
-```
-
-After
-```ts
-import responseMiddleware from 'express-response-middleware'
-
-const myMiddleware = responseMiddleware.json((json) => {
-    const hasPermission = false
-    const shouldSendNull = false
-    if (!hasPermission) {
-        res.send("Forbidden")
-        return
-    }
-    if (shouldSendNull) {
-        res.status(204)
-        return null
-    }
-    return json
-})
-```
-
-
-### To V1
-
-V1 is mostly just fork of `express-mung` with integrated types
-
-- Update the import
-- Rename option `mungError` to `runOnError`
-
-```diff
-- import mung from 'express-mung'
-+ import responseMiddleware from 'express-response-middleware'
-
-const myMiddleware = responseMiddleware.json(() => {
-  // code here
-},
-- { mungError: true }
-+ { runOnError: true }
-)
-```
-
-# License
-
-The MIT license
+1. Merge your changes into the `main` branch.
+2. An automated GitHub Action will run, triggering the creation of a Release PR.
+3. Merge the release PR.
+4. Wait for the second GitHub Action to run automatically.
+5. Congratulations, you're all set!
