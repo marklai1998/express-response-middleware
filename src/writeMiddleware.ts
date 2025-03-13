@@ -6,18 +6,18 @@ export type TransformChunk = (
   encoding: string | null,
   request: Request,
   response: Response
-) => void | string | Buffer
+) => void | string | Buffer | Promise<void> | Promise<string> | Promise<Buffer>
 
-// TODO: async support
-// TODO: add docs about return type
 export const writeMiddleware =
   (fn: TransformChunk): RequestHandler =>
   (req, res, next) => {
-    const original = res.write
+    const originalWrite = res.write
+    const originalEnd = res.end
 
     res.write = function (this: Response, chunk) {
+      let mayBePromise
       try {
-        const modifiedChunk = fn(
+        mayBePromise = fn(
           chunk,
           // Since `encoding` is an optional argument to `res.write`,
           // make sure it is a string and not actually the callback.
@@ -25,14 +25,43 @@ export const writeMiddleware =
           req,
           res
         )
+      } catch (e) {
+        errorHandler(e, req, res, next)
+        return false
+      }
 
+      if (mayBePromise instanceof Promise) {
+        void (async () => {
+          try {
+            const result = await mayBePromise
+            res.end = originalEnd
+
+            if (res.writableEnded) return false
+
+            arguments[0] = result === undefined ? chunk : result
+
+            const writeResponse = originalWrite.apply(res, arguments as any)
+
+            if (res.__isEnd) res.end()
+
+            return writeResponse
+          } catch (e) {
+            errorHandler(e, req, res, next)
+            return false
+          }
+        })()
+
+        res.end = function (this: Response) {
+          this.__isEnd = true
+          return res
+        }
+        return false
+      } else {
+        const result = mayBePromise
         if (res.writableEnded) return false
 
-        arguments[0] = modifiedChunk === undefined ? chunk : modifiedChunk
-        return original.apply(res, arguments as any)
-      } catch (err) {
-        errorHandler(err, req, res, next)
-        return false
+        arguments[0] = result === undefined ? chunk : result
+        return originalWrite.apply(res, arguments as any)
       }
     }
 

@@ -57,7 +57,8 @@ Transform the HTTP headers of the response.
 
 `fn(chunk, encoding, req, res)` receives the string or buffer as `chunk`, its `encoding` if applicable (`null` otherwise), `req` and `res`. It returns the modified body. If `undefined` is returned (i.e. nothing) then the original unmodified chunk is used.
 
-> Note. It does not support promise callback
+> [!CAUTION]
+> The return type will be inaccurate when using writeMiddleware, beware if you need the return type from .write
 
 ### Notes
 
@@ -162,7 +163,9 @@ const myMiddleware = responseMiddleware.json((json) => {
 })
 ```
 
+#### headerSent Handling
 
+Middleware will still call if headers are being sent (res.headersSent === `true`)
 
 #### Remove `content-type` and 204 handler
 
