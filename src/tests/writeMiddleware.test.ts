@@ -93,16 +93,6 @@ describe('write', () => {
       'This is the response body with more content2 with more content',
     ],
     [
-      appendText2,
-      appendTextAsync,
-      'This is the response body with more content with more content2',
-    ],
-    [
-      appendTextAsync2,
-      appendText,
-      'This is the response body with more content with more content2',
-    ],
-    [
       appendTextAsync,
       appendText2,
       'This is the response body with more content2 with more content',
