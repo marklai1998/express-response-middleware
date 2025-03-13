@@ -14,6 +14,15 @@ describe('write', () => {
     return chunk + ' with more content'
   }
 
+  const appendText2: TransformChunk = chunk => {
+    return chunk + ' with more content2'
+  }
+
+  const appendTextAsync2: TransformChunk = async chunk => {
+    await sleep()
+    return chunk + ' with more content2'
+  }
+
   const inspectJson: TransformChunk = chunk => {
     try {
       const json = JSON.parse(String(chunk))
@@ -69,6 +78,54 @@ describe('write', () => {
       expect(response.text).toStrictEqual(
         'This is the response body with more content'
       )
+    }
+  )
+
+  it.each([
+    [
+      appendText,
+      appendText2,
+      'This is the response body with more content2 with more content',
+    ],
+    [
+      appendText,
+      appendTextAsync2,
+      'This is the response body with more content2 with more content',
+    ],
+    [
+      appendText2,
+      appendTextAsync,
+      'This is the response body with more content with more content2',
+    ],
+    [
+      appendTextAsync2,
+      appendText,
+      'This is the response body with more content with more content2',
+    ],
+    [
+      appendTextAsync,
+      appendText2,
+      'This is the response body with more content2 with more content',
+    ],
+    [
+      appendTextAsync,
+      appendTextAsync2,
+      'This is the response body with more content2 with more content',
+    ],
+  ])(
+    'should work with multiple middleware',
+    async (handler, handler2, expectStr) => {
+      const server = express()
+        .use(writeMiddleware(handler))
+        .use(writeMiddleware(handler2))
+        .get('/', (_req, res) => {
+          res.status(200).write('This is the response body')
+          res.end()
+        })
+      const response = await request(server).get('/')
+
+      expect(response.status).toStrictEqual(200)
+      expect(response.text).toStrictEqual(expectStr)
     }
   )
 
