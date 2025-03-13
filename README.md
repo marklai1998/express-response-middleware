@@ -1,6 +1,9 @@
 # express-response-middleware
 
 > [!NOTE]  
+> V2 is still WIP, meanwhile please check out [V1](docs/V1_README.md)
+
+> [!NOTE]  
 > Come from express-mung? Checkout the [Migration Guide](docs/MIGRATE_FROM_MUNG.md)
 
 <div align="center">
