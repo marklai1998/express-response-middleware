@@ -106,12 +106,22 @@ const myMiddleware = writeMiddleware((chunk, encoding, req, res) => {
 - When `writeMiddleware` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
 - Calling `res.json` or `res.send` from `writeMiddleware` can lead to unexpected behavior since they end the response internally.
 - The returned value of `res.write` will be inaccurate when using `writeMiddleware`, beware if you rely on it
+- `res.end` after `res.write` would not trigger endMiddleware, as header already sent
 
 ## Exception handling
 
 `responseMiddleware` catches any exception (synchronous, asynchronous or Promise reject) and sends an HTTP 500 response with the exception message. You should handle your own error if you want different behavior
 
 ## 🤝 Contributing
+
+### TODO
+
+Current state project is up to modern standard and support all of the `express-mung` use case, here is the list that I think can improve on. 
+
+- [ ] Support calling end outside Json
+- [ ] Support multiple write call for async handler
+- [ ] `res.send` Support
+- [ ] `res.jsonp` Support
 
 ### Development
 
