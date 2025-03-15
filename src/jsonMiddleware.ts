@@ -1,5 +1,6 @@
 import { Request, RequestHandler, Response } from 'express'
 import { errorHandler } from './utils/errorHandler'
+import { AsyncLocalStorage } from 'node:async_hooks'
 
 export type TransformJson<T = {}> = (
   body: T,
@@ -7,12 +8,23 @@ export type TransformJson<T = {}> = (
   response: Response
 ) => unknown | Promise<unknown>
 
+const isInSend = new AsyncLocalStorage<boolean>()
+
 export const jsonMiddleware =
   (fn: TransformJson): RequestHandler =>
   (req, res, next) => {
     const originalJsonFn = res.json
+    const originalSendFn = res.send
+
+    res.send = function (this: Response) {
+      return isInSend.run(true, () =>
+        originalSendFn.apply(this, arguments as any)
+      )
+    }
 
     res.json = function (this: Response, json) {
+      const originalEndFn = res.end
+
       if (res.headersSent) return res
 
       const originalJson = json
@@ -30,6 +42,7 @@ export const jsonMiddleware =
         mayBePromise
           .then(result => {
             if (res.headersSent) return
+            res.end = originalEndFn
 
             originalJsonFn.call(
               this,
@@ -38,8 +51,17 @@ export const jsonMiddleware =
           })
           .catch(e => {
             res.json = originalJsonFn
+            res.end = originalEndFn
             errorHandler(e, req, res, next)
           })
+
+        // Prevent end being called wile promise still running
+        res.end = function (this: Response) {
+          if (isInSend.getStore()) {
+            originalEndFn.apply(this, arguments as any)
+          }
+          return res
+        }
       } else {
         const result = mayBePromise
 
@@ -48,23 +70,7 @@ export const jsonMiddleware =
         originalJsonFn.call(this, result === undefined ? originalJson : result)
       }
 
-      return new Proxy(this, {
-        get(target: any, prop) {
-          if (prop === 'end') {
-            return function (this: Response) {
-              return this
-            }
-          }
-
-          const origMethod = target[prop]
-          if (typeof origMethod == 'function') {
-            return function (this: Response, ...args: unknown[]) {
-              return origMethod.apply(this, args)
-            }
-          }
-          return origMethod
-        },
-      })
+      return res
     }
 
     next()
