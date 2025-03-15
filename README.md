@@ -149,7 +149,7 @@ const myMiddleware = writeMiddleware((chunk, encoding, req, res) => {
 
 Current state project is up to modern standard and support all of the `express-mung` use case, here is the list that I think can improve on. 
 
-- [ ] Support multiple write call for async handler
+- [ ] Support multiple write call with `writeMiddleware` + async handler
 
 ### Development
 
