@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/marklai1998/express-response-middleware/compare/v2.0.1...v2.1.0) (2025-03-15)
+
+
+### Features
+
+* set project type to module ([35769d7](https://github.com/marklai1998/express-response-middleware/commit/35769d740ab7d507d725ba1844516188319da759))
+
 ## [2.0.1](https://github.com/marklai1998/express-response-middleware/compare/v2.0.0...v2.0.1) (2025-03-15)
 
 
