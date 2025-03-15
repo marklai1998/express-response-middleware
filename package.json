@@ -1,6 +1,6 @@
 {
   "name": "express-response-middleware",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Transform an express response",
   "type": "module",
   "main": "dist/cjs/index.cjs",
