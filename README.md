@@ -138,7 +138,6 @@ const myMiddleware = writeMiddleware((chunk, encoding, req, res) => {
 
 Current state project is up to modern standard and support all of the `express-mung` use case, here is the list that I think can improve on. 
 
-- [ ] Support calling end outside Json
 - [ ] Support multiple write call for async handler
 - [ ] `res.send` Support
 
