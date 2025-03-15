@@ -4,7 +4,7 @@ import esbuild from 'rollup-plugin-esbuild'
 
 export default [
   {
-    input: 'src/main.ts',
+    input: 'src/index.ts',
     plugins: [peerDepsExternal(), esbuild()],
     output: [
       {
@@ -25,7 +25,7 @@ export default [
     ],
   },
   {
-    input: 'src/main.ts',
+    input: 'src/index.ts',
     plugins: [
       dts({
         compilerOptions: {

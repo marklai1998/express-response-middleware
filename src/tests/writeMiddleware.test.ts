@@ -1,6 +1,6 @@
 import express, { ErrorRequestHandler } from 'express'
 import request from 'supertest'
-import { TransformChunk, writeMiddleware } from '../main'
+import { TransformChunk, writeMiddleware } from '../index'
 import { expect } from 'vitest'
 import { sleep } from './testHelpers/sleep'
 

@@ -9,7 +9,7 @@ import {
   TransformEnd,
   TransformJson,
   writeMiddleware,
-} from '../main'
+} from '../index'
 import { sleep } from './testHelpers/sleep'
 import { sendMiddleware, TransformSend } from '../sendMiddleware'
 

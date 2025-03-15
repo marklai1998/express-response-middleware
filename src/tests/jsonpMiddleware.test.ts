@@ -1,6 +1,6 @@
 import express, { ErrorRequestHandler } from 'express'
 import request from 'supertest'
-import { jsonpMiddleware, TransformJsonp } from '../main'
+import { jsonpMiddleware, TransformJsonp } from '../index'
 import { sleep } from './testHelpers/sleep'
 
 describe('jsonpMiddleware', () => {

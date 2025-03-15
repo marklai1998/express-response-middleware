@@ -1,6 +1,6 @@
 import express, { ErrorRequestHandler } from 'express'
 import request from 'supertest'
-import { jsonMiddleware, TransformJson } from '../main'
+import { jsonMiddleware, TransformJson } from '../index'
 import { sleep } from './testHelpers/sleep'
 
 describe('jsonMiddleware', () => {
