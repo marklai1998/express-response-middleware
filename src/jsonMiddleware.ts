@@ -27,8 +27,6 @@ export const jsonMiddleware =
 
       if (res.headersSent) return res
 
-      const originalJson = json
-
       let mayBePromise
       try {
         mayBePromise = fn(json, req, res)
@@ -44,10 +42,7 @@ export const jsonMiddleware =
             if (res.headersSent) return
             res.end = originalEndFn
 
-            originalJsonFn.call(
-              this,
-              result === undefined ? originalJson : result
-            )
+            originalJsonFn.call(this, result === undefined ? json : result)
           })
           .catch(e => {
             res.json = originalJsonFn
@@ -57,6 +52,7 @@ export const jsonMiddleware =
 
         // Prevent end being called wile promise still running
         res.end = function (this: Response) {
+          //  Res.send will call Res.end, when send is call inside the middleware, do it actually
           if (isInSend.getStore()) {
             originalEndFn.apply(this, arguments as any)
           }
@@ -67,7 +63,7 @@ export const jsonMiddleware =
 
         if (res.headersSent) return res
 
-        originalJsonFn.call(this, result === undefined ? originalJson : result)
+        originalJsonFn.call(this, result === undefined ? json : result)
       }
 
       return res
