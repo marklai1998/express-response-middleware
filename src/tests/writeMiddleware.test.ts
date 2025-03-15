@@ -1,8 +1,8 @@
 import express, { ErrorRequestHandler } from 'express'
 import request from 'supertest'
-import { TransformChunk, writeMiddleware } from '../index'
+import { TransformChunk, writeMiddleware } from '../index.js'
 import { expect } from 'vitest'
-import { sleep } from './testHelpers/sleep'
+import { sleep } from './testHelpers/sleep.js'
 
 describe('write', () => {
   const appendText: TransformChunk = chunk => {

@@ -1,8 +1,8 @@
-import { sendMiddleware, TransformSend } from '../sendMiddleware'
+import { sendMiddleware, TransformSend } from '../sendMiddleware.js'
 import request from 'supertest'
 import express from 'express'
 import { expect } from 'vitest'
-import { sleep } from './testHelpers/sleep'
+import { sleep } from './testHelpers/sleep.js'
 
 describe('sendMiddleware', () => {
   const modifyText: TransformSend = data => {

@@ -1,5 +1,5 @@
 import { Request, RequestHandler, Response } from 'express'
-import { errorHandler } from './utils/errorHandler'
+import { errorHandler } from './utils/errorHandler.js'
 
 export type TransformEnd = (
   request: Request,

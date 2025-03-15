@@ -43,6 +43,8 @@ export default [
         dir: 'dist/cjs',
         format: 'cjs',
         interop: 'auto',
+        entryFileNames: '[name].d.cts',
+        chunkFileNames: '[name]-[hash].d.cts',
       },
     ],
   },

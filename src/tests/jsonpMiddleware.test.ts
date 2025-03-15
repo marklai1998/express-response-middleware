@@ -1,7 +1,7 @@
 import express, { ErrorRequestHandler } from 'express'
 import request from 'supertest'
-import { jsonpMiddleware, TransformJsonp } from '../index'
-import { sleep } from './testHelpers/sleep'
+import { jsonpMiddleware, TransformJsonp } from '../index.js'
+import { sleep } from './testHelpers/sleep.js'
 
 describe('jsonpMiddleware', () => {
   const noop: TransformJsonp = () => {}

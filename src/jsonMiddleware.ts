@@ -1,6 +1,6 @@
 import { Request, RequestHandler, Response } from 'express'
-import { errorHandler } from './utils/errorHandler'
-import { isInSend } from './utils/asyncLocalStorage'
+import { errorHandler } from './utils/errorHandler.js'
+import { isInSend } from './utils/asyncLocalStorage.js'
 
 export type TransformJson<T = {}> = (
   body: T,

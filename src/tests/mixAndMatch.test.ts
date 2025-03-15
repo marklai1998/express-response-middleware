@@ -9,9 +9,9 @@ import {
   TransformEnd,
   TransformJson,
   writeMiddleware,
-} from '../index'
-import { sleep } from './testHelpers/sleep'
-import { sendMiddleware, TransformSend } from '../sendMiddleware'
+} from '../index.js'
+import { sleep } from './testHelpers/sleep.js'
+import { sendMiddleware, TransformSend } from '../sendMiddleware.js'
 
 describe('mix and match', () => {
   const header: TransformEnd = (_req, res) => {
