@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/marklai1998/express-response-middleware/compare/v2.0.0...v2.0.1) (2025-03-15)
+
+
+### Bug Fixes
+
+* build entry file ([f82450f](https://github.com/marklai1998/express-response-middleware/commit/f82450fa402ced9307bd31192ca34cfbcb9dc4a3))
+
 ## [2.0.0](https://github.com/marklai1998/express-response-middleware/compare/v1.0.0...v2.0.0) (2025-03-15)
 
 
