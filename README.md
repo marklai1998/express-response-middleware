@@ -61,6 +61,7 @@ app.use(hideSecretMiddleware)
 
 - [Json Middleware](#jsonmiddleware)
 - [Jsonp Middleware](#jsonpmiddleware)
+- [Send Middleware](#sendmiddleware)
 - [End Middleware](#endMiddleware)
 - [Write Middleware](#endMiddleware)
 - Legacy docs
@@ -89,6 +90,19 @@ import { jsonpMiddleware } from 'express-response-middleware'
 const myMiddleware = jsonpMiddleware((json, req, res) => {
     // your code here
     return json
+})
+```
+
+### `sendMiddleware`
+
+Intercept `res.send`, allow transform the body of the response.
+
+```ts
+import { sendMiddleware } from 'express-response-middleware'
+
+const myMiddleware = sendMiddleware((payload, req, res) => {
+    // your code here
+    return payload
 })
 ```
 
@@ -139,7 +153,6 @@ const myMiddleware = writeMiddleware((chunk, encoding, req, res) => {
 Current state project is up to modern standard and support all of the `express-mung` use case, here is the list that I think can improve on. 
 
 - [ ] Support multiple write call for async handler
-- [ ] `res.send` Support
 
 ### Development
 

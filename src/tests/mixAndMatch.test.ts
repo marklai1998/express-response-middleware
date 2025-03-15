@@ -11,6 +11,7 @@ import {
   writeMiddleware,
 } from '../main'
 import { sleep } from './testHelpers/sleep'
+import { sendMiddleware, TransformSend } from '../sendMiddleware'
 
 describe('mix and match', () => {
   const header: TransformEnd = (_req, res) => {
@@ -45,6 +46,15 @@ describe('mix and match', () => {
   const appendTextAsync: TransformChunk = async chunk => {
     await sleep()
     return chunk + ' with more content'
+  }
+
+  const modifyText: TransformSend = data => {
+    return data + ' with more content'
+  }
+
+  const modifyTextAsync: TransformSend = async data => {
+    await sleep()
+    return data + ' with more content'
   }
 
   it.each([
@@ -132,6 +142,56 @@ describe('mix and match', () => {
 
     expect(response.status).toStrictEqual(200)
     expect(response.body).toStrictEqual(expected)
+    expect(response.headers).toStrictEqual(
+      expect.objectContaining({
+        'x-inspected-by': 'me',
+      })
+    )
+  })
+
+  it.each([
+    [modifyText, header],
+    [modifyTextAsync, header],
+    [modifyText, headerAsync],
+    [modifyTextAsync, headerAsync],
+  ])('end should work with send', async (sendHandler, endHandler) => {
+    const server = express()
+      .use(sendMiddleware(sendHandler))
+      .use(endMiddleware(endHandler))
+      .get('/', (_req, res) => {
+        res.send('This is the response body')
+      })
+    const response = await request(server).get('/')
+
+    expect(response.status).toStrictEqual(200)
+    expect(response.text).toStrictEqual(
+      'This is the response body with more content'
+    )
+    expect(response.headers).toStrictEqual(
+      expect.objectContaining({
+        'x-inspected-by': 'me',
+      })
+    )
+  })
+
+  it.each([
+    [modifyText, header],
+    [modifyTextAsync, header],
+    [modifyText, headerAsync],
+    [modifyTextAsync, headerAsync],
+  ])('end should work with send', async (sendHandler, endHandler) => {
+    const server = express()
+      .use(endMiddleware(endHandler))
+      .use(sendMiddleware(sendHandler))
+      .get('/', (_req, res) => {
+        res.send('This is the response body')
+      })
+    const response = await request(server).get('/')
+
+    expect(response.status).toStrictEqual(200)
+    expect(response.text).toStrictEqual(
+      'This is the response body with more content'
+    )
     expect(response.headers).toStrictEqual(
       expect.objectContaining({
         'x-inspected-by': 'me',

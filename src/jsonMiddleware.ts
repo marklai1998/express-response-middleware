@@ -1,14 +1,12 @@
 import { Request, RequestHandler, Response } from 'express'
 import { errorHandler } from './utils/errorHandler'
-import { AsyncLocalStorage } from 'node:async_hooks'
+import { isInSend } from './utils/asyncLocalStorage'
 
 export type TransformJson<T = {}> = (
   body: T,
   request: Request,
   response: Response
 ) => unknown | Promise<unknown>
-
-const isInSend = new AsyncLocalStorage<boolean>()
 
 export const jsonMiddleware =
   (fn: TransformJson): RequestHandler =>
