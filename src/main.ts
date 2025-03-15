@@ -1,6 +1,7 @@
 export * from './jsonMiddleware'
 export * from './endMiddleware'
 export * from './writeMiddleware'
+export * from './jsonpMiddleware'
 
 declare global {
   namespace Express {

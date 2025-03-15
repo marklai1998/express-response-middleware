@@ -60,6 +60,7 @@ app.use(hideSecretMiddleware)
 ## 💻 API
 
 - [Json Middleware](#jsonmiddleware)
+- [Jsonp Middleware](#jsonpmiddleware)
 - [End Middleware](#endMiddleware)
 - [Write Middleware](#endMiddleware)
 - Legacy docs
@@ -70,7 +71,22 @@ app.use(hideSecretMiddleware)
 Intercept `res.json`, allow transform the JSON body of the response.
 
 ```ts
+import { jsonMiddleware } from 'express-response-middleware'
+
 const myMiddleware = jsonMiddleware((json, req, res) => {
+    // your code here
+    return json
+})
+```
+
+### `jsonpMiddleware`
+
+Intercept `res.jsonp`, allow transform the JSON body of the response.
+
+```ts
+import { jsonpMiddleware } from 'express-response-middleware'
+
+const myMiddleware = jsonpMiddleware((json, req, res) => {
     // your code here
     return json
 })
@@ -81,6 +97,8 @@ const myMiddleware = jsonMiddleware((json, req, res) => {
 Intercept `end.json`, allow transform the HTTP headers of the response.
 
 ```ts
+import { endMiddleware } from 'express-response-middleware'
+
 const myMiddleware = endMiddleware((req, res) => {
     // your code here
 })
@@ -94,6 +112,8 @@ const myMiddleware = endMiddleware((req, res) => {
 Intercept `end.write`, allow transform buffer.
 
 ```ts
+import { writeMiddleware } from 'express-response-middleware'
+
 const myMiddleware = writeMiddleware((chunk, encoding, req, res) => {
     // your code here
     return chunk
@@ -121,7 +141,6 @@ Current state project is up to modern standard and support all of the `express-m
 - [ ] Support calling end outside Json
 - [ ] Support multiple write call for async handler
 - [ ] `res.send` Support
-- [ ] `res.jsonp` Support
 
 ### Development
 

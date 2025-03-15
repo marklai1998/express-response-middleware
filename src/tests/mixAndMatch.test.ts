@@ -4,6 +4,7 @@ import { expect } from 'vitest'
 import {
   endMiddleware,
   jsonMiddleware,
+  jsonpMiddleware,
   TransformChunk,
   TransformEnd,
   TransformJson,
@@ -79,6 +80,52 @@ describe('mix and match', () => {
       .use(endMiddleware(endHandler))
       .use(jsonMiddleware(jsonHandler))
       .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
+    const response = await request(server).get('/')
+
+    const expected = { a: 'a', inspected_by: 'me' }
+
+    expect(response.status).toStrictEqual(200)
+    expect(response.body).toStrictEqual(expected)
+    expect(response.headers).toStrictEqual(
+      expect.objectContaining({
+        'x-inspected-by': 'me',
+      })
+    )
+  })
+
+  it.each([
+    [inspect, header],
+    [inspectAsync, header],
+    [inspect, headerAsync],
+    [inspectAsync, headerAsync],
+  ])('end should work with jsonp', async (jsonHandler, endHandler) => {
+    const server = express()
+      .use(jsonpMiddleware(jsonHandler))
+      .use(endMiddleware(endHandler))
+      .get('/', (_req, res) => res.status(200).jsonp({ a: 'a' }).end())
+    const response = await request(server).get('/')
+
+    const expected = { a: 'a', inspected_by: 'me' }
+
+    expect(response.status).toStrictEqual(200)
+    expect(response.body).toStrictEqual(expected)
+    expect(response.headers).toStrictEqual(
+      expect.objectContaining({
+        'x-inspected-by': 'me',
+      })
+    )
+  })
+
+  it.each([
+    [inspect, header],
+    [inspectAsync, header],
+    [inspect, headerAsync],
+    [inspectAsync, headerAsync],
+  ])('end should work with json reverse', async (jsonHandler, endHandler) => {
+    const server = express()
+      .use(endMiddleware(endHandler))
+      .use(jsonpMiddleware(jsonHandler))
+      .get('/', (_req, res) => res.status(200).jsonp({ a: 'a' }).end())
     const response = await request(server).get('/')
 
     const expected = { a: 'a', inspected_by: 'me' }
