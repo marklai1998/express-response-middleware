@@ -9,7 +9,7 @@ Middleware for express responses. Fork of [express-mung](https://www.npmjs.com/p
 
 This package allows synchronous and asynchronous transformation of an express response. This is a similar concept to the express middleware for a request but for a response. Note that the middleware is executed in LIFO order. It is implemented by monkey patching (hooking) the `res.end`, `res.json`, or `res.write` methods.
 
-![GitHub CI](https://github.com/marklai1998/express-response-middleware/actions/workflows/runTest.yml/badge.svg) [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org) [![npm type definitions](https://img.shields.io/npm/types/typescript.svg)](https://www.typescriptlang.org/)
+![NPM](https://img.shields.io/npm/v/express-response-middleware) ![GitHub CI](https://github.com/marklai1998/express-response-middleware/actions/workflows/runTest.yml/badge.svg) [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org) [![npm type definitions](https://img.shields.io/npm/types/typescript.svg)](https://www.typescriptlang.org/)
 
 [Installation](#-installation) | [Quick Start](#-quick-start) | [API](#-api) | [Contributing](#-contributing)
 
