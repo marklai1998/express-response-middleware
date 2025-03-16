@@ -1,4 +1,4 @@
-# express-response-middleware
+# Express Response Middleware
 
 > [!NOTE]  
 > Come from express-mung? Checkout the [Migration Guide](docs/MIGRATE_FROM_MUNG.md)
