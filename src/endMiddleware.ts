@@ -1,26 +1,26 @@
-import { Request, RequestHandler, Response } from 'express'
-import { errorHandler } from './utils/errorHandler.js'
+import { Request, RequestHandler, Response } from "express";
+import { errorHandler } from "./utils/errorHandler.js";
 
 export type TransformEnd = (
   request: Request,
-  response: Response
-) => unknown | Promise<unknown>
+  response: Response,
+) => unknown | Promise<unknown>;
 
 export const endMiddleware =
   (fn: TransformEnd): RequestHandler =>
   (req, res, next) => {
-    const originalEndFn = res.end
+    const originalEndFn = res.end;
 
     res.end = function (this: Response) {
-      if (res.headersSent) return originalEndFn.apply(this, arguments as any)
+      if (res.headersSent) return originalEndFn.apply(this, arguments as any);
 
-      let mayBePromise
+      let mayBePromise;
       try {
-        mayBePromise = fn(req, res)
+        mayBePromise = fn(req, res);
       } catch (e) {
-        res.end = originalEndFn
-        errorHandler(e, req, res, next)
-        return res
+        res.end = originalEndFn;
+        errorHandler(e, req, res, next);
+        return res;
       }
 
       if (mayBePromise instanceof Promise) {
@@ -28,34 +28,34 @@ export const endMiddleware =
           .then(() => {
             if (res.headersSent) {
               console.error(
-                'sending response while in endMiddleware is undefined behaviour'
-              )
-              return
+                "sending response while in endMiddleware is undefined behaviour",
+              );
+              return;
             }
 
-            originalEndFn.apply(this, arguments as any)
+            originalEndFn.apply(this, arguments as any);
           })
-          .catch(e => {
-            res.end = originalEndFn
-            errorHandler(e, req, res, next)
-          })
+          .catch((e) => {
+            res.end = originalEndFn;
+            errorHandler(e, req, res, next);
+          });
 
         res.end = function (this: Response) {
-          return res
-        }
+          return res;
+        };
       } else {
         if (res.headersSent) {
           console.error(
-            'sending response while in endMiddleware is undefined behaviour'
-          )
-          return res
+            "sending response while in endMiddleware is undefined behaviour",
+          );
+          return res;
         }
 
-        return originalEndFn.apply(this, arguments as any)
+        return originalEndFn.apply(this, arguments as any);
       }
 
-      return res
-    }
+      return res;
+    };
 
-    next()
-  }
+    next();
+  };

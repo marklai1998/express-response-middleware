@@ -1,70 +1,70 @@
-import { Request, RequestHandler, Response } from 'express'
-import { errorHandler } from './utils/errorHandler.js'
+import { Request, RequestHandler, Response } from "express";
+import { errorHandler } from "./utils/errorHandler.js";
 
 export type TransformChunk = (
   chunk: string | Buffer,
   encoding: string | null,
   request: Request,
-  response: Response
-) => void | string | Buffer | Promise<void> | Promise<string> | Promise<Buffer>
+  response: Response,
+) => void | string | Buffer | Promise<void> | Promise<string> | Promise<Buffer>;
 
 export const writeMiddleware =
   (fn: TransformChunk): RequestHandler =>
   (req, res, next) => {
-    const originalWrite = res.write
-    const originalEndFn = res.end
+    const originalWrite = res.write;
+    const originalEndFn = res.end;
 
     res.write = function (this: Response, chunk) {
-      if (res.writableEnded) return false
+      if (res.writableEnded) return false;
 
-      let mayBePromise
+      let mayBePromise;
       try {
         mayBePromise = fn(
           chunk,
           // Since `encoding` is an optional argument to `res.write`,
           // make sure it is a string and not actually the callback.
-          typeof arguments[1] === 'string' ? arguments[1] : null,
+          typeof arguments[1] === "string" ? arguments[1] : null,
           req,
-          res
-        )
+          res,
+        );
       } catch (e) {
-        errorHandler(e, req, res, next)
-        return false
+        errorHandler(e, req, res, next);
+        return false;
       }
 
       if (mayBePromise instanceof Promise) {
         mayBePromise
-          .then(result => {
-            res.end = originalEndFn
+          .then((result) => {
+            res.end = originalEndFn;
 
-            if (res.writableEnded) return false
+            if (res.writableEnded) return false;
 
-            arguments[0] = result === undefined ? chunk : result
+            arguments[0] = result === undefined ? chunk : result;
 
-            const writeResponse = originalWrite.apply(res, arguments as any)
+            const writeResponse = originalWrite.apply(res, arguments as any);
 
-            if (res.__isEnd) res.end()
+            if (res.__isEnd) res.end();
 
-            return writeResponse
+            return writeResponse;
           })
-          .catch(e => {
-            res.end = originalEndFn
-            errorHandler(e, req, res, next)
-          })
+          .catch((e) => {
+            res.end = originalEndFn;
+            errorHandler(e, req, res, next);
+          });
 
         res.end = function (this: Response) {
-          this.__isEnd = true
-          return res
-        }
-        return false
+          this.__isEnd = true;
+          return res;
+        };
+        return false;
       } else {
-        const result = mayBePromise
-        if (res.writableEnded) return false
+        const result = mayBePromise;
+        if (res.writableEnded) return false;
 
-        arguments[0] = result === undefined ? chunk : result
-        return originalWrite.apply(res, arguments as any)
+        arguments[0] = result === undefined ? chunk : result;
+        return originalWrite.apply(res, arguments as any);
       }
-    }
+    };
 
-    next()
-  }
+    next();
+  };
