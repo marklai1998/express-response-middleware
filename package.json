@@ -27,6 +27,7 @@
   },
   "scripts": {
     "build": "rollup -c",
+    "prepare": "husky",
     "test": "vitest run --coverage",
     "pre-commit": "pnpm lint-staged",
     "pre-push": "tsc",
