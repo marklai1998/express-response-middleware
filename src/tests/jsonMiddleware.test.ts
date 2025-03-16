@@ -2,6 +2,7 @@ import express, { ErrorRequestHandler } from 'express'
 import request from 'supertest'
 import { jsonMiddleware, TransformJson } from '../index.js'
 import { sleep } from './testHelpers/sleep.js'
+import { expect } from 'vitest'
 
 describe('jsonMiddleware', () => {
   const noop: TransformJson = () => {}
@@ -12,8 +13,11 @@ describe('jsonMiddleware', () => {
   }
 
   const inspect: TransformJson<any> = json => {
+    return { ...json, inspected_by: 'me' }
+  }
+
+  const inspectMutate: TransformJson<any> = json => {
     json.inspected_by = 'me'
-    return json
   }
 
   const inspect2: TransformJson<any> = json => {
@@ -21,12 +25,18 @@ describe('jsonMiddleware', () => {
     return json
   }
 
-  const inspectAsync: TransformJson = async json => {
+  const inspectMutateAsync: TransformJson = async json => {
     await sleep()
     ;(json as any).inspected_by = 'me'
     await sleep()
+  }
 
-    return json
+  const inspectAsync: TransformJson = async json => {
+    await sleep()
+    const res = { ...json, inspected_by: 'me' }
+    await sleep()
+
+    return res
   }
 
   const inspectAsync2: TransformJson = async json => {
@@ -61,12 +71,14 @@ describe('jsonMiddleware', () => {
     return Promise.resolve(json)
   }
 
-  it.each([inspect, inspectAsync])(
+  it.each([inspect, inspectAsync, inspectMutate, inspectMutateAsync])(
     'should return the JSON result',
     async handler => {
       const server = express()
         .use(jsonMiddleware(handler))
-        .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
+        .get('/', (_req, res) => {
+          res.status(200).json({ a: 'a' }).end()
+        })
       const response = await request(server).get('/')
 
       const expected = { a: 'a', inspected_by: 'me' }
@@ -79,6 +91,24 @@ describe('jsonMiddleware', () => {
     }
   )
 
+  it.each([inspect, inspectAsync])(
+    'should not call if header is already sent',
+    async handler => {
+      const handlerSpy = vi.fn(handler)
+
+      const server = express()
+        .use(jsonMiddleware(handlerSpy))
+        .get('/', (_req, res) => {
+          res.end()
+          res.status(200).json({ a: 'a' }).end()
+        })
+      const response = await request(server).get('/')
+
+      expect(handlerSpy).not.toHaveBeenCalled()
+      expect(response.status).toStrictEqual(200)
+    }
+  )
+
   it.each([
     [inspect, inspect2],
     [inspect, inspectAsync2],
@@ -88,7 +118,9 @@ describe('jsonMiddleware', () => {
     const server = express()
       .use(jsonMiddleware(handler))
       .use(jsonMiddleware(handler2))
-      .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
+      .get('/', (_req, res) => {
+        res.status(200).json({ a: 'a' }).end()
+      })
     const response = await request(server).get('/')
 
     const expected = { a: 'a', inspected_by: 'me', inspected_by_2: 'him' }
@@ -105,7 +137,9 @@ describe('jsonMiddleware', () => {
     async handler => {
       const server = express()
         .use(jsonMiddleware(handler))
-        .get('/', (_req, res) => res.status(404).json({ a: 'a' }).end())
+        .get('/', (_req, res) => {
+          res.status(404).json({ a: 'a' }).end()
+        })
       const response = await request(server).get('/')
 
       const expected = { a: 'a', inspected_by: 'me' }
@@ -123,7 +157,9 @@ describe('jsonMiddleware', () => {
     async handler => {
       const server = express()
         .use(jsonMiddleware(handler))
-        .get('/', (_req, res) => res.status(200).send({ a: 'a' }).end())
+        .get('/', (_req, res) => {
+          res.status(200).send({ a: 'a' }).end()
+        })
       const response = await request(server).get('/')
 
       let expected = { a: 'a', inspected_by: 'me' }
@@ -141,7 +177,9 @@ describe('jsonMiddleware', () => {
     async handler => {
       const server = express()
         .use(jsonMiddleware(handler))
-        .get('/', (_req, res) => res.status(200).json(42).end())
+        .get('/', (_req, res) => {
+          res.status(200).json(42).end()
+        })
       const response = await request(server).get('/')
 
       expect(response.status).toStrictEqual(200)
@@ -159,7 +197,9 @@ describe('jsonMiddleware', () => {
     async handler => {
       const server = express()
         .use(jsonMiddleware(handler))
-        .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
+        .get('/', (_req, res) => {
+          res.status(200).json({ a: 'a' }).end()
+        })
       const response = await request(server).get('/')
 
       expect(response.status).toStrictEqual(403)
@@ -175,12 +215,15 @@ describe('jsonMiddleware', () => {
   it.each([error, errorAsync])(
     'should 500 on a synchronous exception',
     async handler => {
-      const errorHandler: ErrorRequestHandler = (err, _req, res, _next) =>
+      const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
         res.status(500).send(err.message).end()
+      }
       const server = express()
         .use(errorHandler)
         .use(jsonMiddleware(handler))
-        .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
+        .get('/', (_req, res) => {
+          res.status(200).json({ a: 'a' }).end()
+        })
 
       const response = await request(server).get('/')
 
@@ -191,8 +234,9 @@ describe('jsonMiddleware', () => {
   it.each([error, errorAsync])(
     'should 500 on an asynchronous exception',
     async handler => {
-      const errorHandler: ErrorRequestHandler = (err, _req, res, _next) =>
+      const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
         res.status(500).send(err.message).end()
+      }
       const server = express()
         .use(errorHandler)
         .use(jsonMiddleware(handler))

@@ -44,7 +44,9 @@ describe('endMiddleware', () => {
   it.each([header, headerAsync])('should return the headers', async handler => {
     const server = express()
       .use(endMiddleware(handler))
-      .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
+      .get('/', (_req, res) => {
+        res.status(200).json({ a: 'a' }).end()
+      })
     const response = await request(server).get('/')
 
     expect(response.status).toStrictEqual(200)
@@ -65,7 +67,9 @@ describe('endMiddleware', () => {
     const server = express()
       .use(endMiddleware(handler))
       .use(endMiddleware(handler2))
-      .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
+      .get('/', (_req, res) => {
+        res.status(200).json({ a: 'a' }).end()
+      })
     const response = await request(server).get('/')
 
     expect(response.status).toStrictEqual(200)
@@ -83,7 +87,9 @@ describe('endMiddleware', () => {
     async handler => {
       const server = express()
         .use(endMiddleware(handler))
-        .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
+        .get('/', (_req, res) => {
+          res.status(200).json({ a: 'a' }).end()
+        })
       const response = await request(server).get('/')
 
       expect(response.status).toStrictEqual(500)

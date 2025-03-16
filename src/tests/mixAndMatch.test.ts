@@ -66,7 +66,9 @@ describe('mix and match', () => {
     const server = express()
       .use(jsonMiddleware(jsonHandler))
       .use(endMiddleware(endHandler))
-      .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
+      .get('/', (_req, res) => {
+        res.status(200).json({ a: 'a' }).end()
+      })
     const response = await request(server).get('/')
 
     const expected = { a: 'a', inspected_by: 'me' }
@@ -89,7 +91,9 @@ describe('mix and match', () => {
     const server = express()
       .use(endMiddleware(endHandler))
       .use(jsonMiddleware(jsonHandler))
-      .get('/', (_req, res) => res.status(200).json({ a: 'a' }).end())
+      .get('/', (_req, res) => {
+        res.status(200).json({ a: 'a' }).end()
+      })
     const response = await request(server).get('/')
 
     const expected = { a: 'a', inspected_by: 'me' }
@@ -112,7 +116,9 @@ describe('mix and match', () => {
     const server = express()
       .use(jsonpMiddleware(jsonHandler))
       .use(endMiddleware(endHandler))
-      .get('/', (_req, res) => res.status(200).jsonp({ a: 'a' }).end())
+      .get('/', (_req, res) => {
+        res.status(200).jsonp({ a: 'a' }).end()
+      })
     const response = await request(server).get('/')
 
     const expected = { a: 'a', inspected_by: 'me' }
@@ -135,7 +141,9 @@ describe('mix and match', () => {
     const server = express()
       .use(endMiddleware(endHandler))
       .use(jsonpMiddleware(jsonHandler))
-      .get('/', (_req, res) => res.status(200).jsonp({ a: 'a' }).end())
+      .get('/', (_req, res) => {
+        res.status(200).jsonp({ a: 'a' }).end()
+      })
     const response = await request(server).get('/')
 
     const expected = { a: 'a', inspected_by: 'me' }

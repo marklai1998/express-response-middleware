@@ -23,23 +23,33 @@ describe('sendMiddleware', () => {
     return data + ' with more content 2'
   }
 
-  const modifyJson: TransformSend = data => {
+  const modifyJsonMutation: TransformSend = data => {
     if (typeof data === 'object') {
       ;(data as any).b = 'b'
     }
+  }
 
-    return data
+  const modifyJsonMutationAsync: TransformSend = async data => {
+    await sleep()
+
+    if (typeof data === 'object') {
+      ;(data as any).b = 'b'
+    }
+    await sleep()
+  }
+
+  const modifyJson: TransformSend = data => {
+    return typeof data === 'object' ? { ...data, b: 'b' } : data
   }
 
   const modifyJsonAsync: TransformSend = async data => {
     await sleep()
 
-    if (typeof data === 'object') {
-      ;(data as any).b = 'b'
-    }
+    const res = typeof data === 'object' ? { ...data, b: 'b' } : data
+
     await sleep()
 
-    return data
+    return res
   }
 
   const error: TransformSend = data => {
@@ -83,6 +93,24 @@ describe('sendMiddleware', () => {
     }
   )
 
+  it.each([modifyText, modifyTextAsync])(
+    'should not call if header is already sent',
+    async handler => {
+      const handlerSpy = vi.fn(handler)
+
+      const server = express()
+        .use(sendMiddleware(handlerSpy))
+        .get('/', (_req, res) => {
+          res.end()
+          res.send('This is the response body')
+        })
+      const response = await request(server).get('/')
+
+      expect(handlerSpy).not.toHaveBeenCalled()
+      expect(response.text).toStrictEqual('')
+    }
+  )
+
   it.each([
     [modifyText, modifyText2],
     [modifyText, modifyTextAsync2],
@@ -92,7 +120,9 @@ describe('sendMiddleware', () => {
     const server = express()
       .use(sendMiddleware(handler))
       .use(sendMiddleware(handler2))
-      .get('/', (_req, res) => res.send('This is the response body'))
+      .get('/', (_req, res) => {
+        res.send('This is the response body')
+      })
     const response = await request(server).get('/')
 
     expect(response.text).toStrictEqual(
@@ -100,25 +130,27 @@ describe('sendMiddleware', () => {
     )
   })
 
-  it.each([modifyJson, modifyJsonAsync])(
-    'should return a modified json body ',
-    async handler => {
-      const server = express()
-        .use(sendMiddleware(handler))
-        .get('/', (_req, res) => {
-          res.send({
-            a: 'a',
-          })
+  it.each([
+    modifyJson,
+    modifyJsonAsync,
+    modifyJsonMutation,
+    modifyJsonMutationAsync,
+  ])('should return a modified json body ', async handler => {
+    const server = express()
+      .use(sendMiddleware(handler))
+      .get('/', (_req, res) => {
+        res.send({
+          a: 'a',
         })
-      const response = await request(server).get('/')
-
-      expect(response.status).toStrictEqual(200)
-      expect(response.body).toStrictEqual({
-        a: 'a',
-        b: 'b',
       })
-    }
-  )
+    const response = await request(server).get('/')
+
+    expect(response.status).toStrictEqual(200)
+    expect(response.body).toStrictEqual({
+      a: 'a',
+      b: 'b',
+    })
+  })
 
   it.each([modifyText, modifyTextAsync])(
     'should send an error response',

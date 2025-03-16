@@ -6,5 +6,4 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     .set('content-language', 'en')
     .json({ message: err.message })
     .end()
-  return res
 }

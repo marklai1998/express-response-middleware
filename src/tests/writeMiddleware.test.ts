@@ -27,7 +27,7 @@ describe('write', () => {
     try {
       const json = JSON.parse(String(chunk))
       json.inspected_by = 'me'
-      return JSON.stringify(json)
+      return JSON.stringify({ ...json, inspected_by: 'me' })
     } catch (e) {
       console.log('JSON parse error')
       throw e
@@ -40,7 +40,7 @@ describe('write', () => {
       const json = JSON.parse(String(chunk))
       json.inspected_by = 'me'
       sleep()
-      return JSON.stringify(json)
+      return JSON.stringify({ ...json, inspected_by: 'me' })
     } catch (e) {
       console.log('JSON parse error')
       throw e
@@ -51,7 +51,8 @@ describe('write', () => {
     ;(chunk as any).foo.bar.hopefully.fails()
   }
 
-  const errorAsync: TransformChunk = chunk => {
+  const errorAsync: TransformChunk = async chunk => {
+    await sleep()
     ;(chunk as any).foo.bar.hopefully.fails()
   }
 
@@ -181,8 +182,9 @@ describe('write', () => {
   it.each([error, errorAsync])(
     'should 500 on a synchronous exception',
     async handler => {
-      const errorHandler: ErrorRequestHandler = (err, _req, res, _next) =>
+      const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
         res.status(500).send(err.message).end()
+      }
       const server = express()
         .use(errorHandler)
         .use(writeMiddleware(handler))
@@ -202,8 +204,9 @@ describe('write', () => {
   it.each([error, errorAsync])(
     'should 500 on an asynchronous exception',
     async handler => {
-      const errorHandler: ErrorRequestHandler = (err, _req, res, _next) =>
+      const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
         res.status(500).send(err.message).end()
+      }
       const server = express()
         .use(errorHandler)
         .use(writeMiddleware(handler))
