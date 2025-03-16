@@ -28,6 +28,8 @@
   "scripts": {
     "build": "rollup -c",
     "test": "vitest run --coverage",
+    "pre-commit": "pnpm lint-staged",
+    "pre-push": "tsc",
     "lint:format": "prettier --check src package.json",
     "lint:format:fix": "prettier --write src package.json"
   },
@@ -48,11 +50,15 @@
   },
   "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
+    "@commitlint/cli": "19.7.1",
+    "@commitlint/config-conventional": "19.7.1",
     "@types/express": "5.0.0",
     "@types/node": "22.13.10",
     "@types/supertest": "6.0.2",
     "@vitest/coverage-v8": "3.0.8",
+    "husky": "9.1.7",
     "prettier": "3.5.3",
+    "lint-staged": "15.5.0",
     "rollup": "4.35.0",
     "rollup-plugin-dts": "6.1.1",
     "rollup-plugin-esbuild": "6.2.1",

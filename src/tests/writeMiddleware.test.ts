@@ -29,17 +29,6 @@ describe('write', () => {
     return chunk + ' with more content2'
   }
 
-  const end: TransformChunk = (chunk, _encoding, _req, res) => {
-    res.end()
-    return chunk + ' with more content'
-  }
-
-  const endAsync: TransformChunk = async (chunk, _encoding, _req, res) => {
-    await sleep()
-    res.end('OOps')
-    return chunk + ' with more content'
-  }
-
   const inspectJson: TransformChunk = chunk => {
     try {
       const json = JSON.parse(String(chunk))
