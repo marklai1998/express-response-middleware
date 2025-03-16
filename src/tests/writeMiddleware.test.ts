@@ -14,6 +14,12 @@ describe('write', () => {
     return chunk + ' with more content'
   }
 
+  const doNothing: TransformChunk = () => {}
+
+  const doNothingAsync: TransformChunk = async () => {
+    await sleep()
+  }
+
   const appendText2: TransformChunk = chunk => {
     return chunk + ' with more content2'
   }
@@ -79,6 +85,40 @@ describe('write', () => {
       expect(response.text).toStrictEqual(
         'This is the response body with more content'
       )
+    }
+  )
+
+  it.each([appendText, appendTextAsync])(
+    'should not call if header is already sent',
+    async handler => {
+      const handlerSpy = vi.fn(handler)
+
+      const server = express()
+        .use(writeMiddleware(handlerSpy))
+        .get('/', (_req, res) => {
+          res.end()
+          res.status(200).write('This is the response body')
+        })
+      const response = await request(server).get('/')
+
+      expect(handlerSpy).not.toHaveBeenCalled()
+      expect(response.status).toStrictEqual(200)
+    }
+  )
+
+  it.each([doNothing, doNothingAsync])(
+    'should return the text result if callback return void',
+    async handler => {
+      const server = express()
+        .use(writeMiddleware(handler))
+        .get('/', (_req, res) => {
+          res.status(200).write(Buffer.from('This is the response body'))
+          res.end()
+        })
+      const response = await request(server).get('/')
+
+      expect(response.status).toStrictEqual(200)
+      expect(response.text).toStrictEqual('This is the response body')
     }
   )
 
