@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/marklai1998/express-response-middleware/compare/v2.1.0...v2.1.1) (2025-03-16)
+
+
+### Bug Fixes
+
+* remove old type ([80a9eca](https://github.com/marklai1998/express-response-middleware/commit/80a9eca3e083a44b8f9cc34b5cffd59bed4b70a7))
+
 ## [2.1.0](https://github.com/marklai1998/express-response-middleware/compare/v2.0.1...v2.1.0) (2025-03-15)
 
 
