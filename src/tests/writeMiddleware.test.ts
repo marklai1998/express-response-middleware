@@ -29,6 +29,17 @@ describe('write', () => {
     return chunk + ' with more content2'
   }
 
+  const end: TransformChunk = (chunk, _encoding, _req, res) => {
+    res.end()
+    return chunk + ' with more content'
+  }
+
+  const endAsync: TransformChunk = async (chunk, _encoding, _req, res) => {
+    await sleep()
+    res.end('OOps')
+    return chunk + ' with more content'
+  }
+
   const inspectJson: TransformChunk = chunk => {
     try {
       const json = JSON.parse(String(chunk))
@@ -76,7 +87,7 @@ describe('write', () => {
       const server = express()
         .use(writeMiddleware(handler))
         .get('/', (_req, res) => {
-          res.status(200).write('This is the response body')
+          res.status(200).write('This is the response body', 'utf-8')
           res.end()
         })
       const response = await request(server).get('/')
