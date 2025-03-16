@@ -1,1 +1,2 @@
-export const sleep = () => new Promise(resolve => setTimeout(resolve, 100))
+export const sleep = () =>
+  new Promise(resolve => setTimeout(resolve, Math.random() * 1000))
