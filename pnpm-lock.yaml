@@ -36,6 +36,9 @@ importers:
       rollup-plugin-esbuild:
         specifier: 6.2.1
         version: 6.2.1(esbuild@0.25.1)(rollup@4.35.0)
+      rollup-plugin-node-externals:
+        specifier: ^8.0.0
+        version: 8.0.0(rollup@4.35.0)
       rollup-plugin-peer-deps-external:
         specifier: 2.2.4
         version: 2.2.4(rollup@4.35.0)
@@ -926,6 +929,12 @@ packages:
     peerDependencies:
       esbuild: '>=0.18.0'
       rollup: ^1.20.0 || ^2.0.0 || ^3.0.0 || ^4.0.0
+
+  rollup-plugin-node-externals@8.0.0:
+    resolution: {integrity: sha512-2HIOpWsWn5DqBoYl6iCAmB4kd5GoGbF68PR4xKR1YBPvywiqjtYvDEjHFodyqRL51iAMDITP074Zxs0OKs6F+g==}
+    engines: {node: '>= 21 || ^20.6.0 || ^18.19.0'}
+    peerDependencies:
+      rollup: ^4.0.0
 
   rollup-plugin-peer-deps-external@2.2.4:
     resolution: {integrity: sha512-AWdukIM1+k5JDdAqV/Cxd+nejvno2FVLVeZ74NKggm3Q5s9cbbcOgUPGdbxPi4BXu7xGaZ8HG12F+thImYu/0g==}
@@ -1995,6 +2004,10 @@ snapshots:
       unplugin-utils: 0.2.4
     transitivePeerDependencies:
       - supports-color
+
+  rollup-plugin-node-externals@8.0.0(rollup@4.35.0):
+    dependencies:
+      rollup: 4.35.0
 
   rollup-plugin-peer-deps-external@2.2.4(rollup@4.35.0):
     dependencies:

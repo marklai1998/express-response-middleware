@@ -1,11 +1,12 @@
 import dts from 'rollup-plugin-dts'
 import peerDepsExternal from 'rollup-plugin-peer-deps-external'
 import esbuild from 'rollup-plugin-esbuild'
+import { nodeExternals } from 'rollup-plugin-node-externals'
 
 export default [
   {
     input: 'src/index.ts',
-    plugins: [peerDepsExternal(), esbuild()],
+    plugins: [nodeExternals(), peerDepsExternal(), esbuild()],
     output: [
       {
         dir: 'dist/esm',
