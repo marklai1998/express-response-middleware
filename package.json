@@ -67,13 +67,5 @@
   "packageManager": "pnpm@10.6.3",
   "engines": {
     "node": ">=18"
-  },
-  "pnpm": {
-    "ignoredBuiltDependencies": [
-      "esbuild"
-    ],
-    "onlyBuiltDependencies": [
-      "esbuild"
-    ]
   }
 }
