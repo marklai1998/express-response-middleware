@@ -43,8 +43,8 @@ importers:
         specifier: 4.36.0
         version: 4.36.0
       rollup-plugin-dts:
-        specifier: 6.1.1
-        version: 6.1.1(rollup@4.36.0)(typescript@5.8.2)
+        specifier: 6.2.0
+        version: 6.2.0(rollup@4.36.0)(typescript@5.8.2)
       rollup-plugin-esbuild:
         specifier: 6.2.1
         version: 6.2.1(esbuild@0.25.1)(rollup@4.36.0)
@@ -1355,8 +1355,8 @@ packages:
   rfdc@1.4.1:
     resolution: {integrity: sha512-q1b3N5QkRUWUl7iyylaaj3kOpIT0N2i9MqIEQXP73GVsN9cw3fdx8X63cEmWhJGi2PPCF23Ijp7ktmd39rawIA==}
 
-  rollup-plugin-dts@6.1.1:
-    resolution: {integrity: sha512-aSHRcJ6KG2IHIioYlvAOcEq6U99sVtqDDKVhnwt70rW6tsz3tv5OSjEiWcgzfsHdLyGXZ/3b/7b/+Za3Y6r1XA==}
+  rollup-plugin-dts@6.2.0:
+    resolution: {integrity: sha512-iciY+z46mUbN5nCxtJqVynwgrZZljM8of6k8Rg5rVAmu4VHDxexFPgoCa2wrJG5mMsHSGrJmjQPCM4vD0Oe3Lg==}
     engines: {node: '>=16'}
     peerDependencies:
       rollup: ^3.29.4 || ^4
@@ -2915,7 +2915,7 @@ snapshots:
 
   rfdc@1.4.1: {}
 
-  rollup-plugin-dts@6.1.1(rollup@4.36.0)(typescript@5.8.2):
+  rollup-plugin-dts@6.2.0(rollup@4.36.0)(typescript@5.8.2):
     dependencies:
       magic-string: 0.30.17
       rollup: 4.36.0
