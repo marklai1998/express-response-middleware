@@ -32,6 +32,9 @@ jobs:
       - name: Lint
         run: pnpm biome check --diagnostic-level=error
 
+      - name: Lint type
+        run: pnpm tsc
+
   run-test:
     runs-on: ubuntu-latest
     steps:
