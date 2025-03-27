@@ -29,8 +29,8 @@ jobs:
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
 
-      - name: Lint format
-        run: pnpm lint:format
+      - name: Lint
+        run: pnpm biome check --diagnostic-level=error
 
   run-test:
     runs-on: ubuntu-latest

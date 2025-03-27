@@ -1,5 +1,5 @@
-import { Request, RequestHandler, Response } from "express";
-import { errorHandler } from "./utils/errorHandler.js";
+import type { Request, RequestHandler, Response } from 'express';
+import { errorHandler } from './utils/errorHandler.js';
 
 export type TransformChunk = (
   chunk: string | Buffer,
@@ -17,13 +17,14 @@ export const writeMiddleware =
     res.write = function (this: Response, chunk) {
       if (res.writableEnded) return false;
 
-      let mayBePromise;
+      let mayBePromise: ReturnType<TransformChunk>;
       try {
         mayBePromise = fn(
           chunk,
           // Since `encoding` is an optional argument to `res.write`,
           // make sure it is a string and not actually the callback.
-          typeof arguments[1] === "string" ? arguments[1] : null,
+          // biome-ignore lint/style/noArguments: pass argument type
+          typeof arguments[1] === 'string' ? arguments[1] : null,
           req,
           res,
         );
@@ -39,8 +40,10 @@ export const writeMiddleware =
 
             if (res.writableEnded) return false;
 
+            // biome-ignore lint/style/noArguments: pass argument type
             arguments[0] = result === undefined ? chunk : result;
 
+            // biome-ignore lint/style/noArguments: pass argument type
             const writeResponse = originalWrite.apply(res, arguments as any);
 
             if (res.__isEnd) res.end();
@@ -57,13 +60,16 @@ export const writeMiddleware =
           return res;
         };
         return false;
-      } else {
-        const result = mayBePromise;
-        if (res.writableEnded) return false;
-
-        arguments[0] = result === undefined ? chunk : result;
-        return originalWrite.apply(res, arguments as any);
       }
+
+      const result = mayBePromise;
+      if (res.writableEnded) return false;
+
+      // biome-ignore lint/style/noArguments: pass argument type
+      arguments[0] = result === undefined ? chunk : result;
+
+      // biome-ignore lint/style/noArguments: pass argument type
+      return originalWrite.apply(res, arguments as any);
     };
 
     next();

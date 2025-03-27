@@ -1,5 +1,5 @@
-import { Request, RequestHandler, Response } from "express";
-import { errorHandler } from "./utils/errorHandler.js";
+import type { Request, RequestHandler, Response } from 'express';
+import { errorHandler } from './utils/errorHandler.js';
 
 export type TransformSend<T = unknown> = (
   body: T,
@@ -15,7 +15,7 @@ export const sendMiddleware =
     res.send = function (this: Response, payload) {
       if (res.headersSent) return res;
 
-      let mayBePromise;
+      let mayBePromise: unknown;
       try {
         mayBePromise = fn(payload, req, res);
       } catch (e) {

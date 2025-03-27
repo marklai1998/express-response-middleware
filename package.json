@@ -20,37 +20,28 @@
   },
   "typesVersions": {
     "*": {
-      "*": [
-        "./dist/esm/index.d.ts"
-      ]
+      "*": ["./dist/esm/index.d.ts"]
     }
   },
   "scripts": {
     "build": "rollup -c",
     "prepare": "husky",
     "test": "vitest run --coverage",
-    "pre-commit": "pnpm lint-staged",
-    "pre-push": "tsc",
-    "lint:format": "prettier --check src package.json",
-    "lint:format:fix": "prettier --write src package.json"
+    "pre-commit": "pnpm biome check --fix --staged",
+    "pre-push": "tsc"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/marklai1998/express-response-middleware"
   },
-  "keywords": [
-    "mung",
-    "middleware",
-    "transform",
-    "response",
-    "express"
-  ],
+  "keywords": ["mung", "middleware", "transform", "response", "express"],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/marklai1998/express-response-middleware/issues"
   },
   "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@commitlint/cli": "19.8.0",
     "@commitlint/config-conventional": "19.8.0",
     "@types/express": "5.0.1",
@@ -58,8 +49,6 @@
     "@types/supertest": "6.0.3",
     "@vitest/coverage-v8": "3.0.9",
     "husky": "9.1.7",
-    "prettier": "3.5.3",
-    "lint-staged": "15.5.0",
     "rollup": "4.37.0",
     "rollup-plugin-dts": "6.2.1",
     "rollup-plugin-esbuild": "6.2.1",

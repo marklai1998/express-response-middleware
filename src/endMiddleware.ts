@@ -1,20 +1,20 @@
-import { Request, RequestHandler, Response } from "express";
-import { errorHandler } from "./utils/errorHandler.js";
+import type { Request, RequestHandler, Response } from 'express';
+import { errorHandler } from './utils/errorHandler.js';
 
-export type TransformEnd = (
+export type TransformEnd<T = unknown> = (
   request: Request,
   response: Response,
-) => unknown | Promise<unknown>;
+) => T | Promise<T>;
 
 export const endMiddleware =
-  (fn: TransformEnd): RequestHandler =>
+  <T = unknown>(fn: TransformEnd<T>): RequestHandler =>
   (req, res, next) => {
     const originalEndFn = res.end;
 
     res.end = function (this: Response) {
       if (res.headersSent) return originalEndFn.apply(this, arguments as any);
 
-      let mayBePromise;
+      let mayBePromise: T | Promise<T>;
       try {
         mayBePromise = fn(req, res);
       } catch (e) {
@@ -28,7 +28,7 @@ export const endMiddleware =
           .then(() => {
             if (res.headersSent) {
               console.error(
-                "sending response while in endMiddleware is undefined behaviour",
+                'sending response while in endMiddleware is undefined behaviour',
               );
               return;
             }
@@ -46,7 +46,7 @@ export const endMiddleware =
       } else {
         if (res.headersSent) {
           console.error(
-            "sending response while in endMiddleware is undefined behaviour",
+            'sending response while in endMiddleware is undefined behaviour',
           );
           return res;
         }

@@ -1,7 +1,7 @@
-import dts from 'rollup-plugin-dts'
-import peerDepsExternal from 'rollup-plugin-peer-deps-external'
-import esbuild from 'rollup-plugin-esbuild'
-import { nodeExternals } from 'rollup-plugin-node-externals'
+import dts from 'rollup-plugin-dts';
+import esbuild from 'rollup-plugin-esbuild';
+import { nodeExternals } from 'rollup-plugin-node-externals';
+import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
 export default [
   {
@@ -49,4 +49,4 @@ export default [
       },
     ],
   },
-]
+];
