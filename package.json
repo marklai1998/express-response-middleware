@@ -42,26 +42,26 @@
   "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
-    "@commitlint/cli": "19.8.0",
-    "@commitlint/config-conventional": "19.8.0",
-    "@types/express": "5.0.1",
-    "@types/node": "22.15.3",
+    "@commitlint/cli": "19.8.1",
+    "@commitlint/config-conventional": "19.8.1",
+    "@types/express": "5.0.2",
+    "@types/node": "22.15.21",
     "@types/supertest": "6.0.3",
-    "@vitest/coverage-v8": "3.1.2",
+    "@vitest/coverage-v8": "3.1.4",
     "husky": "9.1.7",
-    "rollup": "4.40.1",
+    "rollup": "4.41.1",
     "rollup-plugin-dts": "6.2.1",
     "rollup-plugin-esbuild": "6.2.1",
     "rollup-plugin-node-externals": "8.0.0",
     "rollup-plugin-peer-deps-external": "2.2.4",
-    "supertest": "7.1.0",
+    "supertest": "7.1.1",
     "typescript": "5.8.3",
-    "vitest": "3.1.2"
+    "vitest": "3.1.4"
   },
   "peerDependencies": {
     "express": "^4.0.0 || ^5.0.0"
   },
-  "packageManager": "pnpm@10.10.0",
+  "packageManager": "pnpm@10.11.0",
   "engines": {
     "node": ">=18"
   }
