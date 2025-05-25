@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.2](https://github.com/marklai1998/express-response-middleware/compare/v2.1.1...v2.1.2) (2025-05-25)
+
+
+### Bug Fixes
+
+* remove type module flag ([d2a2f9d](https://github.com/marklai1998/express-response-middleware/commit/d2a2f9d9ce23a3d35f6f2fe0f8d9b4f4792f74bc))
+
 ## [2.1.1](https://github.com/marklai1998/express-response-middleware/compare/v2.1.0...v2.1.1) (2025-03-16)
 
 
