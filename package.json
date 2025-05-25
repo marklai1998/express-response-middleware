@@ -1,6 +1,6 @@
 {
   "name": "express-response-middleware",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "Transform an express response",
   "main": "dist/cjs/index.cjs",
   "module": "dist/esm/index.mjs",
@@ -19,7 +19,9 @@
   },
   "typesVersions": {
     "*": {
-      "*": ["./dist/esm/index.d.ts"]
+      "*": [
+        "./dist/esm/index.d.ts"
+      ]
     }
   },
   "scripts": {
@@ -33,7 +35,13 @@
     "type": "git",
     "url": "git+https://github.com/marklai1998/express-response-middleware"
   },
-  "keywords": ["mung", "middleware", "transform", "response", "express"],
+  "keywords": [
+    "mung",
+    "middleware",
+    "transform",
+    "response",
+    "express"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/marklai1998/express-response-middleware/issues"
