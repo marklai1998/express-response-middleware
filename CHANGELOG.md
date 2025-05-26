@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.3](https://github.com/marklai1998/express-response-middleware/compare/v2.1.2...v2.1.3) (2025-05-26)
+
+
+### Bug Fixes
+
+* only include dist in build ([b08a020](https://github.com/marklai1998/express-response-middleware/commit/b08a0208143428e851683e8a9b3669b86759e772))
+
 ## [2.1.2](https://github.com/marklai1998/express-response-middleware/compare/v2.1.1...v2.1.2) (2025-05-25)
 
 
