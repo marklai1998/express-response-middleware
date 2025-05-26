@@ -1,8 +1,10 @@
 {
   "name": "express-response-middleware",
-  "version": "2.1.2",
+  "version": "2.1.3",
   "description": "Transform an express response",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "dist/cjs/index.cjs",
   "module": "dist/esm/index.mjs",
   "types": "dist/esm/index.d.ts",
