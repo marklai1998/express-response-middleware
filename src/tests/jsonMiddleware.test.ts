@@ -1,7 +1,7 @@
 import express, { type ErrorRequestHandler } from 'express';
 import request from 'supertest';
 import { expect } from 'vitest';
-import { type TransformJson, jsonMiddleware } from '../index.js';
+import { jsonMiddleware, type TransformJson } from '../index.js';
 import { sleep } from './testHelpers/sleep.js';
 
 describe('jsonMiddleware', () => {

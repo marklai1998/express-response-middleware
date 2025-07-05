@@ -7,24 +7,23 @@
   },
   "files": {
     "ignoreUnknown": false,
-    "ignore": []
+    "includes": ["**"]
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space"
   },
-  "organizeImports": {
-    "enabled": true
-  },
+  "assist": { "enabled": true },
   "linter": {
     "enabled": true,
     "rules": {
       "recommended": true,
-      "style": {
-        "noArguments": "off"
-      },
+      "style": {},
       "suspicious": {
         "noExplicitAny": "warn"
+      },
+      "complexity": {
+        "noArguments": "off"
       }
     }
   },

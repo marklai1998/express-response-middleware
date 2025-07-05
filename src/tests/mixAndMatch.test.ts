@@ -2,15 +2,15 @@ import express from 'express';
 import request from 'supertest';
 import { expect } from 'vitest';
 import {
-  type TransformChunk,
-  type TransformEnd,
-  type TransformJson,
   endMiddleware,
   jsonMiddleware,
   jsonpMiddleware,
+  type TransformChunk,
+  type TransformEnd,
+  type TransformJson,
   writeMiddleware,
 } from '../index.js';
-import { type TransformSend, sendMiddleware } from '../sendMiddleware.js';
+import { sendMiddleware, type TransformSend } from '../sendMiddleware.js';
 import { sleep } from './testHelpers/sleep.js';
 
 describe('mix and match', () => {

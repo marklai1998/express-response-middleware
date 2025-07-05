@@ -1,7 +1,7 @@
 import express from 'express';
 import request from 'supertest';
 import { expect } from 'vitest';
-import { type TransformEnd, endMiddleware } from '../index.js';
+import { endMiddleware, type TransformEnd } from '../index.js';
 import { sleep } from './testHelpers/sleep.js';
 
 describe('endMiddleware', () => {
