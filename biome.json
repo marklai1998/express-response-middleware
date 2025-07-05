@@ -6,25 +6,22 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": false
+    "ignoreUnknown": true
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space"
   },
-  "assist": { "enabled": true },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "recommended": true
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
-      "suspicious": {
-        "noExplicitAny": "warn"
-      }
-    }
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "double"
+      "recommended": true
     }
   }
 }
