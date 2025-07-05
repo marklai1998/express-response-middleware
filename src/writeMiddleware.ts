@@ -1,5 +1,5 @@
-import type { Request, RequestHandler, Response } from 'express';
-import { errorHandler } from './utils/errorHandler.js';
+import type { Request, RequestHandler, Response } from "express";
+import { errorHandler } from "./utils/errorHandler.js";
 
 export type TransformChunk = (
   chunk: string | Buffer,
@@ -23,7 +23,7 @@ export const writeMiddleware =
           chunk,
           // Since `encoding` is an optional argument to `res.write`,
           // make sure it is a string and not actually the callback.
-          typeof arguments[1] === 'string' ? arguments[1] : null,
+          typeof arguments[1] === "string" ? arguments[1] : null,
           req,
           res,
         );

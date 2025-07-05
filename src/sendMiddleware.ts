@@ -1,5 +1,5 @@
-import type { Request, RequestHandler, Response } from 'express';
-import { errorHandler } from './utils/errorHandler.js';
+import type { Request, RequestHandler, Response } from "express";
+import { errorHandler } from "./utils/errorHandler.js";
 
 export type TransformSend<T = unknown> = (
   body: T,
