@@ -17,12 +17,8 @@
     "enabled": true,
     "rules": {
       "recommended": true,
-      "style": {},
       "suspicious": {
         "noExplicitAny": "warn"
-      },
-      "complexity": {
-        "noArguments": "off"
       }
     }
   },
