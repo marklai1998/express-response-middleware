@@ -1,10 +1,10 @@
-import express from 'express';
-import request from 'supertest';
-import { expect } from 'vitest';
-import { type TransformSend, sendMiddleware } from '../sendMiddleware.js';
-import { sleep } from './testHelpers/sleep.js';
+import express from "express";
+import request from "supertest";
+import { expect } from "vitest";
+import { sendMiddleware, type TransformSend } from "../sendMiddleware.js";
+import { sleep } from "./testHelpers/sleep.js";
 
-describe('sendMiddleware', () => {
+describe("sendMiddleware", () => {
   const modifyText: TransformSend = (data) => {
     return `${data} with more content`;
   };
@@ -24,28 +24,28 @@ describe('sendMiddleware', () => {
   };
 
   const modifyJsonMutation: TransformSend = (data) => {
-    if (typeof data === 'object') {
-      (data as any).b = 'b';
+    if (typeof data === "object") {
+      (data as any).b = "b";
     }
   };
 
   const modifyJsonMutationAsync: TransformSend = async (data) => {
     await sleep();
 
-    if (typeof data === 'object') {
-      (data as any).b = 'b';
+    if (typeof data === "object") {
+      (data as any).b = "b";
     }
     await sleep();
   };
 
   const modifyJson: TransformSend = (data) => {
-    return typeof data === 'object' ? { ...data, b: 'b' } : data;
+    return typeof data === "object" ? { ...data, b: "b" } : data;
   };
 
   const modifyJsonAsync: TransformSend = async (data) => {
     await sleep();
 
-    const res = typeof data === 'object' ? { ...data, b: 'b' } : data;
+    const res = typeof data === "object" ? { ...data, b: "b" } : data;
 
     await sleep();
 
@@ -78,36 +78,36 @@ describe('sendMiddleware', () => {
   };
 
   it.each([modifyText, modifyTextAsync])(
-    'should return the modified text result',
+    "should return the modified text result",
     async (handler) => {
       const server = express()
         .use(sendMiddleware(handler))
-        .get('/', (_req, res) => {
-          res.send('This is the response body');
+        .get("/", (_req, res) => {
+          res.send("This is the response body");
         });
-      const response = await request(server).get('/');
+      const response = await request(server).get("/");
 
       expect(response.text).toStrictEqual(
-        'This is the response body with more content',
+        "This is the response body with more content",
       );
     },
   );
 
   it.each([modifyText, modifyTextAsync])(
-    'should not call if header is already sent',
+    "should not call if header is already sent",
     async (handler) => {
       const handlerSpy = vi.fn(handler);
 
       const server = express()
         .use(sendMiddleware(handlerSpy))
-        .get('/', (_req, res) => {
+        .get("/", (_req, res) => {
           res.end();
-          res.send('This is the response body');
+          res.send("This is the response body");
         });
-      const response = await request(server).get('/');
+      const response = await request(server).get("/");
 
       expect(handlerSpy).not.toHaveBeenCalled();
-      expect(response.text).toStrictEqual('');
+      expect(response.text).toStrictEqual("");
     },
   );
 
@@ -116,17 +116,17 @@ describe('sendMiddleware', () => {
     [modifyText, modifyTextAsync2],
     [modifyTextAsync, modifyText2],
     [modifyTextAsync, modifyTextAsync2],
-  ])('should work with multiple middleware', async (handler, handler2) => {
+  ])("should work with multiple middleware", async (handler, handler2) => {
     const server = express()
       .use(sendMiddleware(handler))
       .use(sendMiddleware(handler2))
-      .get('/', (_req, res) => {
-        res.send('This is the response body');
+      .get("/", (_req, res) => {
+        res.send("This is the response body");
       });
-    const response = await request(server).get('/');
+    const response = await request(server).get("/");
 
     expect(response.text).toStrictEqual(
-      'This is the response body with more content 2 with more content',
+      "This is the response body with more content 2 with more content",
     );
   });
 
@@ -135,83 +135,83 @@ describe('sendMiddleware', () => {
     modifyJsonAsync,
     modifyJsonMutation,
     modifyJsonMutationAsync,
-  ])('should return a modified json body ', async (handler) => {
+  ])("should return a modified json body ", async (handler) => {
     const server = express()
       .use(sendMiddleware(handler))
-      .get('/', (_req, res) => {
+      .get("/", (_req, res) => {
         res.send({
-          a: 'a',
+          a: "a",
         });
       });
-    const response = await request(server).get('/');
+    const response = await request(server).get("/");
 
     expect(response.status).toStrictEqual(200);
     expect(response.body).toStrictEqual({
-      a: 'a',
-      b: 'b',
+      a: "a",
+      b: "b",
     });
   });
 
   it.each([modifyText, modifyTextAsync])(
-    'should send an error response',
+    "should send an error response",
     async (handler) => {
       const server = express()
         .use(sendMiddleware(handler))
-        .get('/', (_req, res) => {
-          res.status(404).send('This is the response body');
+        .get("/", (_req, res) => {
+          res.status(404).send("This is the response body");
         });
 
-      const response = await request(server).get('/');
+      const response = await request(server).get("/");
 
       expect(response.status).toStrictEqual(404);
 
       expect(response.text).toStrictEqual(
-        'This is the response body with more content',
+        "This is the response body with more content",
       );
     },
   );
 
   it.each([error403, error403Async])(
-    'should abort if a response is sent',
+    "should abort if a response is sent",
     async (handler) => {
       const server = express()
         .use(sendMiddleware(handler))
-        .get('/', (_req, res) => {
-          res.status(200).send('This is the response body');
+        .get("/", (_req, res) => {
+          res.status(200).send("This is the response body");
         });
-      const response = await request(server).get('/');
+      const response = await request(server).get("/");
 
       expect(response.status).toStrictEqual(403);
     },
   );
 
   it.each([error, errorAsync])(
-    'should 500 on a synchronous exception',
+    "should 500 on a synchronous exception",
     async (handler) => {
       const server = express()
         .use(sendMiddleware(handler))
-        .get('/', (_req, res) => {
-          res.status(200).send('This is the response body');
+        .get("/", (_req, res) => {
+          res.status(200).send("This is the response body");
         });
 
-      const response = await request(server).get('/');
+      const response = await request(server).get("/");
 
       expect(response.status).toStrictEqual(500);
     },
   );
 
   it.each([error, errorAsync])(
-    'should 500 on an asynchronous exception',
+    "should 500 on an asynchronous exception",
     async (handler) => {
       const server = express()
         .use(sendMiddleware(handler))
-        .get('/', (_req, res) => {
+        .get("/", (_req, res) => {
           process.nextTick(() => {
-            res.status(200).send('This is the response body');
+            res.status(200).send("This is the response body");
           });
         });
 
-      const response = await request(server).get('/');
+      const response = await request(server).get("/");
 
       expect(response.status).toStrictEqual(500);
     },

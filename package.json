@@ -2,7 +2,9 @@
   "name": "express-response-middleware",
   "version": "2.1.3",
   "description": "Transform an express response",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "main": "dist/cjs/index.cjs",
   "module": "dist/esm/index.mjs",
   "types": "dist/esm/index.d.ts",
@@ -20,7 +22,9 @@
   },
   "typesVersions": {
     "*": {
-      "*": ["./dist/esm/index.d.ts"]
+      "*": [
+        "./dist/esm/index.d.ts"
+      ]
     }
   },
   "scripts": {
@@ -31,34 +35,40 @@
     "type": "git",
     "url": "git+https://github.com/marklai1998/express-response-middleware"
   },
-  "keywords": ["mung", "middleware", "transform", "response", "express"],
+  "keywords": [
+    "mung",
+    "middleware",
+    "transform",
+    "response",
+    "express"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/marklai1998/express-response-middleware/issues"
   },
   "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
-    "@biomejs/biome": "1.9.4",
+    "@biomejs/biome": "2.0.6",
     "@commitlint/cli": "19.8.1",
     "@commitlint/config-conventional": "19.8.1",
-    "@types/express": "5.0.2",
-    "@types/node": "22.15.29",
+    "@types/express": "5.0.3",
+    "@types/node": "22.16.0",
     "@types/supertest": "6.0.3",
-    "@vitest/coverage-v8": "3.1.4",
-    "lefthook": "1.11.13",
-    "rollup": "4.41.1",
+    "@vitest/coverage-v8": "3.2.4",
+    "lefthook": "1.11.16",
+    "rollup": "4.44.2",
     "rollup-plugin-dts": "6.2.1",
     "rollup-plugin-esbuild": "6.2.1",
-    "rollup-plugin-node-externals": "8.0.0",
+    "rollup-plugin-node-externals": "8.0.1",
     "rollup-plugin-peer-deps-external": "2.2.4",
     "supertest": "7.1.1",
     "typescript": "5.8.3",
-    "vitest": "3.1.4"
+    "vitest": "3.2.4"
   },
   "peerDependencies": {
     "express": "^4.0.0 || ^5.0.0"
   },
-  "packageManager": "pnpm@10.11.0",
+  "packageManager": "pnpm@10.12.4",
   "engines": {
     "node": ">=18"
   }
