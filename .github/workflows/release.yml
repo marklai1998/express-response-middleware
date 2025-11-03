@@ -33,47 +33,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm i --frozen-lockfile
-
-      - run: pnpm build
-        if: ${{ steps.release.outputs.release_created }}
-
-      - run: pnpm publish --no-git-checks
-        if: ${{ steps.release.outputs.release_created }}
-name: Publish Package to npmjs
-on:
-  push:
-    branches:
-      - main
-
-permissions:
-  id-token: write
-  contents: write
-  pull-requests: write
-  issues: write
-
-jobs:
-  release-please:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5
-        with:
-          fetch-depth: 0
-
-      - uses: pnpm/action-setup@41ff72655975bd51cab0327fa583b6e92b6d3061 # v4
-        name: Install pnpm
-
-      - uses: actions/setup-node@2028fbc5c25fe9cf00d9f06a71cc4710d4507903 # v6
-        with:
-          node-version-file: '.node-version'
-
-      - uses: googleapis/release-please-action@16a9c90856f42705d54a6fda1823352bdc62cf38 # v4
-        id: release
-        with:
-          release-type: node
-
-      - name: Install dependencies
-        run: pnpm i --frozen-lockfile
         if: ${{ steps.release.outputs.release_created }}
 
       - run: pnpm build
