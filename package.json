@@ -5,30 +5,30 @@
   "files": [
     "dist"
   ],
-  "main": "dist/cjs/index.cjs",
-  "module": "dist/esm/index.mjs",
-  "types": "dist/esm/index.d.ts",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.mts",
   "exports": {
     ".": {
       "require": {
-        "types": "./dist/cjs/index.d.cts",
-        "default": "./dist/cjs/index.cjs"
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
       },
       "import": {
-        "types": "./dist/esm/index.d.ts",
-        "default": "./dist/esm/index.mjs"
+        "types": "./dist/index.d.mts",
+        "default": "./dist/index.mjs"
       }
     }
   },
   "typesVersions": {
     "*": {
       "*": [
-        "./dist/esm/index.d.ts"
+        "./dist/index.d.mts"
       ]
     }
   },
   "scripts": {
-    "build": "rollup -c",
+    "build": "tsdown --format esm --format cjs",
     "test": "vitest run --coverage"
   },
   "repository": {
@@ -56,12 +56,8 @@
     "@types/supertest": "6.0.3",
     "@vitest/coverage-v8": "4.0.6",
     "lefthook": "2.0.2",
-    "rollup": "4.52.5",
-    "rollup-plugin-dts": "6.2.3",
-    "rollup-plugin-esbuild": "6.2.1",
-    "rollup-plugin-node-externals": "8.1.1",
-    "rollup-plugin-peer-deps-external": "2.2.4",
     "supertest": "7.1.4",
+    "tsdown": "0.15.12",
     "typescript": "5.9.3",
     "vitest": "4.0.6"
   },
