@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.2.0](https://github.com/marklai1998/express-response-middleware/compare/v2.1.3...v2.2.0) (2025-11-03)
+
+
+### Features
+
+* use rolldown bundle ([5d47e9f](https://github.com/marklai1998/express-response-middleware/commit/5d47e9f24287c2d48a1924a271da383accba93e8))
+
 ## [2.1.3](https://github.com/marklai1998/express-response-middleware/compare/v2.1.2...v2.1.3) (2025-05-26)
 
 
