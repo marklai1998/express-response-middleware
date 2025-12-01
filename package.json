@@ -48,23 +48,23 @@
   },
   "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
-    "@biomejs/biome": "2.3.3",
+    "@biomejs/biome": "2.3.8",
     "@commitlint/cli": "20.1.0",
     "@commitlint/config-conventional": "20.0.0",
     "@types/express": "5.0.5",
-    "@types/node": "24.10.0",
+    "@types/node": "24.10.1",
     "@types/supertest": "6.0.3",
-    "@vitest/coverage-v8": "4.0.6",
-    "lefthook": "2.0.2",
+    "@vitest/coverage-v8": "4.0.14",
+    "lefthook": "2.0.4",
     "supertest": "7.1.4",
-    "tsdown": "0.15.12",
+    "tsdown": "0.16.8",
     "typescript": "5.9.3",
-    "vitest": "4.0.6"
+    "vitest": "4.0.14"
   },
   "peerDependencies": {
     "express": "^4.0.0 || ^5.0.0"
   },
-  "packageManager": "pnpm@10.20.0",
+  "packageManager": "pnpm@10.24.0",
   "engines": {
     "node": ">=18"
   }
