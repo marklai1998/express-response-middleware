@@ -70,57 +70,57 @@ describe("write", () => {
     res.status(403).json({ foo: "bar " });
   };
 
-  it.each([appendText, appendTextAsync])(
-    "should return the text result",
-    async (handler) => {
-      const server = express()
-        .use(writeMiddleware(handler))
-        .get("/", (_req, res) => {
-          res.status(200).write("This is the response body", "utf-8");
-          res.end();
-        });
-      const response = await request(server).get("/");
+  it.each([
+    appendText,
+    appendTextAsync,
+  ])("should return the text result", async (handler) => {
+    const server = express()
+      .use(writeMiddleware(handler))
+      .get("/", (_req, res) => {
+        res.status(200).write("This is the response body", "utf-8");
+        res.end();
+      });
+    const response = await request(server).get("/");
 
-      expect(response.status).toStrictEqual(200);
-      expect(response.text).toStrictEqual(
-        "This is the response body with more content",
-      );
-    },
-  );
+    expect(response.status).toStrictEqual(200);
+    expect(response.text).toStrictEqual(
+      "This is the response body with more content",
+    );
+  });
 
-  it.each([appendText, appendTextAsync])(
-    "should not call if header is already sent",
-    async (handler) => {
-      const handlerSpy = vi.fn(handler);
+  it.each([
+    appendText,
+    appendTextAsync,
+  ])("should not call if header is already sent", async (handler) => {
+    const handlerSpy = vi.fn(handler);
 
-      const server = express()
-        .use(writeMiddleware(handlerSpy))
-        .get("/", (_req, res) => {
-          res.end();
-          res.status(200).write("This is the response body");
-        });
-      const response = await request(server).get("/");
+    const server = express()
+      .use(writeMiddleware(handlerSpy))
+      .get("/", (_req, res) => {
+        res.end();
+        res.status(200).write("This is the response body");
+      });
+    const response = await request(server).get("/");
 
-      expect(handlerSpy).not.toHaveBeenCalled();
-      expect(response.status).toStrictEqual(200);
-    },
-  );
+    expect(handlerSpy).not.toHaveBeenCalled();
+    expect(response.status).toStrictEqual(200);
+  });
 
-  it.each([doNothing, doNothingAsync])(
-    "should return the text result if callback return void",
-    async (handler) => {
-      const server = express()
-        .use(writeMiddleware(handler))
-        .get("/", (_req, res) => {
-          res.status(200).write(Buffer.from("This is the response body"));
-          res.end();
-        });
-      const response = await request(server).get("/");
+  it.each([
+    doNothing,
+    doNothingAsync,
+  ])("should return the text result if callback return void", async (handler) => {
+    const server = express()
+      .use(writeMiddleware(handler))
+      .get("/", (_req, res) => {
+        res.status(200).write(Buffer.from("This is the response body"));
+        res.end();
+      });
+    const response = await request(server).get("/");
 
-      expect(response.status).toStrictEqual(200);
-      expect(response.text).toStrictEqual("This is the response body");
-    },
-  );
+    expect(response.status).toStrictEqual(200);
+    expect(response.text).toStrictEqual("This is the response body");
+  });
 
   it.each([
     [
@@ -143,125 +143,122 @@ describe("write", () => {
       appendTextAsync2,
       "This is the response body with more content2 with more content",
     ],
-  ])(
-    "should work with multiple middleware",
-    async (handler, handler2, expectStr) => {
-      const server = express()
-        .use(writeMiddleware(handler))
-        .use(writeMiddleware(handler2))
-        .get("/", (_req, res) => {
-          res.status(200).write("This is the response body");
-          res.end();
-        });
-      const response = await request(server).get("/");
+  ])("should work with multiple middleware", async (handler, handler2, expectStr) => {
+    const server = express()
+      .use(writeMiddleware(handler))
+      .use(writeMiddleware(handler2))
+      .get("/", (_req, res) => {
+        res.status(200).write("This is the response body");
+        res.end();
+      });
+    const response = await request(server).get("/");
 
-      expect(response.status).toStrictEqual(200);
-      expect(response.text).toStrictEqual(expectStr);
-    },
-  );
+    expect(response.status).toStrictEqual(200);
+    expect(response.text).toStrictEqual(expectStr);
+  });
 
-  it.each([inspectJson, inspectJsonAsync])(
-    "should return a `body` when the content type is application/json",
-    async (handler) => {
-      const server = express()
-        .use(writeMiddleware(handler))
-        .get("/", (_req, res) => {
-          res
-            .set("Content-Type", "application/json")
-            .status(200)
-            .write(
-              JSON.stringify({
-                a: "a",
-              }),
-            );
-          res.end();
-        });
-      const response = await request(server).get("/");
+  it.each([
+    inspectJson,
+    inspectJsonAsync,
+  ])("should return a `body` when the content type is application/json", async (handler) => {
+    const server = express()
+      .use(writeMiddleware(handler))
+      .get("/", (_req, res) => {
+        res
+          .set("Content-Type", "application/json")
+          .status(200)
+          .write(
+            JSON.stringify({
+              a: "a",
+            }),
+          );
+        res.end();
+      });
+    const response = await request(server).get("/");
 
-      expect(response.status).toStrictEqual(200);
-      expect(response.body).toStrictEqual({ a: "a", inspected_by: "me" });
-    },
-  );
+    expect(response.status).toStrictEqual(200);
+    expect(response.body).toStrictEqual({ a: "a", inspected_by: "me" });
+  });
 
-  it.each([appendText, appendTextAsync])(
-    "should call callback an error response",
-    async (handler) => {
-      const server = express()
-        .use(writeMiddleware(handler))
-        .get("/", (_req, res) => {
-          res.status(404).write("This is the response body");
-          res.end();
-        });
-      const response = await request(server).get("/");
+  it.each([
+    appendText,
+    appendTextAsync,
+  ])("should call callback an error response", async (handler) => {
+    const server = express()
+      .use(writeMiddleware(handler))
+      .get("/", (_req, res) => {
+        res.status(404).write("This is the response body");
+        res.end();
+      });
+    const response = await request(server).get("/");
 
-      expect(response.status).toStrictEqual(404);
-      expect(response.text).toStrictEqual(
-        "This is the response body with more content",
-      );
-    },
-  );
+    expect(response.status).toStrictEqual(404);
+    expect(response.text).toStrictEqual(
+      "This is the response body with more content",
+    );
+  });
 
-  it.each([error403, error403Async])(
-    "should abort if a response is sent",
-    async (handler) => {
-      const server = express()
-        .use(writeMiddleware(handler))
-        .get("/", (_req, res) => {
+  it.each([
+    error403,
+    error403Async,
+  ])("should abort if a response is sent", async (handler) => {
+    const server = express()
+      .use(writeMiddleware(handler))
+      .get("/", (_req, res) => {
+        res
+          .set("Content-Type", "application/json")
+          .status(200)
+          .write("This is the response body");
+        res.end();
+      });
+    const response = await request(server).get("/");
+
+    expect(response.status).to.equal(403);
+  });
+
+  it.each([
+    error,
+    errorAsync,
+  ])("should 500 on a synchronous exception", async (handler) => {
+    const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
+      res.status(500).send(err.message).end();
+    };
+    const server = express()
+      .use(errorHandler)
+      .use(writeMiddleware(handler))
+      .get("/", (_req, res) => {
+        res
+          .set("Content-Type", "application/json")
+          .status(200)
+          .write("This is the response body");
+        res.end();
+      });
+    const response = await request(server).get("/");
+
+    expect(response.status).toStrictEqual(500);
+  });
+
+  it.each([
+    error,
+    errorAsync,
+  ])("should 500 on an asynchronous exception", async (handler) => {
+    const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
+      res.status(500).send(err.message).end();
+    };
+    const server = express()
+      .use(errorHandler)
+      .use(writeMiddleware(handler))
+      .get("/", (_req, res) => {
+        process.nextTick(() => {
           res
             .set("Content-Type", "application/json")
             .status(200)
             .write("This is the response body");
           res.end();
         });
-      const response = await request(server).get("/");
+      });
+    const response = await request(server).get("/");
 
-      expect(response.status).to.equal(403);
-    },
-  );
-
-  it.each([error, errorAsync])(
-    "should 500 on a synchronous exception",
-    async (handler) => {
-      const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-        res.status(500).send(err.message).end();
-      };
-      const server = express()
-        .use(errorHandler)
-        .use(writeMiddleware(handler))
-        .get("/", (_req, res) => {
-          res
-            .set("Content-Type", "application/json")
-            .status(200)
-            .write("This is the response body");
-          res.end();
-        });
-      const response = await request(server).get("/");
-
-      expect(response.status).toStrictEqual(500);
-    },
-  );
-
-  it.each([error, errorAsync])(
-    "should 500 on an asynchronous exception",
-    async (handler) => {
-      const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
-        res.status(500).send(err.message).end();
-      };
-      const server = express()
-        .use(errorHandler)
-        .use(writeMiddleware(handler))
-        .get("/", (_req, res) => {
-          process.nextTick(() => {
-            res
-              .set("Content-Type", "application/json")
-              .status(200)
-              .write("This is the response body");
-            res.end();
-          });
-        });
-      const response = await request(server).get("/");
-
-      expect(response.status).toStrictEqual(500);
-    },
-  );
+    expect(response.status).toStrictEqual(500);
+  });
 });

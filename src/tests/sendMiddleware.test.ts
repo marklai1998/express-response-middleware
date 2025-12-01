@@ -77,39 +77,39 @@ describe("sendMiddleware", () => {
     return data;
   };
 
-  it.each([modifyText, modifyTextAsync])(
-    "should return the modified text result",
-    async (handler) => {
-      const server = express()
-        .use(sendMiddleware(handler))
-        .get("/", (_req, res) => {
-          res.send("This is the response body");
-        });
-      const response = await request(server).get("/");
+  it.each([
+    modifyText,
+    modifyTextAsync,
+  ])("should return the modified text result", async (handler) => {
+    const server = express()
+      .use(sendMiddleware(handler))
+      .get("/", (_req, res) => {
+        res.send("This is the response body");
+      });
+    const response = await request(server).get("/");
 
-      expect(response.text).toStrictEqual(
-        "This is the response body with more content",
-      );
-    },
-  );
+    expect(response.text).toStrictEqual(
+      "This is the response body with more content",
+    );
+  });
 
-  it.each([modifyText, modifyTextAsync])(
-    "should not call if header is already sent",
-    async (handler) => {
-      const handlerSpy = vi.fn(handler);
+  it.each([
+    modifyText,
+    modifyTextAsync,
+  ])("should not call if header is already sent", async (handler) => {
+    const handlerSpy = vi.fn(handler);
 
-      const server = express()
-        .use(sendMiddleware(handlerSpy))
-        .get("/", (_req, res) => {
-          res.end();
-          res.send("This is the response body");
-        });
-      const response = await request(server).get("/");
+    const server = express()
+      .use(sendMiddleware(handlerSpy))
+      .get("/", (_req, res) => {
+        res.end();
+        res.send("This is the response body");
+      });
+    const response = await request(server).get("/");
 
-      expect(handlerSpy).not.toHaveBeenCalled();
-      expect(response.text).toStrictEqual("");
-    },
-  );
+    expect(handlerSpy).not.toHaveBeenCalled();
+    expect(response.text).toStrictEqual("");
+  });
 
   it.each([
     [modifyText, modifyText2],
@@ -152,68 +152,68 @@ describe("sendMiddleware", () => {
     });
   });
 
-  it.each([modifyText, modifyTextAsync])(
-    "should send an error response",
-    async (handler) => {
-      const server = express()
-        .use(sendMiddleware(handler))
-        .get("/", (_req, res) => {
-          res.status(404).send("This is the response body");
-        });
+  it.each([
+    modifyText,
+    modifyTextAsync,
+  ])("should send an error response", async (handler) => {
+    const server = express()
+      .use(sendMiddleware(handler))
+      .get("/", (_req, res) => {
+        res.status(404).send("This is the response body");
+      });
 
-      const response = await request(server).get("/");
+    const response = await request(server).get("/");
 
-      expect(response.status).toStrictEqual(404);
+    expect(response.status).toStrictEqual(404);
 
-      expect(response.text).toStrictEqual(
-        "This is the response body with more content",
-      );
-    },
-  );
+    expect(response.text).toStrictEqual(
+      "This is the response body with more content",
+    );
+  });
 
-  it.each([error403, error403Async])(
-    "should abort if a response is sent",
-    async (handler) => {
-      const server = express()
-        .use(sendMiddleware(handler))
-        .get("/", (_req, res) => {
+  it.each([
+    error403,
+    error403Async,
+  ])("should abort if a response is sent", async (handler) => {
+    const server = express()
+      .use(sendMiddleware(handler))
+      .get("/", (_req, res) => {
+        res.status(200).send("This is the response body");
+      });
+    const response = await request(server).get("/");
+
+    expect(response.status).toStrictEqual(403);
+  });
+
+  it.each([
+    error,
+    errorAsync,
+  ])("should 500 on a synchronous exception", async (handler) => {
+    const server = express()
+      .use(sendMiddleware(handler))
+      .get("/", (_req, res) => {
+        res.status(200).send("This is the response body");
+      });
+
+    const response = await request(server).get("/");
+
+    expect(response.status).toStrictEqual(500);
+  });
+
+  it.each([
+    error,
+    errorAsync,
+  ])("should 500 on an asynchronous exception", async (handler) => {
+    const server = express()
+      .use(sendMiddleware(handler))
+      .get("/", (_req, res) => {
+        process.nextTick(() => {
           res.status(200).send("This is the response body");
         });
-      const response = await request(server).get("/");
+      });
 
-      expect(response.status).toStrictEqual(403);
-    },
-  );
+    const response = await request(server).get("/");
 
-  it.each([error, errorAsync])(
-    "should 500 on a synchronous exception",
-    async (handler) => {
-      const server = express()
-        .use(sendMiddleware(handler))
-        .get("/", (_req, res) => {
-          res.status(200).send("This is the response body");
-        });
-
-      const response = await request(server).get("/");
-
-      expect(response.status).toStrictEqual(500);
-    },
-  );
-
-  it.each([error, errorAsync])(
-    "should 500 on an asynchronous exception",
-    async (handler) => {
-      const server = express()
-        .use(sendMiddleware(handler))
-        .get("/", (_req, res) => {
-          process.nextTick(() => {
-            res.status(200).send("This is the response body");
-          });
-        });
-
-      const response = await request(server).get("/");
-
-      expect(response.status).toStrictEqual(500);
-    },
-  );
+    expect(response.status).toStrictEqual(500);
+  });
 });

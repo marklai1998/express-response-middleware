@@ -41,25 +41,25 @@ describe("endMiddleware", () => {
     return;
   };
 
-  it.each([header, headerAsync])(
-    "should return the headers",
-    async (handler) => {
-      const server = express()
-        .use(endMiddleware(handler))
-        .get("/", (_req, res) => {
-          res.status(200).json({ a: "a" }).end();
-        });
-      const response = await request(server).get("/");
+  it.each([
+    header,
+    headerAsync,
+  ])("should return the headers", async (handler) => {
+    const server = express()
+      .use(endMiddleware(handler))
+      .get("/", (_req, res) => {
+        res.status(200).json({ a: "a" }).end();
+      });
+    const response = await request(server).get("/");
 
-      expect(response.status).toStrictEqual(200);
-      expect(response.body).toStrictEqual({ a: "a" });
-      expect(response.headers).toStrictEqual(
-        expect.objectContaining({
-          "x-inspected-by": "me",
-        }),
-      );
-    },
-  );
+    expect(response.status).toStrictEqual(200);
+    expect(response.body).toStrictEqual({ a: "a" });
+    expect(response.headers).toStrictEqual(
+      expect.objectContaining({
+        "x-inspected-by": "me",
+      }),
+    );
+  });
 
   it.each([
     [header, header2],
@@ -85,17 +85,17 @@ describe("endMiddleware", () => {
     );
   });
 
-  it.each([error, errorAsync])(
-    "should 500 on a synchronous exception",
-    async (handler) => {
-      const server = express()
-        .use(endMiddleware(handler))
-        .get("/", (_req, res) => {
-          res.status(200).json({ a: "a" }).end();
-        });
-      const response = await request(server).get("/");
+  it.each([
+    error,
+    errorAsync,
+  ])("should 500 on a synchronous exception", async (handler) => {
+    const server = express()
+      .use(endMiddleware(handler))
+      .get("/", (_req, res) => {
+        res.status(200).json({ a: "a" }).end();
+      });
+    const response = await request(server).get("/");
 
-      expect(response.status).toStrictEqual(500);
-    },
-  );
+    expect(response.status).toStrictEqual(500);
+  });
 });
