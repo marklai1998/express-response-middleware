@@ -48,7 +48,7 @@
   },
   "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
-    "@biomejs/biome": "2.3.8",
+    "@biomejs/biome": "2.3.13",
     "@commitlint/cli": "20.1.0",
     "@commitlint/config-conventional": "20.0.0",
     "@types/express": "5.0.5",
