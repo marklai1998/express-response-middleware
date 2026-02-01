@@ -19,7 +19,7 @@ importers:
         specifier: 20.3.1
         version: 20.3.1(@types/node@24.10.9)(typescript@5.9.3)
       '@marklai/shared-config-commitlint':
-        specifier: ^1.0.0
+        specifier: 1.0.0
         version: 1.0.0(@commitlint/cli@20.3.1(@types/node@24.10.9)(typescript@5.9.3))
       '@types/express':
         specifier: 5.0.6
