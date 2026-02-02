@@ -16,11 +16,11 @@ importers:
         specifier: 2.3.13
         version: 2.3.13
       '@commitlint/cli':
-        specifier: 20.3.1
-        version: 20.3.1(@types/node@24.10.9)(typescript@5.9.3)
+        specifier: 20.4.0
+        version: 20.4.0(@types/node@24.10.9)(typescript@5.9.3)
       '@marklai/shared-config-commitlint':
         specifier: 1.0.0
-        version: 1.0.0(@commitlint/cli@20.3.1(@types/node@24.10.9)(typescript@5.9.3))
+        version: 1.0.0(@commitlint/cli@20.4.0(@types/node@24.10.9)(typescript@5.9.3))
       '@types/express':
         specifier: 5.0.6
         version: 5.0.6
@@ -154,8 +154,8 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@commitlint/cli@20.3.1':
-    resolution: {integrity: sha512-NtInjSlyev/+SLPvx/ulz8hRE25Wf5S9dLNDcIwazq0JyB4/w1ROF/5nV0ObPTX8YpRaKYeKtXDYWqumBNHWsw==}
+  '@commitlint/cli@20.4.0':
+    resolution: {integrity: sha512-2lqrFrYNxjKxgMqeYiO3zNM14XN9v72/5xIJyvdLw7sHEGlfg6sweW01PGNWiqZa6/AuZwsb0uzkgWJy6F4N2w==}
     engines: {node: '>=v18'}
     hasBin: true
 
@@ -1763,7 +1763,7 @@ snapshots:
   '@biomejs/cli-win32-x64@2.3.13':
     optional: true
 
-  '@commitlint/cli@20.3.1(@types/node@24.10.9)(typescript@5.9.3)':
+  '@commitlint/cli@20.4.0(@types/node@24.10.9)(typescript@5.9.3)':
     dependencies:
       '@commitlint/format': 20.4.0
       '@commitlint/lint': 20.4.0
@@ -1976,9 +1976,9 @@ snapshots:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
 
-  '@marklai/shared-config-commitlint@1.0.0(@commitlint/cli@20.3.1(@types/node@24.10.9)(typescript@5.9.3))':
+  '@marklai/shared-config-commitlint@1.0.0(@commitlint/cli@20.4.0(@types/node@24.10.9)(typescript@5.9.3))':
     dependencies:
-      '@commitlint/cli': 20.3.1(@types/node@24.10.9)(typescript@5.9.3)
+      '@commitlint/cli': 20.4.0(@types/node@24.10.9)(typescript@5.9.3)
       '@commitlint/config-conventional': 20.3.1
 
   '@napi-rs/wasm-runtime@1.1.1':
