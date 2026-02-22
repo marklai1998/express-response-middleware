@@ -21,6 +21,9 @@ importers:
       '@marklai/shared-config-commitlint':
         specifier: 1.0.0
         version: 1.0.0(@commitlint/cli@20.4.2(@types/node@24.10.13)(typescript@5.9.3))
+      '@marklai/shared-config-typescript':
+        specifier: ^1.1.0
+        version: 1.1.0(typescript@5.9.3)
       '@types/express':
         specifier: 5.0.6
         version: 5.0.6
@@ -406,6 +409,12 @@ packages:
     engines: {node: '>=20'}
     peerDependencies:
       '@commitlint/cli': ^20.0.0
+
+  '@marklai/shared-config-typescript@1.1.0':
+    resolution: {integrity: sha512-YikYyh8vYpZ4ZEzOZ1+OPyaD0OYxc8JBqt/KXrA4cW9YMTTr8j2RNrGteHyxZBjnCMWRkEpAmvmfjmGPXkodQg==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      typescript: ^5.0.0
 
   '@napi-rs/wasm-runtime@1.1.1':
     resolution: {integrity: sha512-p64ah1M1ld8xjWv3qbvFwHiFVWrq1yFvV4f7w+mzaqiR4IlSgkqhcRdHwsGgomwzBH51sRY4NEowLxnaBjcW/A==}
@@ -1996,6 +2005,10 @@ snapshots:
     dependencies:
       '@commitlint/cli': 20.4.2(@types/node@24.10.13)(typescript@5.9.3)
       '@commitlint/config-conventional': 20.3.1
+
+  '@marklai/shared-config-typescript@1.1.0(typescript@5.9.3)':
+    dependencies:
+      typescript: 5.9.3
 
   '@napi-rs/wasm-runtime@1.1.1':
     dependencies:
