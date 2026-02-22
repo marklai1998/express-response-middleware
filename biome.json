@@ -1,27 +1,16 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true
-  },
-  "files": {
-    "ignoreUnknown": true
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "space"
-  },
-  "assist": {
-    "enabled": true,
-    "actions": {
-      "recommended": true
-    }
-  },
+  "extends": ["@marklai/shared-config-biome"],
   "linter": {
-    "enabled": true,
     "rules": {
-      "recommended": true
+      "suspicious": {
+        "noExplicitAny": "warn"
+      },
+      "style": {
+        "useConsistentTypeDefinitions": {
+          "level": "warn"
+        }
+      }
     }
   }
 }
