@@ -48,7 +48,7 @@
   },
   "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
-    "@biomejs/biome": "2.4.12",
+    "@biomejs/biome": "2.4.13",
     "@commitlint/cli": "20.5.2",
     "@marklai/shared-config-biome": "1.0.0",
     "@marklai/shared-config-commitlint": "1.0.1",
@@ -59,7 +59,7 @@
     "@vitest/coverage-v8": "4.1.4",
     "lefthook": "2.1.6",
     "supertest": "7.2.2",
-    "tsdown": "0.21.9",
+    "tsdown": "0.21.10",
     "typescript": "6.0.3",
     "vitest": "4.1.4"
   },
