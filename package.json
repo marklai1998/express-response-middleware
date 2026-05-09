@@ -2,12 +2,22 @@
   "name": "express-response-middleware",
   "version": "2.2.0",
   "description": "Transform an express response",
-  "files": [
-    "dist"
+  "keywords": [
+    "mung",
+    "middleware",
+    "transform",
+    "response",
+    "express"
   ],
-  "main": "dist/index.js",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.mts",
+  "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
+  "bugs": {
+    "url": "https://github.com/marklai1998/express-response-middleware/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marklai1998/express-response-middleware"
+  },
+  "license": "MIT",
   "exports": {
     ".": {
       "require": {
@@ -20,6 +30,9 @@
       }
     }
   },
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.mts",
   "typesVersions": {
     "*": {
       "*": [
@@ -27,26 +40,13 @@
       ]
     }
   },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsdown --format esm --format cjs",
     "test": "vitest run --coverage"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/marklai1998/express-response-middleware"
-  },
-  "keywords": [
-    "mung",
-    "middleware",
-    "transform",
-    "response",
-    "express"
-  ],
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/marklai1998/express-response-middleware/issues"
-  },
-  "homepage": "https://github.com/marklai1998/express-response-middleware#readme",
   "devDependencies": {
     "@biomejs/biome": "2.4.13",
     "@commitlint/cli": "20.5.3",
@@ -66,7 +66,7 @@
   "peerDependencies": {
     "express": "^4.0.0 || ^5.0.0"
   },
-  "packageManager": "pnpm@10.33.3",
+  "packageManager": "pnpm@11.0.9",
   "engines": {
     "node": ">=18"
   }
