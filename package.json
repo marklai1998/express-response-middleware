@@ -48,9 +48,9 @@
     "test": "vitest run --coverage"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.0",
+    "@biomejs/biome": "2.5.1",
     "@commitlint/cli": "21.0.2",
-    "@marklai/shared-config-biome": "1.0.0",
+    "@marklai/shared-config-biome": "1.0.1",
     "@marklai/shared-config-commitlint": "1.0.5",
     "@marklai/shared-config-typescript": "1.1.0",
     "@types/express": "5.0.6",
