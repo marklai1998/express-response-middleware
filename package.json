@@ -48,7 +48,7 @@
     "test": "vitest run --coverage"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.1",
+    "@biomejs/biome": "2.5.2",
     "@commitlint/cli": "21.1.0",
     "@marklai/shared-config-biome": "1.0.1",
     "@marklai/shared-config-commitlint": "1.0.5",
