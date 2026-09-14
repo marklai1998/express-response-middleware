@@ -48,13 +48,13 @@
     "test": "vitest run --coverage"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.12",
+    "@biomejs/biome": "2.5.13",
     "@commitlint/cli": "21.2.2",
     "@marklai/shared-config-biome": "1.0.2",
     "@marklai/shared-config-commitlint": "1.1.1",
     "@marklai/shared-config-typescript": "1.1.2",
     "@types/express": "5.0.6",
-    "@types/node": "24.13.3",
+    "@types/node": "24.13.4",
     "@types/supertest": "7.2.1",
     "@vitest/coverage-v8": "5.0.0",
     "lefthook": "2.1.12",
