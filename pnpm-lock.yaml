@@ -175,13 +175,13 @@ importers:
         version: 2.5.15
       '@commitlint/cli':
         specifier: 21.2.3
-        version: 21.2.3(@types/node@24.19.1)(conventional-commits-parser@7.1.3)(typescript@7.0.2)
+        version: 21.2.3(@types/node@24.19.2)(conventional-commits-parser@7.1.3)(typescript@7.0.2)
       '@marklai/shared-config-biome':
         specifier: 1.0.2
         version: 1.0.2(@biomejs/biome@2.5.15)
       '@marklai/shared-config-commitlint':
         specifier: 1.1.2
-        version: 1.1.2(@commitlint/cli@21.2.3(@types/node@24.19.1)(conventional-commits-parser@7.1.3)(typescript@7.0.2))
+        version: 1.1.2(@commitlint/cli@21.2.3(@types/node@24.19.2)(conventional-commits-parser@7.1.3)(typescript@7.0.2))
       '@marklai/shared-config-typescript':
         specifier: 1.1.2
         version: 1.1.2(typescript@7.0.2)
@@ -189,8 +189,8 @@ importers:
         specifier: 5.0.6
         version: 5.0.6
       '@types/node':
-        specifier: 24.19.1
-        version: 24.19.1
+        specifier: 24.19.2
+        version: 24.19.2
       '@types/supertest':
         specifier: 7.2.1
         version: 7.2.1
@@ -198,20 +198,20 @@ importers:
         specifier: 5.0.3
         version: 5.0.3(vitest@5.0.3)
       lefthook:
-        specifier: 2.2.1
-        version: 2.2.1
+        specifier: 2.2.2
+        version: 2.2.2
       supertest:
         specifier: 7.3.1
         version: 7.3.1
       tsdown:
-        specifier: 0.23.0
-        version: 0.23.0(typescript@7.0.2)
+        specifier: 0.23.1
+        version: 0.23.1(typescript@7.0.2)
       typescript:
         specifier: 7.0.2
         version: 7.0.2
       vitest:
         specifier: 5.0.3
-        version: 5.0.3(@types/node@24.19.1)(@vitest/coverage-v8@5.0.3)(vite@8.3.4(@types/node@24.19.1)(jiti@2.6.1))
+        version: 5.0.3(@types/node@24.19.2)(@vitest/coverage-v8@5.0.3)(vite@8.3.4(@types/node@24.19.2)(jiti@2.6.1))
 
 packages:
 
@@ -560,8 +560,8 @@ packages:
   '@types/methods@1.1.4':
     resolution: {integrity: sha512-ymXWVrDiCxTBE3+RIrrP533E70eA+9qu7zdWoHuOmGujkYtzf4HQF96b8nwHLqhuf4ykX61IGRIB38CC6/sImQ==}
 
-  '@types/node@24.19.1':
-    resolution: {integrity: sha512-aS3/DG0oM05K0RIXXP+hKjinGG5IgSSVGzswZxW3O0sS3pH4/fycXundUC9XsszgKCk4gHXylTEK6hyFxVxnoQ==}
+  '@types/node@24.19.2':
+    resolution: {integrity: sha512-93d49wCWJkCyN87MxLpNN6KXPCwFw7bVUg79mGUV1OS40JGWwVCr8n61DXCSqz7CV6/VfPkb7xec7uP2M+QHWQ==}
 
   '@types/qs@6.15.1':
     resolution: {integrity: sha512-GZHUBZR9hckSUhrxmp1nG6NwdpM9fCunJwyThLW1X3AyHgd9IlHb6VANpQQqDr2o/qQp6McZ3y/IA2rVzKzSbw==}
@@ -1175,58 +1175,63 @@ packages:
   json-schema-traverse@1.0.0:
     resolution: {integrity: sha512-NM8/P9n3XjXhIZn1lLhkFaACTOURQXjWhV4BA/RnOv8xvgqtqpAX9IO4mRQxSx1Rlo4tqzeqb0sOlruaOy3dug==}
 
-  lefthook-darwin-arm64@2.2.1:
-    resolution: {integrity: sha512-SyuDBT5HqNQfi607vMHrYJu45bRN7JoIFdyxLjEPVe34UnZJCesmeYBODEYTyCfRZjPOaTbton4Padu+qvqfCQ==}
+  lefthook-android-arm64@2.2.2:
+    resolution: {integrity: sha512-wb9rQQFLX7u1dJLxvMrq9VUfMYi5kxM7tJQ6Y4mWEOwaU+SmIm2wjoT/nromKq27Y8fh2Qd7FgCD3G1wfW8CnQ==}
+    cpu: [arm64]
+    os: [android]
+
+  lefthook-darwin-arm64@2.2.2:
+    resolution: {integrity: sha512-6V8D3bLnD/60Xhqn0o2EQD6H3Fe/U9LGkt4WF1O/3eBHbux+5ZJqoH0hfrC+Bi9Dy1Ve1AWxiAY7U2asYl8qVA==}
     cpu: [arm64]
     os: [darwin]
 
-  lefthook-darwin-x64@2.2.1:
-    resolution: {integrity: sha512-qkIdM89T3OxpLp9rssPSdRQ7QKkX0l07xWxxOaZfECn5iB2xVXSD9FQSjYUMNGXtJJWOGqdKqBngGTB/ShDZtQ==}
+  lefthook-darwin-x64@2.2.2:
+    resolution: {integrity: sha512-fH/kArZ9ZZ65wCFtvBMgGcq25qwQpkQ5jp93ba+8wpjgxxzjczYGluwHvM/NQDJWLOFXuKXW0yFs76SramQkyQ==}
     cpu: [x64]
     os: [darwin]
 
-  lefthook-freebsd-arm64@2.2.1:
-    resolution: {integrity: sha512-0jdr/9Q5cGuazrEVquv29AOD77aPc2jAmFU4EtqVVg3PhMJjAyt7bQeA9qdwHhaHhLnaeUZwMwo3IleVm+D4wg==}
+  lefthook-freebsd-arm64@2.2.2:
+    resolution: {integrity: sha512-MCRsU01ju989QQffOfS3gCeFfyVDXs5B/FzR65fmrNvqcxb98fldvfzzoAbnK2q6SBJlRT3QT1tNEMCxddCwlA==}
     cpu: [arm64]
     os: [freebsd]
 
-  lefthook-freebsd-x64@2.2.1:
-    resolution: {integrity: sha512-JFKyNZ9qQp9NsuFyAg/CJIBurIHX3AUayFXxuoDMATWAIhhlyK0YMtpWgEFIl1M2iGLBLQ3TiLoCCRnbwndNDg==}
+  lefthook-freebsd-x64@2.2.2:
+    resolution: {integrity: sha512-LkKuJU0S2oLimeoHwPTy1TLWB6GcN0t5lLxiXNlsBKUkr6R47QRcvPMZMoXmu3IetQtd+WliXMLE8qTwi2fqBg==}
     cpu: [x64]
     os: [freebsd]
 
-  lefthook-linux-arm64@2.2.1:
-    resolution: {integrity: sha512-na8Ezm7pK44+WsQqj9tES7v8VseM1MrNeNJhUnM8eINV22KYptWam8evfjZxY3NYxOTwn6f/Zpe/BBvcLKMaTQ==}
+  lefthook-linux-arm64@2.2.2:
+    resolution: {integrity: sha512-d+HFtS2DEKaOnD7vRU0tUz8pNgHwsUYmQ22+1dyXpOrXGyzNXR0AqX5KsIRF36JGhVvO5X5Anw5QYgR3mxVSuA==}
     cpu: [arm64]
     os: [linux]
 
-  lefthook-linux-x64@2.2.1:
-    resolution: {integrity: sha512-wl7CR5uNkOiZ38SkW4l9O6wf/Nllbkw90ZZonXRFkbgrnPjLMhZGUt9ucewsPwBQ/ckU1t08JuBHeOywB/CFow==}
+  lefthook-linux-x64@2.2.2:
+    resolution: {integrity: sha512-N/OlQyAhcU6RAXjrwFxLsh70sn96rBoi+XkuLJ8CVBkk9Ci3VDXQayDZTNz5B1xML8RwoMcV8Wblniy1xFOmSA==}
     cpu: [x64]
     os: [linux]
 
-  lefthook-openbsd-arm64@2.2.1:
-    resolution: {integrity: sha512-UFwL+AGSqkhQ15kuKl5FMRx/UqbcfcQbGFg5ggYzhT7qBOsTu3a9POXRxt3hsalBeMgkDWsv3IaPlj51YGpCAg==}
+  lefthook-openbsd-arm64@2.2.2:
+    resolution: {integrity: sha512-6G/gKXcpIwC+XcODg7ELZYP/hIrVIHQxhy2GoRdVyecmpGMFj+BZo3iqcUmeWusQMuL+UdNexbkrUaeJalIkNw==}
     cpu: [arm64]
     os: [openbsd]
 
-  lefthook-openbsd-x64@2.2.1:
-    resolution: {integrity: sha512-IMKEuxJLo91C1yjhJ42EadfXUb3ECMkvTKpSt17kwaiyZsvvZ8LGdrXwQZiLNJt2M5ECuTVCQUvDimM6mGraOw==}
+  lefthook-openbsd-x64@2.2.2:
+    resolution: {integrity: sha512-eMJGi3/tqKEqu7XCZlqwQWRtK5JlL/9diaqqgRlEdlRD7GxwzHZN21z6awbITum9emea3lALvXFe6V8odQLGOA==}
     cpu: [x64]
     os: [openbsd]
 
-  lefthook-windows-arm64@2.2.1:
-    resolution: {integrity: sha512-Pi8vOvObjg8HJDl8d96s7jsI6TN33klpqv6tXSXpoKEeoAwEh5Y9NawO6bzoOpLfAxf2SfMBcuaBzFQ5zE2gjA==}
+  lefthook-windows-arm64@2.2.2:
+    resolution: {integrity: sha512-4P1EaQb5xG1zhYD1RLJ6TEGdFkmHkB+Slqx6yRDPKuBDNxMiD0+kTAAdUY2E8xPuRR35xHpVPR+b3/HtzPrjQQ==}
     cpu: [arm64]
     os: [win32]
 
-  lefthook-windows-x64@2.2.1:
-    resolution: {integrity: sha512-7FtuPrc1XzxIFLAbzneOF1hr9r/vGi2lcMpX14QG9d/mnLhwu4EyNBh48JNEqsQqrOB9QKavsNqxVl1e8zcukA==}
+  lefthook-windows-x64@2.2.2:
+    resolution: {integrity: sha512-9Ck4zancQilBfXT3ZeRipm7Lcq4RQfxyMpy8SAVINw0t/BrbjsT25V46ZuziERcwdajnE4myfMzC33GoCBwr7g==}
     cpu: [x64]
     os: [win32]
 
-  lefthook@2.2.1:
-    resolution: {integrity: sha512-aKEwhQzGbLMkZu5vrFYKJzLvLVblWATYITmN7Ak4qRCDPCoFJhmeJZFuYf3nTXuqG9xTBE+J8xaAEPL2tpuWyw==}
+  lefthook@2.2.2:
+    resolution: {integrity: sha512-37fYHAhL12r1twaEV0PA5TwoIT491eTGGYjhhXxlYNMq3DSkiGZBQ++Jfk5maXj0vq52NRauLtMikBKtbNJs3Q==}
     hasBin: true
 
   lightningcss-android-arm64@1.33.0:
@@ -1561,14 +1566,14 @@ packages:
     resolution: {integrity: sha512-L0Orpi8qGpRG//Nd+H90vFB+3iHnue1zSSGmNOOCh1GLJ7rUKVwV2HvijphGQS2UmhUZewS9VgvxYIdgr+fG1A==}
     hasBin: true
 
-  tsdown@0.23.0:
-    resolution: {integrity: sha512-BaT+ep1xnj5hdyICLd5r5SYYE+TXnI1ATePLykv9vcKpHpFTWUWRH+x1AF/E2qcu3YB6+vI8IdyxIIIffEqw5Q==}
+  tsdown@0.23.1:
+    resolution: {integrity: sha512-MSC2WSOts3in95J334/VIS7KPfor3eCSvndJ6KdoVj9Aak9Kh1aNfz9ws5owhdukuTNSXRdfkPEzA/ihpDD6SA==}
     engines: {node: ^22.18.0 || ^24.11.0 || >=26.0.0}
     hasBin: true
     peerDependencies:
       '@arethetypeswrong/core': ^0.18.1
-      '@tsdown/css': 0.23.0
-      '@tsdown/exe': 0.23.0
+      '@tsdown/css': 0.23.1
+      '@tsdown/exe': 0.23.1
       '@vitejs/devtools': '*'
       publint: ^0.3.8
       tsx: '*'
@@ -1617,10 +1622,6 @@ packages:
   vary@1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
     engines: {node: '>= 0.8'}
-
-  verkit@0.4.1:
-    resolution: {integrity: sha512-mMVzj0TXExtVdlDEq+Mzp0eyOuyznNpFobNM3uAqe3HVm/Ps2c+u17BligMkZjZCA6EiXpoon8iRTer3iu40SQ==}
-    engines: {node: '>=18.12.0'}
 
   verkit@0.5.0:
     resolution: {integrity: sha512-u4J1hr6Y+C/hit34GwL3eIcUf3wngT8TlYUjK7tk0jxydKLAq3sYvifjdTDA6U3KCKRcQCQDGf/srjxfZF3l7g==}
@@ -1808,12 +1809,12 @@ snapshots:
   '@biomejs/cli-win32-x64@2.5.15':
     optional: true
 
-  '@commitlint/cli@21.2.3(@types/node@24.19.1)(conventional-commits-parser@7.1.3)(typescript@7.0.2)':
+  '@commitlint/cli@21.2.3(@types/node@24.19.2)(conventional-commits-parser@7.1.3)(typescript@7.0.2)':
     dependencies:
       '@commitlint/config-conventional': 21.2.3
       '@commitlint/format': 21.2.3
       '@commitlint/lint': 21.2.3
-      '@commitlint/load': 21.2.3(@types/node@24.19.1)(typescript@7.0.2)
+      '@commitlint/load': 21.2.3(@types/node@24.19.2)(typescript@7.0.2)
       '@commitlint/read': 21.2.3(conventional-commits-parser@7.1.3)
       '@commitlint/types': 21.2.3
       tinyexec: 1.3.1
@@ -1858,14 +1859,14 @@ snapshots:
       '@commitlint/rules': 21.2.3
       '@commitlint/types': 21.2.3
 
-  '@commitlint/load@21.2.3(@types/node@24.19.1)(typescript@7.0.2)':
+  '@commitlint/load@21.2.3(@types/node@24.19.2)(typescript@7.0.2)':
     dependencies:
       '@commitlint/config-validator': 21.2.3
       '@commitlint/execute-rule': 21.0.1
       '@commitlint/resolve-extends': 21.2.3
       '@commitlint/types': 21.2.3
       cosmiconfig: 9.0.2(typescript@7.0.2)
-      cosmiconfig-typescript-loader: 6.3.0(@types/node@24.19.1)(cosmiconfig@9.0.2(typescript@7.0.2))(typescript@7.0.2)
+      cosmiconfig-typescript-loader: 6.3.0(@types/node@24.19.2)(cosmiconfig@9.0.2(typescript@7.0.2))(typescript@7.0.2)
       es-toolkit: 1.52.0
       is-plain-obj: 4.1.0
       picocolors: 1.1.1
@@ -1940,9 +1941,9 @@ snapshots:
     dependencies:
       '@biomejs/biome': 2.5.15
 
-  '@marklai/shared-config-commitlint@1.1.2(@commitlint/cli@21.2.3(@types/node@24.19.1)(conventional-commits-parser@7.1.3)(typescript@7.0.2))':
+  '@marklai/shared-config-commitlint@1.1.2(@commitlint/cli@21.2.3(@types/node@24.19.2)(conventional-commits-parser@7.1.3)(typescript@7.0.2))':
     dependencies:
-      '@commitlint/cli': 21.2.3(@types/node@24.19.1)(conventional-commits-parser@7.1.3)(typescript@7.0.2)
+      '@commitlint/cli': 21.2.3(@types/node@24.19.2)(conventional-commits-parser@7.1.3)(typescript@7.0.2)
       '@commitlint/config-conventional': 21.2.3
 
   '@marklai/shared-config-typescript@1.1.2(typescript@7.0.2)':
@@ -2017,7 +2018,7 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 24.19.1
+      '@types/node': 24.19.2
 
   '@types/chai@5.2.3':
     dependencies:
@@ -2026,7 +2027,7 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 24.19.1
+      '@types/node': 24.19.2
 
   '@types/cookiejar@2.1.5': {}
 
@@ -2036,7 +2037,7 @@ snapshots:
 
   '@types/express-serve-static-core@5.1.3':
     dependencies:
-      '@types/node': 24.19.1
+      '@types/node': 24.19.2
       '@types/qs': 6.15.1
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
@@ -2051,7 +2052,7 @@ snapshots:
 
   '@types/methods@1.1.4': {}
 
-  '@types/node@24.19.1':
+  '@types/node@24.19.2':
     dependencies:
       undici-types: 7.24.6
 
@@ -2061,18 +2062,18 @@ snapshots:
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 24.19.1
+      '@types/node': 24.19.2
 
   '@types/serve-static@2.2.0':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 24.19.1
+      '@types/node': 24.19.2
 
   '@types/superagent@8.1.11':
     dependencies:
       '@types/cookiejar': 2.1.5
       '@types/methods': 1.1.4
-      '@types/node': 24.19.1
+      '@types/node': 24.19.2
       form-data: 4.0.6
 
   '@types/supertest@7.2.1':
@@ -2150,7 +2151,7 @@ snapshots:
       obug: 2.2.1
       std-env: 4.3.0
       tinyrainbow: 3.2.0
-      vitest: 5.0.3(@types/node@24.19.1)(@vitest/coverage-v8@5.0.3)(vite@8.3.4(@types/node@24.19.1)(jiti@2.6.1))
+      vitest: 5.0.3(@types/node@24.19.2)(@vitest/coverage-v8@5.0.3)(vite@8.3.4(@types/node@24.19.2)(jiti@2.6.1))
 
   '@vitest/istanbul-lib-coverage@1.0.2': {}
 
@@ -2158,14 +2159,14 @@ snapshots:
     dependencies:
       '@vitest/istanbul-lib-coverage': 1.0.2
 
-  '@vitest/mocker@5.0.3(vite@8.3.4(@types/node@24.19.1)(jiti@2.6.1))':
+  '@vitest/mocker@5.0.3(vite@8.3.4(@types/node@24.19.2)(jiti@2.6.1))':
     dependencies:
       '@jridgewell/trace-mapping': 0.3.31
       '@vitest/spy': 5.0.3
       estree-walker: 3.0.3
       magic-string: 1.4.3
     optionalDependencies:
-      vite: 8.3.4(@types/node@24.19.1)(jiti@2.6.1)
+      vite: 8.3.4(@types/node@24.19.2)(jiti@2.6.1)
 
   '@vitest/spy@5.0.3': {}
 
@@ -2306,9 +2307,9 @@ snapshots:
 
   cookiejar@2.1.4: {}
 
-  cosmiconfig-typescript-loader@6.3.0(@types/node@24.19.1)(cosmiconfig@9.0.2(typescript@7.0.2))(typescript@7.0.2):
+  cosmiconfig-typescript-loader@6.3.0(@types/node@24.19.2)(cosmiconfig@9.0.2(typescript@7.0.2))(typescript@7.0.2):
     dependencies:
-      '@types/node': 24.19.1
+      '@types/node': 24.19.2
       cosmiconfig: 9.0.2(typescript@7.0.2)
       jiti: 2.6.1
       typescript: 7.0.2
@@ -2558,48 +2559,52 @@ snapshots:
 
   json-schema-traverse@1.0.0: {}
 
-  lefthook-darwin-arm64@2.2.1:
+  lefthook-android-arm64@2.2.2:
     optional: true
 
-  lefthook-darwin-x64@2.2.1:
+  lefthook-darwin-arm64@2.2.2:
     optional: true
 
-  lefthook-freebsd-arm64@2.2.1:
+  lefthook-darwin-x64@2.2.2:
     optional: true
 
-  lefthook-freebsd-x64@2.2.1:
+  lefthook-freebsd-arm64@2.2.2:
     optional: true
 
-  lefthook-linux-arm64@2.2.1:
+  lefthook-freebsd-x64@2.2.2:
     optional: true
 
-  lefthook-linux-x64@2.2.1:
+  lefthook-linux-arm64@2.2.2:
     optional: true
 
-  lefthook-openbsd-arm64@2.2.1:
+  lefthook-linux-x64@2.2.2:
     optional: true
 
-  lefthook-openbsd-x64@2.2.1:
+  lefthook-openbsd-arm64@2.2.2:
     optional: true
 
-  lefthook-windows-arm64@2.2.1:
+  lefthook-openbsd-x64@2.2.2:
     optional: true
 
-  lefthook-windows-x64@2.2.1:
+  lefthook-windows-arm64@2.2.2:
     optional: true
 
-  lefthook@2.2.1:
+  lefthook-windows-x64@2.2.2:
+    optional: true
+
+  lefthook@2.2.2:
     optionalDependencies:
-      lefthook-darwin-arm64: 2.2.1
-      lefthook-darwin-x64: 2.2.1
-      lefthook-freebsd-arm64: 2.2.1
-      lefthook-freebsd-x64: 2.2.1
-      lefthook-linux-arm64: 2.2.1
-      lefthook-linux-x64: 2.2.1
-      lefthook-openbsd-arm64: 2.2.1
-      lefthook-openbsd-x64: 2.2.1
-      lefthook-windows-arm64: 2.2.1
-      lefthook-windows-x64: 2.2.1
+      lefthook-android-arm64: 2.2.2
+      lefthook-darwin-arm64: 2.2.2
+      lefthook-darwin-x64: 2.2.2
+      lefthook-freebsd-arm64: 2.2.2
+      lefthook-freebsd-x64: 2.2.2
+      lefthook-linux-arm64: 2.2.2
+      lefthook-linux-x64: 2.2.2
+      lefthook-openbsd-arm64: 2.2.2
+      lefthook-openbsd-x64: 2.2.2
+      lefthook-windows-arm64: 2.2.2
+      lefthook-windows-x64: 2.2.2
 
   lightningcss-android-arm64@1.33.0:
     optional: true
@@ -2922,14 +2927,14 @@ snapshots:
 
   tree-kill@1.2.2: {}
 
-  tsdown@0.23.0(typescript@7.0.2):
+  tsdown@0.23.1(typescript@7.0.2):
     dependencies:
       cac: 7.0.1
       defu: 6.1.7
       empathic: 2.1.0
       hookable: 6.1.2
       import-without-cache: 0.4.1
-      obug: 2.2.1
+      obug: 3.0.0
       picomatch: 4.0.7
       rolldown: 1.2.13
       rolldown-plugin-dts: 0.28.7(rolldown@1.2.13)(typescript@7.0.2)
@@ -2937,7 +2942,7 @@ snapshots:
       tinyglobby: 0.2.17
       tree-kill: 1.2.2
       unconfig-core: 7.5.0
-      verkit: 0.4.1
+      verkit: 0.5.0
     optionalDependencies:
       typescript: 7.0.2
     transitivePeerDependencies:
@@ -2987,11 +2992,9 @@ snapshots:
 
   vary@1.1.2: {}
 
-  verkit@0.4.1: {}
-
   verkit@0.5.0: {}
 
-  vite@8.3.4(@types/node@24.19.1)(jiti@2.6.1):
+  vite@8.3.4(@types/node@24.19.2)(jiti@2.6.1):
     dependencies:
       lightningcss: 1.33.0
       picomatch: 4.0.7
@@ -2999,14 +3002,14 @@ snapshots:
       rolldown: 1.2.13
       tinyglobby: 0.2.17
     optionalDependencies:
-      '@types/node': 24.19.1
+      '@types/node': 24.19.2
       fsevents: 2.3.3
       jiti: 2.6.1
 
-  vitest@5.0.3(@types/node@24.19.1)(@vitest/coverage-v8@5.0.3)(vite@8.3.4(@types/node@24.19.1)(jiti@2.6.1)):
+  vitest@5.0.3(@types/node@24.19.2)(@vitest/coverage-v8@5.0.3)(vite@8.3.4(@types/node@24.19.2)(jiti@2.6.1)):
     dependencies:
       '@types/chai': 5.2.3
-      '@vitest/mocker': 5.0.3(vite@8.3.4(@types/node@24.19.1)(jiti@2.6.1))
+      '@vitest/mocker': 5.0.3(vite@8.3.4(@types/node@24.19.2)(jiti@2.6.1))
       chai: 6.3.0
       es-module-lexer: 2.3.2
       expect-type: 1.4.0
@@ -3017,10 +3020,10 @@ snapshots:
       tinybench: 6.2.2
       tinyexec: 1.3.1
       tinyglobby: 0.2.17
-      vite: 8.3.4(@types/node@24.19.1)(jiti@2.6.1)
+      vite: 8.3.4(@types/node@24.19.2)(jiti@2.6.1)
       why-is-node-running: 3.2.1
     optionalDependencies:
-      '@types/node': 24.19.1
+      '@types/node': 24.19.2
       '@vitest/coverage-v8': 5.0.3(vitest@5.0.3)
     transitivePeerDependencies:
       - msw
