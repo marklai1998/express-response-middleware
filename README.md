@@ -40,20 +40,20 @@ pnpm i express-response-middleware
 Sample middleware (redact.js) to remove classified information.
 
 ```javascript
-import { jsonMiddleware } from 'express-response-middleware'
+import { jsonMiddleware } from 'express-response-middleware';
 
 /* Remove any classified information from the response. */
 export const hideSecretMiddleware = jsonMiddleware((body, req, res) => {
-    if (body.secret) body.secret = '****'
-    // ...
-    return body
-})
+  if (body.secret) body.secret = '****';
+  // ...
+  return body;
+});
 ```
 
 then add to your `app.js` file (before the route handling middleware)
 
 ```javascript
-app.use(hideSecretMiddleware)
+app.use(hideSecretMiddleware);
 ```
 
 ## 💻 API
@@ -71,12 +71,12 @@ app.use(hideSecretMiddleware)
 Intercept `res.json`, allow transform the JSON body of the response.
 
 ```ts
-import { jsonMiddleware } from 'express-response-middleware'
+import { jsonMiddleware } from 'express-response-middleware';
 
 const myMiddleware = jsonMiddleware((json, req, res) => {
-    // your code here
-    return json
-})
+  // your code here
+  return json;
+});
 ```
 
 ### `jsonpMiddleware`
@@ -84,12 +84,12 @@ const myMiddleware = jsonMiddleware((json, req, res) => {
 Intercept `res.jsonp`, allow transform the JSON body of the response.
 
 ```ts
-import { jsonpMiddleware } from 'express-response-middleware'
+import { jsonpMiddleware } from 'express-response-middleware';
 
 const myMiddleware = jsonpMiddleware((json, req, res) => {
-    // your code here
-    return json
-})
+  // your code here
+  return json;
+});
 ```
 
 ### `sendMiddleware`
@@ -97,12 +97,12 @@ const myMiddleware = jsonpMiddleware((json, req, res) => {
 Intercept `res.send`, allow transform the body of the response.
 
 ```ts
-import { sendMiddleware } from 'express-response-middleware'
+import { sendMiddleware } from 'express-response-middleware';
 
 const myMiddleware = sendMiddleware((payload, req, res) => {
-    // your code here
-    return payload
-})
+  // your code here
+  return payload;
+});
 ```
 
 ### `endMiddleware`
@@ -110,11 +110,11 @@ const myMiddleware = sendMiddleware((payload, req, res) => {
 Intercept `end.json`, allow transform the HTTP headers of the response.
 
 ```ts
-import { endMiddleware } from 'express-response-middleware'
+import { endMiddleware } from 'express-response-middleware';
 
 const myMiddleware = endMiddleware((req, res) => {
-    // your code here
-})
+  // your code here
+});
 ```
 
 > [!CAUTION]
@@ -125,17 +125,16 @@ const myMiddleware = endMiddleware((req, res) => {
 Intercept `end.write`, allow transform buffer.
 
 ```ts
-import { writeMiddleware } from 'express-response-middleware'
+import { writeMiddleware } from 'express-response-middleware';
 
 const myMiddleware = writeMiddleware((chunk, encoding, req, res) => {
-    // your code here
-    return chunk
-})
+  // your code here
+  return chunk;
+});
 ```
 
 > [!CAUTION]
 > Promise callback support is limited, it doesn't resolve multiple write call yet [Code](src/writeMiddleware.ts)
-
 - When `writeMiddleware` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
 - Calling `res.json` or `res.send` from `writeMiddleware` can lead to unexpected behavior since they end the response internally.
 - The returned value of `res.write` will be inaccurate when using `writeMiddleware`, beware if you rely on it
@@ -149,8 +148,7 @@ const myMiddleware = writeMiddleware((chunk, encoding, req, res) => {
 
 ### TODO
 
-Current state project is up to modern standard and support all of the `express-mung` use case, here is the list that I think can improve on. 
-
+Current state project is up to modern standard and support all of the `express-mung` use case, here is the list that I think can improve on.
 - [ ] Support multiple write call with `writeMiddleware` + async handler
 
 ### Development
