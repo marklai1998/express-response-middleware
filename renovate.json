@@ -3,5 +3,12 @@
   "extends": [
     "github>marklai1998/shared-configs//packages/renovate/presets/lib.json",
     "github>marklai1998/shared-configs//packages/renovate/presets/autoMerge.json"
+  ],
+  "packageRules": [
+    {
+      "description": "tsdown 0.23.2 dts plugin rejects typescript 7.0.2. Hold at 0.23.1 until TypeScript 7.1 or isolatedDeclarations.",
+      "matchPackageNames": ["tsdown"],
+      "allowedVersions": "0.23.1"
+    }
   ]
 }

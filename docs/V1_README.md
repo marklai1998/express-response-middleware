@@ -19,23 +19,23 @@ Then in your middleware
 Sample middleware (redact.js) to remove classified information.
 
 ```javascript
-'use strict'
-const responseMiddleware = require('express-response-middleware')
+'use strict';
+const responseMiddleware = require('express-response-middleware');
 
 /* Remove any classified information from the response. */
 function redact(body, req, res) {
-  if (body.secret) body.secret = '****'
+  if (body.secret) body.secret = '****';
   // ...
-  return body
+  return body;
 }
 
-module.exports = responseMiddleware.json(redact)
+module.exports = responseMiddleware.json(redact);
 ```
 
 then add to your `app.js` file (before the route handling middleware)
 
 ```javascript
-app.use(require('./redact'))
+app.use(require('./redact'));
 ```
 
 and [_That's all folks!_](https://www.youtube.com/watch?v=gBzJGckMYO4)

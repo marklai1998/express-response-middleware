@@ -8,7 +8,6 @@
 ### Requirement
 
 V2 completely rewrote in ESM with modern syntax
-
 - Node 18 or above
 
 ### Update Import
@@ -20,20 +19,20 @@ V2 completely rewrote in ESM with modern syntax
 
 Before
 ```ts
-import mung from 'express-mung'
+import mung from 'express-mung';
 
 const myMiddleware = mung.json((json) => {
   // your code
-})
+});
 ```
 
 After
 ```ts
-import { jsonMiddleware } from 'express-response-middleware'
+import { jsonMiddleware } from 'express-response-middleware';
 
 const myMiddleware = jsonMiddleware((json) => {
-    // your code
-})
+  // your code
+});
 ```
 
 ### Remove `onError` override
@@ -42,26 +41,27 @@ It is now impossible to override `onError` due to ESM code base, you should try 
 
 Before
 ```ts
-import mung from 'express-mung'
+import mung from 'express-mung';
 
-mung.onError = customErrorHandle
+mung.onError = customErrorHandle;
 
 const myMiddleware = responseMiddleware.json((json) => {
   // your code
-})
+});
 ```
 
 After
 ```ts
-import responseMiddleware from 'express-response-middleware'
+import responseMiddleware from 'express-response-middleware';
 
 const myMiddleware = responseMiddleware.json((json) => {
   try {
     // your code
-  } catch (e){ // onError equivalent
-    customErrorHandle(e)
+  } catch (e) {
+    // onError equivalent
+    customErrorHandle(e);
   }
-})
+});
 ```
 
 ### Remove `mungError`
@@ -70,24 +70,24 @@ const myMiddleware = responseMiddleware.json((json) => {
 
 Before
 ```ts
-import mung from 'express-mung'
+import mung from 'express-mung';
 
 // Would not run on res.statusCode >= 400, unless mungError is set to true
-const myMiddleware = mung.json((json) => { 
+const myMiddleware = mung.json((json) => {
   // code
-  return json
-})
+  return json;
+});
 ```
 
 After
 ```ts
-import responseMiddleware from 'express-response-middleware'
+import responseMiddleware from 'express-response-middleware';
 
 // Would always run, you have to do your own filtering
 const myMiddleware = responseMiddleware.json((json) => {
-    if (res.statusCode >= 400) return
-    return json
-})
+  if (res.statusCode >= 400) return;
+  return json;
+});
 ```
 
 ### headerSent Handling
@@ -103,40 +103,39 @@ Middleware will still call if headers are being sent (res.headersSent === `true`
 
 Before
 ```ts
-import mung from 'express-mung'
+import mung from 'express-mung';
 
 const myMiddleware = mung.json((json) => {
-  const hasPermission = false
-  const shouldSendNull = false
-  if (!hasPermission) return "Forbidden" // `content-type` will automatically set to `text/plain`
-  if (shouldSendNull) return null // `status` will automatically set to 204
-  return json
-})
+  const hasPermission = false;
+  const shouldSendNull = false;
+  if (!hasPermission) return 'Forbidden'; // `content-type` will automatically set to `text/plain`
+  if (shouldSendNull) return null; // `status` will automatically set to 204
+  return json;
+});
 ```
 
 After
 ```ts
-import responseMiddleware from 'express-response-middleware'
+import responseMiddleware from 'express-response-middleware';
 
 const myMiddleware = responseMiddleware.json((json) => {
-    const hasPermission = false
-    const shouldSendNull = false
-    if (!hasPermission) {
-        res.send("Forbidden")
-        return
-    }
-    if (shouldSendNull) {
-        res.status(204)
-        return null
-    }
-    return json
-})
+  const hasPermission = false;
+  const shouldSendNull = false;
+  if (!hasPermission) {
+    res.send('Forbidden');
+    return;
+  }
+  if (shouldSendNull) {
+    res.status(204);
+    return null;
+  }
+  return json;
+});
 ```
 
 ## To V1
 
 V1 is mostly just fork of `express-mung` with integrated types
-
 - Update the import
 - Rename option `mungError` to `runOnError`
 
