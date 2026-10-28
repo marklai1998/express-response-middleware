@@ -13,7 +13,6 @@
       }
     }
   },
-,
   "overrides": [
     {
       "includes": ["pnpm-lock.yaml"],
