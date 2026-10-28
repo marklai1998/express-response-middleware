@@ -12,5 +12,14 @@
         }
       }
     }
-  }
+  },
+,
+  "overrides": [
+    {
+      "includes": ["pnpm-lock.yaml"],
+      "formatter": {
+        "enabled": false
+      }
+    }
+  ]
 }
