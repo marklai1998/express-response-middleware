@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.0](https://github.com/marklai1998/express-response-middleware/compare/v2.2.0...v2.3.0) (2026-11-13)
+
+
+### Features
+
+* **write:** pipe writeMiddleware through a Transform stream ([#282](https://github.com/marklai1998/express-response-middleware/issues/282)) ([6efd794](https://github.com/marklai1998/express-response-middleware/commit/6efd79458c47cb52b1d372f996fe2e68681ab513))
+
 ## [2.2.0](https://github.com/marklai1998/express-response-middleware/compare/v2.1.3...v2.2.0) (2025-11-03)
 
 ### Features
