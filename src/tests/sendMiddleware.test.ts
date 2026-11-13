@@ -1,7 +1,7 @@
 import express from 'express';
 import request from 'supertest';
 import { expect } from 'vitest';
-import { sendMiddleware, type TransformSend } from '../sendMiddleware.js';
+import { sendMiddleware, type TransformSend } from '../index.js';
 import { sleep } from './testHelpers/sleep.js';
 
 describe('sendMiddleware', () => {

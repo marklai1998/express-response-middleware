@@ -1,3 +1,5 @@
+import { AsyncLocalStorage } from 'node:async_hooks';
+import { Transform } from 'node:stream';
 import type { Request, RequestHandler, Response } from 'express';
 import { errorHandler } from './utils/errorHandler.js';
 
@@ -8,64 +10,101 @@ export type TransformChunk = (
   response: Response,
 ) => void | string | Buffer | Promise<void> | Promise<string> | Promise<Buffer>;
 
+type Callback = (error?: Error | null) => void;
+type AnyFn = (...args: unknown[]) => unknown;
+
 export const writeMiddleware =
   (fn: TransformChunk): RequestHandler =>
   (req, res, next) => {
     const originalWrite = res.write;
-    const originalEndFn = res.end;
+    const originalEnd = res.end;
+    const callWrite = (args: unknown[]) =>
+      (originalWrite as AnyFn).apply(res, args) as boolean;
+    const callEnd = (args: unknown[]) =>
+      (originalEnd as AnyFn).apply(res, args);
+    // Calls to res.write / res.end made from inside `fn` (e.g. `res.json()`)
+    // must bypass the transform, otherwise they would be queued behind the
+    // chunk currently being transformed.
+    const inTransform = new AsyncLocalStorage<boolean>();
+    let endCallback: Callback | undefined;
 
-    res.write = function (this: Response, chunk) {
-      if (res.writableEnded) return false;
+    const transform = new Transform({
+      decodeStrings: false,
+      transform(chunk: string | Buffer, encoding: string, callback) {
+        const stringEncoding =
+          encoding === 'buffer' ? null : (encoding as BufferEncoding);
+        // Only `fn` runs inside the bypass context. push/callback must run
+        // outside it: they can synchronously trigger more writes (e.g. via
+        // 'drain'), and those writes must go through the transform.
+        inTransform
+          .run(true, async () => fn(chunk, stringEncoding, req, res))
+          .then(
+            (result) => {
+              const output = result === undefined ? chunk : result;
+              if (typeof output === 'string' && stringEncoding)
+                this.push(output, stringEncoding);
+              else this.push(output);
+              callback();
+            },
+            (e) => callback(e),
+          );
+      },
+    });
 
-      let mayBePromise: ReturnType<TransformChunk>;
-      try {
-        mayBePromise = fn(
-          chunk,
-          // Since `encoding` is an optional argument to `res.write`,
-          // make sure it is a string and not actually the callback.
-          typeof arguments[1] === 'string' ? arguments[1] : null,
-          req,
-          res,
-        );
-      } catch (e) {
-        errorHandler(e, req, res, next);
-        return false;
-      }
+    transform.on('data', (chunk: Buffer) => {
+      if (res.writableEnded) return;
+      // The transformed body length is unknown, fall back to chunked encoding
+      if (!res.headersSent) res.removeHeader('Content-Length');
+      if (!callWrite([chunk])) transform.pause();
+    });
+    res.on('drain', () => transform.resume());
+    // Let upstream writers (e.g. another writeMiddleware) know they can resume
+    transform.on('drain', () => res.emit('drain'));
 
-      if (mayBePromise instanceof Promise) {
-        mayBePromise
-          .then((result) => {
-            res.end = originalEndFn;
+    transform.on('end', () => {
+      if (res.writableEnded) return;
+      callEnd(endCallback ? [endCallback] : []);
+    });
 
-            if (res.writableEnded) return false;
+    transform.on('error', (e) => {
+      res.write = originalWrite;
+      res.end = originalEnd;
+      if (res.headersSent) res.destroy(e);
+      else errorHandler(e, req, res, next);
+    });
 
-            arguments[0] = result === undefined ? chunk : result;
+    res.on('close', () => {
+      if (!transform.destroyed) transform.destroy();
+    });
 
-            const writeResponse = originalWrite.apply(res, arguments as any);
+    res.write = function (this: Response, chunk: unknown, ...args: unknown[]) {
+      if (inTransform.getStore()) return callWrite([chunk, ...args]);
+      if (transform.writableEnded || res.writableEnded) return false;
 
-            if (res.__isEnd) res.end();
+      const encoding = typeof args[0] === 'string' ? args[0] : undefined;
+      const callback = (typeof args[0] === 'function' ? args[0] : args[1]) as
+        | Callback
+        | undefined;
 
-            return writeResponse;
-          })
-          .catch((e) => {
-            res.end = originalEndFn;
-            errorHandler(e, req, res, next);
-          });
+      return transform.write(chunk, encoding as BufferEncoding, callback);
+    } as Response['write'];
 
-        res.end = function (this: Response) {
-          this.__isEnd = true;
-          return res;
-        };
-        return false;
-      }
+    res.end = function (this: Response, ...args: unknown[]) {
+      if (inTransform.getStore()) return callEnd(args);
+      if (transform.writableEnded || res.writableEnded) return res;
 
-      const result = mayBePromise;
-      if (res.writableEnded) return false;
+      const [chunk, encoding, callback] =
+        typeof args[0] === 'function'
+          ? [undefined, undefined, args[0]]
+          : typeof args[1] === 'function'
+            ? [args[0], undefined, args[1]]
+            : args;
+      endCallback = callback as Callback | undefined;
 
-      arguments[0] = result === undefined ? chunk : result;
-
-      return originalWrite.apply(res, arguments as any);
-    };
+      if (chunk != null) transform.end(chunk, encoding as BufferEncoding);
+      else transform.end();
+      return res;
+    } as Response['end'];
 
     next();
   };
