@@ -230,4 +230,17 @@ describe('jsonpMiddleware', () => {
       expect(response.status).toStrictEqual(500);
     },
   );
+  it('should not wrap the 500 error body in the jsonp callback', async () => {
+    const server = express()
+      .use(jsonpMiddleware(error))
+      .get('/', (_req, res) => {
+        res.status(200).jsonp({ a: 'a' });
+      });
+
+    const response = await request(server).get('/?callback=cb');
+
+    expect(response.status).toStrictEqual(500);
+    expect(response.text).not.toContain('cb(');
+    expect(response.headers['content-type']).toContain('application/json');
+  });
 });

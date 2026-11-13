@@ -1,5 +1,5 @@
-import { AsyncLocalStorage } from 'node:async_hooks';
 import type { Request, RequestHandler, Response } from 'express';
+import { isInSend } from './utils/asyncLocalStorage.js';
 import { errorHandler } from './utils/errorHandler.js';
 
 export type TransformJsonp<T = unknown, R = T> = (
@@ -7,8 +7,6 @@ export type TransformJsonp<T = unknown, R = T> = (
   request: Request,
   response: Response,
 ) => R | Promise<R>;
-
-const isInSend = new AsyncLocalStorage<boolean>();
 
 export const jsonpMiddleware =
   <T = unknown>(fn: TransformJsonp<T>): RequestHandler =>
@@ -31,7 +29,7 @@ export const jsonpMiddleware =
       try {
         mayBePromise = fn(json, req, res);
       } catch (e) {
-        res.json = originalJsonpFn;
+        res.jsonp = originalJsonpFn;
         errorHandler(e, req, res, next);
         return res;
       }
