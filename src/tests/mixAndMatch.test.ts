@@ -5,12 +5,13 @@ import {
   endMiddleware,
   jsonMiddleware,
   jsonpMiddleware,
+  sendMiddleware,
   type TransformChunk,
   type TransformEnd,
   type TransformJson,
+  type TransformSend,
   writeMiddleware,
 } from '../index.js';
-import { sendMiddleware, type TransformSend } from '../sendMiddleware.js';
 import { sleep } from './testHelpers/sleep.js';
 
 describe('mix and match', () => {
