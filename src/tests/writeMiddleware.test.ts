@@ -1,3 +1,4 @@
+import { Readable } from 'node:stream';
 import express, { type ErrorRequestHandler } from 'express';
 import request from 'supertest';
 import { expect } from 'vitest';
@@ -264,4 +265,102 @@ describe('write', () => {
       expect(response.status).toStrictEqual(500);
     },
   );
+  const upper: TransformChunk = (chunk) => String(chunk).toUpperCase();
+
+  const upperAsyncRandomDelay: TransformChunk = async (chunk) => {
+    await sleep();
+    return String(chunk).toUpperCase();
+  };
+
+  it.each([upper, upperAsyncRandomDelay])(
+    'should keep chunk order across multiple writes',
+    async (handler) => {
+      const server = express()
+        .use(writeMiddleware(handler))
+        .get('/', (_req, res) => {
+          res.status(200);
+          res.write('a');
+          res.write('b');
+          res.write('c');
+          res.end('d');
+        });
+      const response = await request(server).get('/');
+
+      expect(response.status).toStrictEqual(200);
+      expect(response.text).toStrictEqual('ABCD');
+    },
+  );
+
+  it.each([upper, upperAsyncRandomDelay])(
+    'should transform the chunk passed to res.end',
+    async (handler) => {
+      const server = express()
+        .use(writeMiddleware(handler))
+        .get('/', (_req, res) => {
+          res.status(200).end('end chunk');
+        });
+      const response = await request(server).get('/');
+
+      expect(response.text).toStrictEqual('END CHUNK');
+    },
+  );
+
+  it.each([appendText, appendTextAsync])(
+    'should drop the stale Content-Length set by res.send',
+    async (handler) => {
+      const server = express()
+        .use(writeMiddleware(handler))
+        .get('/', (_req, res) => {
+          res.status(200).send('This is the response body');
+        });
+      const response = await request(server).get('/');
+
+      expect(response.status).toStrictEqual(200);
+      expect(response.headers['content-length']).toBeUndefined();
+      expect(response.text).toStrictEqual(
+        'This is the response body with more content',
+      );
+    },
+  );
+
+  it('should call the res.end callback once the response is finished', async () => {
+    const endCallback = vi.fn();
+    const server = express()
+      .use(writeMiddleware(upperAsyncRandomDelay))
+      .get('/', (_req, res) => {
+        res.status(200).write('a');
+        res.end(endCallback);
+      });
+    const response = await request(server).get('/');
+
+    expect(response.text).toStrictEqual('A');
+    expect(endCallback).toHaveBeenCalledOnce();
+  });
+
+  it('should handle a large piped stream through chained middleware', async () => {
+    const chunkCount = 2000;
+    const chunk = 'x'.repeat(1024);
+    let bytesSeen = 0;
+    const counter: TransformChunk = (c) => {
+      bytesSeen += c.length;
+    };
+
+    const server = express()
+      .use(writeMiddleware(counter))
+      .use(writeMiddleware(async () => {}))
+      .get('/', (_req, res) => {
+        res.status(200);
+        Readable.from(
+          (function* () {
+            for (let i = 0; i < chunkCount; i++) yield chunk;
+          })(),
+        ).pipe(res);
+      });
+    const response = await request(server).get('/');
+
+    expect(response.status).toStrictEqual(200);
+    expect(response.text.length).toStrictEqual(chunkCount * chunk.length);
+    // Chunk boundaries may be coalesced, but every byte must pass through
+    expect(bytesSeen).toStrictEqual(chunkCount * chunk.length);
+  });
 });

@@ -7,7 +7,7 @@
 
 Middleware for express responses. Fork of [express-mung](https://www.npmjs.com/package/express-mung)
 
-This package allows synchronous and asynchronous transformation of an express response. This is a similar concept to the express middleware for a request but for a response. Note that the middleware is executed in LIFO order. It is implemented by monkey patching (hooking) the `res.end`, `res.json`, or `res.write` methods.
+This package allows synchronous and asynchronous transformation of an express response. This is a similar concept to the express middleware for a request but for a response. Note that the middleware is executed in LIFO order. It is implemented by monkey patching (hooking) the `res.end`, `res.json`, `res.jsonp`, `res.send`, or `res.write` methods.
 
 ![NPM](https://img.shields.io/npm/v/express-response-middleware) ![GitHub CI](https://github.com/marklai1998/express-response-middleware/actions/workflows/runTest.yml/badge.svg) [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow.svg)](https://conventionalcommits.org) [![npm type definitions](https://img.shields.io/npm/types/typescript.svg)](https://www.typescriptlang.org/)
 
@@ -61,8 +61,8 @@ app.use(hideSecretMiddleware);
 - [Json Middleware](#jsonmiddleware)
 - [Jsonp Middleware](#jsonpmiddleware)
 - [Send Middleware](#sendmiddleware)
-- [End Middleware](#endMiddleware)
-- [Write Middleware](#endMiddleware)
+- [End Middleware](#endmiddleware)
+- [Write Middleware](#writemiddleware)
 - Legacy docs
   - [V1](docs/V1_README.md)
 
@@ -107,7 +107,7 @@ const myMiddleware = sendMiddleware((payload, req, res) => {
 
 ### `endMiddleware`
 
-Intercept `end.json`, allow transform the HTTP headers of the response.
+Intercept `res.end`, allow transform the HTTP headers of the response.
 
 ```ts
 import { endMiddleware } from 'express-response-middleware';
@@ -122,7 +122,7 @@ const myMiddleware = endMiddleware((req, res) => {
 
 ### `writeMiddleware`
 
-Intercept `end.write`, allow transform buffer.
+Intercept `res.write` and `res.end`, allow transform each chunk of the body. Chunks are piped through a Node.js `Transform` stream, so async callbacks are processed in order and backpressure is respected.
 
 ```ts
 import { writeMiddleware } from 'express-response-middleware';
@@ -133,11 +133,11 @@ const myMiddleware = writeMiddleware((chunk, encoding, req, res) => {
 });
 ```
 
-> [!CAUTION]
-> Promise callback support is limited, it doesn't resolve multiple write call yet [Code](src/writeMiddleware.ts)
 - When `writeMiddleware` detects that a response has completed (i.e. if `res.end` has been called), it will abort.
-- Calling `res.json` or `res.send` from `writeMiddleware` can lead to unexpected behavior since they end the response internally.
-- The returned value of `res.write` will be inaccurate when using `writeMiddleware`, beware if you rely on it
+- Calling `res.json` or `res.send` from `writeMiddleware` ends the response; the remaining chunks are dropped.
+- Writes are flushed asynchronously, so `res.headersSent` may still be `false` right after `res.write`.
+- `Content-Length` is removed since the transformed body length is unknown; the response uses chunked encoding.
+- Chunk boundaries are not guaranteed: chunks may be merged as they pass through the stream.
 - `res.end` after `res.write` would not trigger endMiddleware, as header already sent
 
 ## Exception handling
@@ -149,7 +149,7 @@ const myMiddleware = writeMiddleware((chunk, encoding, req, res) => {
 ### TODO
 
 Current state project is up to modern standard and support all of the `express-mung` use case, here is the list that I think can improve on.
-- [ ] Support multiple write call with `writeMiddleware` + async handler
+- [x] Support multiple write call with `writeMiddleware` + async handler
 
 ### Development
 
