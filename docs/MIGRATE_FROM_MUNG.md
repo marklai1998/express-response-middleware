@@ -8,6 +8,7 @@
 ### Requirement
 
 V2 completely rewrote in ESM with modern syntax
+
 - Node 18 or above
 
 ### Update Import
@@ -18,6 +19,7 @@ V2 completely rewrote in ESM with modern syntax
 - `mung.headersAsync` => `endMiddleware`
 
 Before
+
 ```ts
 import mung from 'express-mung';
 
@@ -27,6 +29,7 @@ const myMiddleware = mung.json((json) => {
 ```
 
 After
+
 ```ts
 import { jsonMiddleware } from 'express-response-middleware';
 
@@ -40,6 +43,7 @@ const myMiddleware = jsonMiddleware((json) => {
 It is now impossible to override `onError` due to ESM code base, you should try catch your own error
 
 Before
+
 ```ts
 import mung from 'express-mung';
 
@@ -51,6 +55,7 @@ const myMiddleware = responseMiddleware.json((json) => {
 ```
 
 After
+
 ```ts
 import responseMiddleware from 'express-response-middleware';
 
@@ -69,6 +74,7 @@ const myMiddleware = responseMiddleware.json((json) => {
 `mungError` is Removed and callback is always called
 
 Before
+
 ```ts
 import mung from 'express-mung';
 
@@ -80,6 +86,7 @@ const myMiddleware = mung.json((json) => {
 ```
 
 After
+
 ```ts
 import responseMiddleware from 'express-response-middleware';
 
@@ -102,6 +109,7 @@ Middleware will still call if headers are being sent (res.headersSent === `true`
 > Note. Express allow sending plain text and null with `.json` and content type will still be json + 200, this change is to stick to vanilla behavior
 
 Before
+
 ```ts
 import mung from 'express-mung';
 
@@ -115,6 +123,7 @@ const myMiddleware = mung.json((json) => {
 ```
 
 After
+
 ```ts
 import responseMiddleware from 'express-response-middleware';
 
@@ -136,6 +145,7 @@ const myMiddleware = responseMiddleware.json((json) => {
 ## To V1
 
 V1 is mostly just fork of `express-mung` with integrated types
+
 - Update the import
 - Rename option `mungError` to `runOnError`
 
