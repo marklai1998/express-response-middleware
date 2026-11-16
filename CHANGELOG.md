@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.3.1](https://github.com/marklai1998/express-response-middleware/compare/v2.3.0...v2.3.1) (2026-11-16)
+
+
+### Bug Fixes
+
+* point CJS entry points to dist/index.cjs ([#286](https://github.com/marklai1998/express-response-middleware/issues/286)) ([#287](https://github.com/marklai1998/express-response-middleware/issues/287)) ([b6cb0d7](https://github.com/marklai1998/express-response-middleware/commit/b6cb0d7f3fada0aaed89944b5a9edb159645dd39))
+
 ## [2.3.0](https://github.com/marklai1998/express-response-middleware/compare/v2.2.0...v2.3.0) (2026-11-13)
 
 
